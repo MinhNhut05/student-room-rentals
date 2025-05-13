@@ -1,0 +1,45 @@
+@import '../../styles/global.scss';
+
+.room-list {
+  padding: 2rem 0;
+  
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  .room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .room-card {
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: white;
+
+    h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .price {
+      color: $primary-color;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+
+    a {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: $primary-color;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}

@@ -1,11 +1,13 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 
 dotenv.config();
 const app = express();
+app.use(cors());  // Add CORS middleware
 app.use(express.json());
 
 // Kết nối DB
