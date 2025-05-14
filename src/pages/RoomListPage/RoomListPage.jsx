@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import './RoomListPage.scss';
+import React, { useEffect, useState } from "react";
+import roomService from "../../services/roomService";
+import RoomCard from "../../components/RoomCard/RoomCard";
+import "./RoomListPage.scss";
 
 const RoomListPage = () => {
   const [rooms, setRooms] = useState([]);
@@ -8,26 +9,37 @@ const RoomListPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // TODO: Fetch rooms from API
-    setLoading(false);
+    const fetchRooms = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await roomService.getRooms();
+        setRooms(data);
+      } catch (err) {
+        setError("Không thể tải danh sách phòng trọ.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRooms();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
   return (
-    <div className="room-list">
-      <h1>Available Rooms</h1>
-      <div className="room-grid">
-        {rooms.map(room => (
-          <div key={room._id} className="room-card">
-            <h3>{room.title}</h3>
-            <p>{room.location}</p>
-            <p className="price">${room.price}/month</p>
-            <Link to={`/rooms/${room._id}`}>View Details</Link>
-          </div>
-        ))}
-      </div>
+    <div className="room-list-page">
+      <h1>Danh sách phòng trọ</h1>
+      {loading ? (
+        <p>Đang tải...</p>
+      ) : error ? (
+        <p className="error">{error}</p>
+      ) : rooms.length === 0 ? (
+        <p>Hiện chưa có phòng trọ nào.</p>
+      ) : (
+        <div className="room-list-grid">
+          {rooms.map((room) => (
+            <RoomCard key={room._id} room={room} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

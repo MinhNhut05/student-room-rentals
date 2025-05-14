@@ -7,7 +7,9 @@ const roomRoutes = require("./routes/roomRoutes");
 
 dotenv.config();
 const app = express();
-app.use(cors());  // Add CORS middleware
+
+// Middleware
+app.use(cors());
 app.use(express.json());
 
 // Kết nối DB
@@ -17,6 +19,16 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log("MongoDB connected"));
+
+mongoose.connection.on("connected", () => {
+  const dbHost = mongoose.connection.host;
+  console.log("✅ Đang kết nối tới MongoDB host:", dbHost);
+});
+
+mongoose.connection.on("connected", async () => {
+  const dbName = mongoose.connection.name;
+  console.log("📊 Database Name:", dbName);
+});
 
 // Routes
 app.use("/api/auth", authRoutes);

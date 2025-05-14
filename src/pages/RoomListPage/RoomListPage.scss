@@ -1,8 +1,28 @@
-@import '../../styles/global.scss';
+@import "../../styles/global.scss";
+
+.room-list-page {
+  padding: 2rem 0;
+
+  h1 {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .error {
+    color: red;
+    text-align: center;
+  }
+
+  .room-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+}
 
 .room-list {
   padding: 2rem 0;
-  
+
   h1 {
     margin-bottom: 2rem;
   }
@@ -16,7 +36,7 @@
   .room-card {
     padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background: white;
 
     h3 {
@@ -36,7 +56,7 @@
       color: white;
       border-radius: 4px;
       text-decoration: none;
-      
+
       &:hover {
         opacity: 0.9;
       }
