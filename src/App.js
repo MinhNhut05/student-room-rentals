@@ -15,28 +15,31 @@ import PostRoomPage from "./pages/PostRoomPage/PostRoomPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 import "./styles/global.scss";
+import { AuthProvider } from "./context/authContext";
 
 const App = () => {
   return (
-    <Router>
-      <Header />
-      <main className="container">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/rooms" element={<RoomListPage />} />
-          <Route path="/rooms/:id" element={<RoomDetailPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+    <AuthProvider>
+      <Router>
+        <Header />
+        <main className="container">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/rooms" element={<RoomListPage />} />
+            <Route path="/rooms/:id" element={<RoomDetailPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
-          {/* ✅ Các route cần bảo vệ */}
-          <Route element={<PrivateRoute />}>
-            <Route path="/post-room" element={<PostRoomPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
-        </Routes>
-      </main>
-      <Footer />
-    </Router>
+            {/* ✅ Các route cần bảo vệ */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/post-room" element={<PostRoomPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 };
 
