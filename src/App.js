@@ -1,6 +1,6 @@
 // src/App.js
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
@@ -18,9 +18,11 @@ import "./styles/global.scss";
 import { AuthProvider } from "./context/authContext";
 
 const App = () => {
+  console.log("App rendering"); // Debug log
+
   return (
     <AuthProvider>
-      <Router>
+      <div className="app">
         <Header />
         <main className="container">
           <Routes>
@@ -30,7 +32,6 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
-            {/* ✅ Các route cần bảo vệ */}
             <Route element={<PrivateRoute />}>
               <Route path="/post-room" element={<PostRoomPage />} />
               <Route path="/profile" element={<ProfilePage />} />
@@ -38,7 +39,7 @@ const App = () => {
           </Routes>
         </main>
         <Footer />
-      </Router>
+      </div>
     </AuthProvider>
   );
 };
