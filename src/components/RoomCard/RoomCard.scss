@@ -1,4 +1,4 @@
-@import "../../styles/global.scss";
+@use "../../scss/variables" as *;
 
 .room-card-link {
   text-decoration: none;

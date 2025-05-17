@@ -1,49 +1,22 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@use "../scss/abstracts/variables" as *;
+
+// Global variables
+:root {
+  --primary-color: #{$primary-color};
+  --secondary-color: #{$secondary-color};
+  --text-color: #{$text-color};
+  --bg-color: #{$bg-color};
 }
 
+// Global styles
 body {
-  font-family: "Segoe UI", sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
+  font-family: "Inter", sans-serif;
+  color: var(--text-color);
+  background: var(--bg-color);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-}
-
-// Biến màu sắc
-$primary-color: #007bff;
-$secondary-color: #6c757d;
-$light-bg: #f9f9f9;
-$dark-text: #333;
-
-// Mixin dùng lại
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-// Reset + style chung
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Segoe UI", sans-serif;
-  background-color: $light-bg;
-  color: $dark-text;
-}
-
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
+  padding: 0 15px;
 }

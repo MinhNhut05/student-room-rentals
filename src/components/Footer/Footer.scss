@@ -1,4 +1,5 @@
-@import '../../styles/global.scss';
+@use "../../styles/global.scss" as *;
+@use "../../scss/abstracts/variables" as *;
 
 .footer {
   background-color: $primary-color;

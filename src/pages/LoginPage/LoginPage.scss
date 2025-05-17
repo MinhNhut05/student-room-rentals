@@ -1,4 +1,4 @@
-@import "../../styles/global.scss";
+@use "../../scss/abstracts/variables" as *;
 
 .login-page {
   max-width: 400px;
@@ -52,6 +52,14 @@
 
     &:hover {
       opacity: 0.9;
+    }
+  }
+
+  .form {
+    &__input {
+      &:focus {
+        border-color: $primary-color;
+      }
     }
   }
 }

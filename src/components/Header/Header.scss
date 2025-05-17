@@ -1,11 +1,24 @@
-@import "../../styles/global.scss";
+@use "../../scss/abstracts/variables" as *;
+@use "../../scss/abstracts/mixins" as *;
 
 .header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
   background-color: $primary-color;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .container {
+    max-width: $container-width;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
   color: white;
   padding: 1rem 0;
 
-  nav {
+  &__nav {
     @include flex-center;
     justify-content: space-between;
 

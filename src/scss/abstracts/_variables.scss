@@ -1,0 +1,26 @@
+// Colors
+$primary-color: #ffb700;
+$secondary-color: #182848;
+$text-color: #1a162e;
+$dark-text: #333;
+$light-text: #fff;
+$bg-color: #f6f6f9;
+
+// Forms
+$input-border: #ddd;
+$input-radius: 4px;
+$btn-radius: 4px;
+
+// Layout
+$container-width: 1200px;
+$spacing-unit: 8px;
+$border-radius: 8px;
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+// Breakpoints
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+);

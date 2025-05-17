@@ -1,4 +1,4 @@
-@import "../../styles/global.scss";
+@use "../../scss/abstracts/variables" as *;
 
 .post-room {
   max-width: 600px;
@@ -49,6 +49,12 @@
 
     &:hover {
       opacity: 0.9;
+    }
+  }
+
+  &__form {
+    input:focus {
+      border-color: $primary-color;
     }
   }
 }

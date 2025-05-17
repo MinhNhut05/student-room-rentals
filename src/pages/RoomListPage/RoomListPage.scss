@@ -1,4 +1,4 @@
-@import "../../styles/global.scss";
+@use "../../scss/abstracts/variables" as *;
 
 .room-list-page {
   padding: 2rem 0;
@@ -59,6 +59,14 @@
 
       &:hover {
         opacity: 0.9;
+      }
+    }
+  }
+
+  &__filters {
+    .filter-option {
+      &.active {
+        color: $primary-color;
       }
     }
   }

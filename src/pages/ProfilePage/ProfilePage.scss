@@ -1,4 +1,4 @@
-@import "../../styles/global.scss";
+@use "../../scss/abstracts/variables" as *;
 
 .profile-page {
   padding: 2rem 0;
@@ -67,5 +67,11 @@
     &:hover {
       opacity: 0.9;
     }
+  }
+}
+
+.profile {
+  &__button {
+    background: $primary-color;
   }
 }

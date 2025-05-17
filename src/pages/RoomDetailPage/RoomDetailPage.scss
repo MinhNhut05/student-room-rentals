@@ -1,4 +1,4 @@
-@import "../../styles/global.scss";
+@use "../../scss/abstracts/variables" as *;
 
 .room-detail {
   padding: 2rem 0;
@@ -52,6 +52,10 @@
         }
       }
     }
+  }
+
+  &__price {
+    color: $primary-color;
   }
 }
 

@@ -8,37 +8,40 @@ const Header = () => {
 
   return (
     <header className="header">
-      <nav className="container">
-        <Link className="logo" to="/">
-          RoomRental
-        </Link>
-
-        <ul>
-          {user && (
+      <div className="container">
+        <nav className="header__nav">
+          <Link to="/" className="logo">
+            RoomRentals
+          </Link>
+          <ul>
             <li>
               <Link to="/rooms">Rooms</Link>
             </li>
-          )}
-
-          {!user ? (
-            <>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-              <li>
-                <Link to="/register">Register</Link>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>Hello, {user.name}</li>
-              <li>
-                <button onClick={logout}>Logout</button>
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
+            {user ? (
+              <>
+                <li>
+                  <Link to="/post-room">Post Room</Link>
+                </li>
+                <li>
+                  <Link to="/profile">Profile</Link>
+                </li>
+                <li>
+                  <button onClick={logout}>Logout</button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login">Login</Link>
+                </li>
+                <li>
+                  <Link to="/register">Register</Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 };
