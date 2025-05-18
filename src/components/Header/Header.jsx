@@ -20,6 +20,9 @@ const Header = () => {
             {user ? (
               <>
                 <li>
+                  <Link to="/my-rooms">My Rooms</Link>
+                </li>
+                <li>
                   <Link to="/post-room">Post Room</Link>
                 </li>
                 <li>

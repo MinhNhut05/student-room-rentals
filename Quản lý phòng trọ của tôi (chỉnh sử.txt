@@ -1,0 +1,52 @@
+
+
+Chức năng tìm kiếm/lọc:
+Frontend: Thêm input tìm kiếm và các bộ lọc (theo giá, diện tích, quận/huyện,...).
+Frontend: Khi người dùng nhập/chọn, gọi API GET /api/rooms với các query parameters (ví dụ: /api/rooms?city=Hanoi&price[lte]=5000000).
+Backend: Xử lý query parameters trong controller getRooms để lọc kết quả từ MongoDB (sử dụng Mongoose query operators).
+
+Upload ảnh (phức tạp hơn):
+Cần sử dụng middleware như multer ở backend để xử lý file upload.
+Cần lưu ảnh ở đâu đó: thư mục trên server (đơn giản, không scalable), hoặc dịch vụ lưu trữ cloud như Cloudinary, AWS S3 (phổ biến cho production). Backend sẽ lưu đường dẫn ảnh vào DB.
+Frontend gửi file ảnh trong form data.
+
+Validation:
+Frontend: Validate dữ liệu nhập ngay trên form để phản hồi nhanh cho user.
+Backend: Quan trọng nhất, validate dữ liệu trước khi lưu vào DB để đảm bảo tính toàn vẹn và an toàn dữ liệu.
+Bước 7: Testing
+
+Test Backend: Sử dụng Postman/Insomnia để gọi và kiểm tra từng API endpoint.
+Test Frontend: Test giao diện, luồng người dùng, tương tác với API trên trình duyệt. Sử dụng React Testing Library hoặc Jest (kết hợp với Enzyme) cho unit/integration test (có thể làm sau khi các tính năng cơ bản hoạt động).
+Bước 8: Deployment (Đưa website lên mạng)
+
+Khi dự án đủ ổn định, bạn sẽ muốn deploy để mọi người có thể truy cập.
+
+Build Frontend: Tạo phiên bản optimized cho production.
+Bash
+
+cd client
+npm run build # Hoặc yarn build
+Lệnh này sẽ tạo thư mục build (hoặc dist với Vite) chứa các file tĩnh (HTML, CSS, JS) đã được tối ưu.
+Deploy Backend & Database:
+Backend Node.js: Có thể deploy lên Heroku (free tier có giới hạn), Render, AWS EC2, Google Cloud Run, Vercel (hỗ trợ serverless functions)...
+MongoDB: Sử dụng MongoDB Atlas (free tier rất tốt cho dự án nhỏ) hoặc deploy MongoDB server riêng.
+Deploy Frontend:
+Các file tĩnh từ bước build có thể được host riêng trên dịch vụ tĩnh như Netlify, Vercel, GitHub Pages, hoặc trong cùng server Node.js của backend.
+Nếu host cùng backend: Cấu hình Express server để phục vụ các file tĩnh từ thư mục build (hoặc dist).
+Cấu hình Biến Môi Trường Production: Trên dịch vụ hosting, cấu hình các biến môi trường (như MONGO_URI, JWT_SECRET, cổng lắng nghe) phù hợp với môi trường production.
+Các Lưu Ý Quan Trọng:
+
+Bắt đầu từ nhỏ: Đừng cố gắng xây dựng tất cả mọi thứ cùng lúc. Bắt đầu với các tính năng cốt lõi: hiển thị danh sách phòng, xem chi tiết. Sau đó thêm đăng nhập/đăng ký, đăng tin, tìm kiếm, v.v.
+Xử lý lỗi: Triển khai xử lý lỗi chi tiết ở cả backend (middleware xử lý lỗi) và frontend (hiển thị thông báo lỗi cho người dùng).
+Bảo mật: Đặc biệt chú ý đến bảo mật: mã hóa mật khẩu, xác thực người dùng (JWT), validate input ở cả backend và frontend, tránh XSS, CSRF.
+Cấu trúc code: Giữ code sạch sẽ, dễ đọc, và tuân theo các quy ước (code conventions).
+Tài liệu: Tham khảo tài liệu chính thức của React, Node.js, Express, Mongoose, React Router, Axios, SASS.
+Thực hành: Cách tốt nhất để học là làm. Đừng ngại thử và sửa lỗi.
+Chúc bạn thành công với dự án xây dựng web mua bán phòng trọ cho sinh viên! Đây là một dự án thực tế rất tốt để củng cố kiến thức về Full-stack Development.
+
+
+Nguồn
+
+
+
+

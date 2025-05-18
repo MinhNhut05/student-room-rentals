@@ -1,0 +1,88 @@
+@use "../../scss/abstracts/variables" as *;
+
+// Specific styles for edit room page
+.edit-room-page {
+  max-width: 800px;
+  margin: 2rem auto;
+
+  h1 {
+    color: $secondary-color;
+    border-bottom: 2px solid $primary-color;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  button[type="submit"] {
+    background-color: $secondary-color;
+
+    &:hover:not(:disabled) {
+      background-color: darken($secondary-color, 10%);
+    }
+  }
+
+  // Loading state
+  &.loading {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.7);
+      z-index: 10;
+    }
+  }
+}
+
+// Additional styling for the image input section
+.image-input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  input {
+    flex: 1;
+  }
+
+  .remove-image-btn {
+    margin-left: 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken(#f44336, 10%);
+    }
+  }
+}
+
+.add-image-btn {
+  background: none;
+  border: 1px solid #ddd;
+  color: $primary-color;
+  padding: 8px 16px;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: lighten($primary-color, 40%);
+  }
+}

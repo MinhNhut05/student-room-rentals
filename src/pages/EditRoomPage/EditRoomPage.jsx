@@ -1,11 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import roomService from "../../services/roomService";
-import "./PostRoomPage.scss";
+import "../PostRoomPage/PostRoomPage.scss"; // Reuse style nếu thích
+import "./EditRoomPage.scss"; // Additional styles specific to edit page
 
-const PostRoomPage = () => {
-  // State cho các trường form
+const EditRoomPage = () => {
+  const { id: roomId } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // State cho input
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -15,36 +20,74 @@ const PostRoomPage = () => {
   const [area, setArea] = useState("");
   const [bedrooms, setBedrooms] = useState("");
   const [bathrooms, setBathrooms] = useState("");
-  const [location, setLocation] = useState(""); // Nếu model yêu cầu trường này!
   const [images, setImages] = useState([""]);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  // Trạng thái fetch
+  const [fetchLoading, setFetchLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+  // Trạng thái submit
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    const fetchRoom = async () => {
+      try {
+        setFetchLoading(true);
+        const roomData = await roomService.getRoomById(roomId);
+        console.log("roomData:", roomData);
 
+        // Kiểm tra quyền sở hữu
+        if (roomData.owner._id.toString() !== user._id.toString()) {
+          console.log("Access denied: Not the owner of this room");
+          console.log(
+            "Room owner:",
+            roomData.owner._id,
+            "Current user:",
+            user._id
+          );
+          navigate("/my-rooms");
+          return;
+        }
+        setTitle(roomData.title || "");
+        setDescription(roomData.description || "");
+        setPrice(roomData.price?.toString() || "");
+        setAddress(roomData.address || "");
+        setCity(roomData.city || "");
+        setDistrict(roomData.district || "");
+        setArea(roomData.area?.toString() || "");
+        setBedrooms(roomData.bedrooms?.toString() || "");
+        setBathrooms(roomData.bathrooms?.toString() || "");
+        setImages(
+          roomData.images && roomData.images.length > 0 ? roomData.images : [""]
+        );
+      } catch (err) {
+        setFetchError("Không thể tải dữ liệu phòng!");
+      } finally {
+        setFetchLoading(false);
+      }
+    };
+    fetchRoom();
+  }, [roomId, user, navigate]);
+
+  // Xử lý submit update phòng
   const submitHandler = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
-    setLoading(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+    setSubmitLoading(true);
 
-    // Validation tối thiểu phía client
-    if (!title || !description || !price || !address || !city || !location) {
-      setError("Vui lòng điền đầy đủ các trường bắt buộc (*)");
-      setLoading(false);
-      return;
-    }
-    if (parseFloat(price) <= 0) {
-      setError("Giá phòng phải lớn hơn 0");
-      setLoading(false);
+    if (!title || !description || !price || !address || !city) {
+      setSubmitError("Vui lòng nhập đủ thông tin bắt buộc!");
+      setSubmitLoading(false);
       return;
     }
 
-    const token = user?.token;
-    const roomData = {
+    const updatedRoom = {
       title,
       description,
       price: parseFloat(price),
@@ -54,59 +97,44 @@ const PostRoomPage = () => {
       area: area ? parseFloat(area) : undefined,
       bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
       bathrooms: bathrooms ? parseInt(bathrooms) : undefined,
-      location,
       images: images.filter((url) => url.trim() !== ""),
     };
-
     try {
-      await roomService.createRoom(roomData, token);
-      setSuccess(true);
-      // Reset form nếu muốn
-      setTitle("");
-      setDescription("");
-      setPrice("");
-      setAddress("");
-      setCity("");
-      setDistrict("");
-      setArea("");
-      setBedrooms("");
-      setBathrooms("");
-      setLocation("");
-      setImages([""]);
-      // Tùy chọn: Điều hướng sang trang khác sau khi thành công
-      // navigate('/rooms');
+      await roomService.updateRoom(roomId, updatedRoom, user.token);
+      setSubmitSuccess(true);
+      // Tùy chọn: điều hướng sau vài giây
+      setTimeout(() => navigate("/my-rooms"), 1000);
     } catch (err) {
-      setError(err);
+      setSubmitError(err);
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 
-  // Hàm xử lý input ảnh
+  // Hàm xử lý ảnh
   const handleImageChange = (index, value) => {
     const newImages = [...images];
     newImages[index] = value;
     setImages(newImages);
   };
-
   const handleAddImageInput = () => {
-    if (images[images.length - 1].trim() !== "") {
-      setImages([...images, ""]);
-    }
+    if (images[images.length - 1].trim() !== "") setImages([...images, ""]);
   };
-
   const handleRemoveImageInput = (index) => {
     const newImages = images.filter((_, i) => i !== index);
     setImages(newImages.length ? newImages : [""]);
   };
 
-  return (
-    <div className="post-room-page auth-page">
-      <h1>Đăng tin phòng trọ mới</h1>
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">Đăng tin thành công!</p>}
+  if (fetchLoading) return <p>Đang tải thông tin phòng...</p>;
+  if (fetchError) return <p className="error-message">{fetchError}</p>;
 
+  return (
+    <div className="edit-room-page post-room-page auth-page">
+      <h1>Chỉnh sửa tin đăng</h1>
+      {submitError && <p className="error-message">{submitError}</p>}
+      {submitSuccess && <p className="success-message">Cập nhật thành công!</p>}
       <form onSubmit={submitHandler}>
+        {/* Các trường giống form đăng tin */}
         <div className="form-group">
           <label>
             Tiêu đề <span className="required">*</span>:
@@ -198,18 +226,7 @@ const PostRoomPage = () => {
             min="0"
           />
         </div>
-        <div className="form-group">
-          <label>
-            Location <span className="required">*</span>:
-          </label>
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-          />
-        </div>
-        {/* Phần nhập URL ảnh */}
+        {/* Nhập URL ảnh */}
         <div className="form-group">
           <label>URL Ảnh:</label>
           {images.map((url, idx) => (
@@ -241,12 +258,12 @@ const PostRoomPage = () => {
             </button>
           )}
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Đang đăng tin..." : "Đăng tin"}
+        <button type="submit" disabled={submitLoading}>
+          {submitLoading ? "Đang cập nhật..." : "Cập nhật tin đăng"}
         </button>
       </form>
     </div>
   );
 };
 
-export default PostRoomPage;
+export default EditRoomPage;

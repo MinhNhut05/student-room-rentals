@@ -5,9 +5,16 @@ const API_URL = process.env.REACT_APP_API_URL
   : "/api/rooms";
 
 // Get all rooms with error handling
-const getRooms = async () => {
+const getRooms = async (ownerId = null, token = null) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+    params: ownerId ? { owner: ownerId } : {},
+  };
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(API_URL, config);
     return response.data;
   } catch (error) {
     console.error("Error fetching rooms:", error);
@@ -26,13 +33,26 @@ const getRoomById = async (id) => {
   }
 };
 
-// Create new room (requires token) with error handling
-const createRoom = async (roomData) => {
+/**
+ * Create new room
+ * @param {Object} roomData - Room information from the frontend form
+ * @param {string} [token] - Authentication token (if not provided, will try to get from localStorage)
+ * @returns {Promise} - The created room data
+ */
+const createRoom = async (roomData, token = null) => {
   try {
-    const token = JSON.parse(localStorage.getItem("user"))?.token;
+    // If token not provided, try to get from localStorage
+    if (!token) {
+      token = JSON.parse(localStorage.getItem("user"))?.token;
+    }
+
     const config = {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     };
+
     const response = await axios.post(API_URL, roomData, config);
     return response.data;
   } catch (error) {

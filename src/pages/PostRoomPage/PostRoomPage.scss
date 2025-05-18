@@ -1,31 +1,58 @@
 @use "../../scss/abstracts/variables" as *;
 
-.post-room {
-  max-width: 600px;
-  margin: 2rem auto;
+.post-room-page {
+  max-width: 800px;
+  margin: 0 auto;
   padding: 2rem;
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   h1 {
+    margin-bottom: 1.5rem;
     text-align: center;
-    margin-bottom: 2rem;
+    color: $secondary-color;
+  }
+
+  .error-message {
+    background-color: #ffebee;
+    color: #b71c1c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  .success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
 
   .form-group {
-    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 
     label {
-      display: block;
-      margin-bottom: 0.5rem;
       font-weight: 500;
+      font-size: 1rem;
+
+      .required {
+        color: #b71c1c;
+      }
     }
 
     input,
     textarea {
-      width: 100%;
-      padding: 0.8rem;
+      padding: 10px;
       border: 1px solid #ddd;
       border-radius: 4px;
       font-size: 1rem;
@@ -37,24 +64,58 @@
     }
   }
 
-  button {
-    width: 100%;
-    padding: 1rem;
-    background: $primary-color;
+  .image-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    input {
+      flex: 1;
+    }
+  }
+
+  .add-image-btn,
+  .remove-image-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  .add-image-btn {
+    color: $primary-color;
+    margin-top: 10px;
+    align-self: flex-start;
+  }
+
+  .remove-image-btn {
+    color: #b71c1c;
+  }
+
+  button[type="submit"] {
+    background-color: $primary-color;
     color: white;
     border: none;
+    padding: 12px;
     border-radius: 4px;
-    font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
+    margin-top: 20px;
+    transition: opacity 0.3s;
 
     &:hover {
       opacity: 0.9;
     }
-  }
 
-  &__form {
-    input:focus {
-      border-color: $primary-color;
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
     }
   }
 }

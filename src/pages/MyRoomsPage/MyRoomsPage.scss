@@ -1,0 +1,55 @@
+@use "../../scss/abstracts/variables" as *;
+
+.my-rooms-page {
+  padding: 2rem 0;
+
+  h1 {
+    margin-bottom: 2rem;
+    color: $secondary-color;
+    text-align: center;
+  }
+
+  .post-new-room-link {
+    display: inline-block;
+    background-color: $primary-color;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+
+  .my-room-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .error-message {
+    color: #d32f2f;
+    background-color: #ffebee;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  // Fix: Use map-get to access breakpoints
+  @media (max-width: map-get($breakpoints, md)) {
+    .my-room-list-grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+  }
+
+  // Fix: Use map-get to access breakpoints
+  @media (max-width: map-get($breakpoints, sm)) {
+    .my-room-list-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

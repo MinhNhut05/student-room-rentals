@@ -13,6 +13,7 @@
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
         // Single Page Apps for GitHub Pages
+        // MIT License
         // https://github.com/rafgraph/spa-github-pages
         (function (l) {
             if (l.search[1] === '/') {
@@ -20,7 +21,7 @@
                     return s.replace(/~and~/g, '&')
                 }).join('?');
                 window.history.replaceState(null, null,
-                    l.pathname.slice(0, -1) + (decoded.length > 0 ? '?' + decoded : '') + l.hash
+                    l.pathname.slice(0, -1) + decoded + l.hash
                 );
             }
         }(window.location))
@@ -30,9 +31,7 @@
 
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">
-        <h1>minhnhut</h1>
-    </div>
+    <div id="root"></div>
 </body>
 
 </html>

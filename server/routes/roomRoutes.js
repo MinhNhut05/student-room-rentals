@@ -1,24 +1,21 @@
 const express = require("express");
+const router = express.Router();
 const {
-  createRoom,
   getRooms,
   getRoomById,
+  createRoom, // Controller tạo phòng
   updateRoom,
   deleteRoom,
-  getAllRooms,
 } = require("../controllers/roomController");
 const { protect } = require("../middleware/authMiddleware");
-const Room = require("../models/roomModel");
 
-const router = express.Router();
+// Combine routes with the same path
+router.route("/").get(getRooms).post(protect, createRoom);
 
-// Public routes
-router.get("/", getAllRooms);
-router.get("/:id", getRoomById);
-
-// Protected routes
-router.post("/", protect, createRoom);
-router.put("/:id", protect, updateRoom);
-router.delete("/:id", protect, deleteRoom);
+router
+  .route("/:id")
+  .get(getRoomById)
+  .put(protect, updateRoom)
+  .delete(protect, deleteRoom);
 
 module.exports = router;
