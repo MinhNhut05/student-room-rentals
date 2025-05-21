@@ -1,10 +1,193 @@
 @use "../../styles/global.scss" as *;
 @use "../../scss/abstracts/variables" as *;
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import "../../scss/abstracts/variables";
+
+// Footer variables
+$footer-bg-color: #262626; // Dark grey background for footer
+$text-light: #ffffff; // White text for logo, titles
+$text-subtle: #a0a0a0; // Lighter grey for description, copyright
+$link-color: #c0c0c0; // Slightly brighter grey for links
+$link-hover-color: $primary-color; // Green on hover for links
+$social-icon-color: #e0e0e0; // Color for social icons
+$social-icon-hover: $primary-color; // Green on hover for social icons
+
 .footer {
-  background-color: $primary-color;
-  color: white;
-  padding: 1rem 0;
-  margin-top: 2rem;
-  text-align: center;
+  background-color: $footer-bg-color;
+  color: $text-light;
+  font-family: "Inter", sans-serif;
+  padding: 45px 20px 15px; // Top, right/left, bottom padding
+  margin-top: 70px; // Space from content above
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid; // Use CSS Grid for robust column layout
+    grid-template-columns: 2fr repeat(4, 1fr); // First column wider, then 4 equal columns
+    gap: 40px; // Gap between columns
+    justify-content: space-between; // Distribute space
+
+    // Styles for each column
+    .column {
+      .column-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 25px;
+        color: $text-light;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: 700;
+        color: $text-light;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        // House icon using pseudo-element (matching header)
+        &::before {
+          content: "🏠"; // House emoji as placeholder (can be replaced with SVG)
+          font-size: 24px;
+        }
+      }
+
+      .description {
+        font-size: 14px;
+        line-height: 1.6;
+        color: $text-subtle;
+        margin-bottom: 30px;
+      }
+
+      .social-icons {
+        display: flex;
+        gap: 20px; // Space between icons
+
+        a {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 38px; // Size of the icon area
+          height: 38px;
+          border-radius: 50%; // Make them circular if desired
+          background-color: transparent; // No background by default
+          color: $social-icon-color; // Icon color
+          font-size: 20px; // Font Awesome icon size
+          transition: color 0.3s ease, background-color 0.3s ease,
+            transform 0.3s ease;
+
+          &:hover {
+            color: $social-icon-hover; // Green on hover
+            transform: translateY(-2px); // Subtle lift
+          }
+        }
+      }
+
+      .link-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          margin-bottom: 15px; // Space between links
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .link {
+            color: $link-color;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease, text-decoration 0.3s ease;
+
+            &:hover {
+              color: $link-hover-color; // Green on hover
+              text-decoration: underline; // Underline on hover
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .copyright {
+    text-align: center;
+    padding-top: 20px; // Space from columns above
+    margin-top: 20px; // Space from columns above
+    border-top: 1px solid lighten($footer-bg-color, 10%); // Subtle top border
+    font-size: 14px;
+    color: $text-subtle; // Lighter grey for copyright text
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .footer {
+    padding: 40px 15px 20px; // Adjust padding
+
+    .container {
+      grid-template-columns: 1fr 1fr; // 2 columns on medium screens
+      gap: 30px;
+      padding: 0 10px; // Adjust container padding
+    }
+
+    .column {
+      .column-title {
+        margin-bottom: 20px;
+        font-size: 17px;
+      }
+      .logo {
+        font-size: 22px;
+      }
+      .description {
+        font-size: 13px;
+        margin-bottom: 20px;
+      }
+      .social-icons {
+        gap: 15px;
+        a {
+          width: 35px;
+          height: 35px;
+          font-size: 18px;
+        }
+      }
+      .link-list li {
+        margin-bottom: 12px;
+        .link {
+          font-size: 14px;
+        }
+      }
+    }
+    .copyright {
+      padding-top: 30px;
+      margin-top: 30px;
+      font-size: 13px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .footer {
+    .container {
+      grid-template-columns: 1fr; // Single column on small screens
+      gap: 30px;
+    }
+    .column {
+      text-align: center; // Center text in columns
+      .logo {
+        justify-content: center; // Center logo
+      }
+      .social-icons {
+        justify-content: center; // Center social icons
+      }
+      .description {
+        text-align: center; // Center description
+      }
+    }
+    .copyright {
+      text-align: center;
+    }
+  }
 }

@@ -1,14 +1,8 @@
 
 
-Chức năng tìm kiếm/lọc:
-Frontend: Thêm input tìm kiếm và các bộ lọc (theo giá, diện tích, quận/huyện,...).
-Frontend: Khi người dùng nhập/chọn, gọi API GET /api/rooms với các query parameters (ví dụ: /api/rooms?city=Hanoi&price[lte]=5000000).
-Backend: Xử lý query parameters trong controller getRooms để lọc kết quả từ MongoDB (sử dụng Mongoose query operators).
 
-Upload ảnh (phức tạp hơn):
-Cần sử dụng middleware như multer ở backend để xử lý file upload.
-Cần lưu ảnh ở đâu đó: thư mục trên server (đơn giản, không scalable), hoặc dịch vụ lưu trữ cloud như Cloudinary, AWS S3 (phổ biến cho production). Backend sẽ lưu đường dẫn ảnh vào DB.
-Frontend gửi file ảnh trong form data.
+
+
 
 Validation:
 Frontend: Validate dữ liệu nhập ngay trên form để phản hồi nhanh cho user.

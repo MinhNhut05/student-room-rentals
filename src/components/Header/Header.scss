@@ -1,61 +1,301 @@
-@use "../../scss/abstracts/variables" as *;
-@use "../../scss/abstracts/mixins" as *;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import "../../scss/abstracts/variables";
+
+// Header variables
+$header-bg-color: #262626; // Dark background for header
+$text-light: #ffffff; // White text for general links
+$text-light-hover: #e0e0e0; // Slightly greyed out on hover for non-primary links
+$border-color-light: #f0f0f0; // Light border for login button
+$button-text-dark: #333333; // Dark text for sign-up button
 
 .header {
-  position: sticky;
+  background-color: $header-bg-color;
+  padding: 15px 0; // Default padding
+  position: sticky; // Sticky header
   top: 0;
+  left: 0;
   width: 100%;
-  z-index: 1000;
-  background-color: $primary-color;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000; // Ensure header is on top of other content
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); // Subtle shadow
+  transition: padding 0.3s ease; // Add transition for smooth padding change
 
-  .container {
-    max-width: $container-width;
-    margin: 0 auto;
-    padding: 0 1rem;
+  // Class added when scrolled
+  &.scrolled {
+    padding: 10px 0; // Reduced padding when scrolled
+    background-color: rgba($header-bg-color, 0.95); // Slightly transparent
   }
 
-  color: white;
-  padding: 1rem 0;
+  .container {
+    max-width: 1400px; // Max width for content
+    margin: 0 auto; // Center content
+    display: flex;
+    justify-content: space-between; // Space out logo, nav, buttons
+    align-items: center;
+    padding: 0 20px; // Padding left/right for smaller screens
+  }
 
-  &__nav {
-    @include flex-center;
-    justify-content: space-between;
+  .logo {
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: $text-light;
+    text-decoration: none; // If it's a link
+    display: flex;
+    align-items: center;
+    gap: 8px; // Space between icon and text if icon is used
 
-    .logo {
-      color: white;
-      text-decoration: none;
-      font-size: 1.5rem;
-      font-weight: bold;
+    // House icon using pseudo-element
+    &::before {
+      content: "🏠"; // House emoji as placeholder (can be replaced with SVG)
+      font-size: 24px;
+    }
+  }
+
+  .hamburger {
+    display: none; // Hidden by default on desktop
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    .hamburger-line {
+      width: 100%;
+      height: 3px;
+      background-color: $text-light;
+      border-radius: 5px;
+      transition: all 0.3s ease;
     }
 
-    ul {
-      list-style: none;
-      display: flex;
-
-      li {
-        margin-left: 20px;
-
-        a {
-          color: white;
-          text-decoration: none;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
+    &.nav-open {
+      .hamburger-line:nth-child(1) {
+        transform: translateY(11px) rotate(45deg);
+      }
+      .hamburger-line:nth-child(2) {
+        opacity: 0;
+      }
+      .hamburger-line:nth-child(3) {
+        transform: translateY(-11px) rotate(-45deg);
       }
     }
   }
 
-  button {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 40px; // Space between nav items and auth buttons
 
-    &:hover {
-      text-decoration: underline;
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      margin-right: 0;
+      display: flex;
+      gap: 25px; // Space between individual nav links
+       // Center nav items
+
+      .nav-item {
+        position: relative; // For dropdown positioning
+
+        .nav-link {
+          font-family: "Inter", sans-serif;
+          color: $text-light;
+          text-decoration: none;
+          font-size: 16px;
+          font-weight: 500;
+          padding: 5px 0;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: $primary-color; // Green on hover
+          }
+        }
+      }
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-left: 40px; // Space between login and signup buttons
+
+      .login-button,
+      .signup-button,
+      .profile-button,
+      .logout-button {
+        font-family: "Inter", sans-serif;
+        display: inline-block;
+        position: relative;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        overflow: hidden;
+        z-index: 1;
+        transition: color 0.5s;
+      }
+      .signup-button,
+      .login-button {
+        width: 150px;
+      }
+      .signup-button {
+        height: 42px;
+      }
+
+      .login-button,
+      .logout-button {
+        // Keep original colors
+        background-color: transparent;
+        border: 2px solid $text-light;
+        color: $text-light;
+
+        &:before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          background: $primary-color;
+          height: 150px;
+          width: 200px;
+          border-radius: 50%;
+          top: 100%;
+          left: 100%;
+          transition: all 0.7s;
+        }
+
+        &:hover {
+          color: #fff;
+          border-color: $primary-color;
+        }
+
+        &:hover:before {
+          top: -30px;
+          left: -30px;
+        }
+
+        &:active:before {
+          background: darken($primary-color, 10%);
+          transition: background 0s;
+        }
+      }
+
+      .signup-button,
+      .profile-button {
+        // Keep original colors
+        --color: $text-light;
+        background-color: $text-light;
+        border: 2px solid $text-light;
+        color: $button-text-dark;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          background: $primary-color;
+          height: 150px;
+          width: 200px;
+          border-radius: 50%;
+          top: 100%;
+          left: 100%;
+          transition: all 0.7s;
+        }
+
+        &:hover {
+          color: #fff;
+          border-color: $primary-color;
+        }
+
+        &:hover:before {
+          top: -30px;
+          left: -30px;
+        }
+
+        &:active:before {
+          background: darken($primary-color, 10%);
+          transition: background 0s;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .header {
+    .container {
+      padding: 0 15px;
+    }
+    .hamburger {
+      display: flex; // Show hamburger on smaller screens
+      z-index: 1100; // Ensure it's above the nav when nav is open
+    }
+
+    .nav {
+      position: absolute;
+      top: 100%; // Position below the header
+      left: 0;
+      width: 100%;
+      flex-direction: column;
+      background-color: $header-bg-color; // Same background as header
+      align-items: flex-start;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transform: translateY(-150%); // Hide by default
+      opacity: 0;
+      pointer-events: none; // Disable interaction when hidden
+      transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+      overflow-y: auto; // Allow scrolling if menu is long
+      max-height: calc(100vh - 60px); // Max height to prevent overflow
+
+      &.nav-open {
+        transform: translateY(0); // Show when open
+        opacity: 1;
+        pointer-events: all; // Enable interaction
+      }
+
+      .nav-list {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px; // Smaller gap for mobile
+        margin-bottom: 20px; // Space before buttons
+
+        .nav-item {
+          width: 100%;
+          .nav-link {
+            padding: 12px 10px;
+            font-size: 18px; // Larger font for mobile
+            width: 100%;
+            display: block; // Make links block for easier tapping
+          }
+        }
+      }
+
+      .auth-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px; // Space between buttons
+
+        .signup-button {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .login-button,
+        .signup-button,
+        .profile-button,
+        .logout-button {
+          width: 80%;
+          padding: 12px 0;
+          font-size: 18px;
+          text-align: center;
+        }
+      }
     }
   }
 }

@@ -1,23 +1,31 @@
 import axios from "axios";
 
+// Ensure the API_URL has a trailing slash
 const API_URL = process.env.REACT_APP_API_URL
-  ? `${process.env.REACT_APP_API_URL}/api/rooms`
-  : "/api/rooms";
+  ? `${process.env.REACT_APP_API_URL}/api/rooms/` // Added trailing slash
+  : "/api/rooms/"; // Added trailing slash
 
-// Get all rooms with error handling
-const getRooms = async (ownerId = null, token = null) => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-    params: ownerId ? { owner: ownerId } : {},
-  };
+// Get all rooms with filters
+const getRooms = async (filters = {}) => {
+  // Destructure the filter object
+  const { ownerId, token, ...otherFilters } = filters;
+
   try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      params: {
+        // Key must be "owner" to match backend's req.query.owner
+        ...(ownerId && { owner: ownerId }),
+        ...otherFilters,
+      },
+    };
+
     const response = await axios.get(API_URL, config);
     return response.data;
   } catch (error) {
-    console.error("Error fetching rooms:", error);
     throw error.response?.data?.message || error.message;
   }
 };
@@ -39,39 +47,33 @@ const getRoomById = async (id) => {
  * @param {string} [token] - Authentication token (if not provided, will try to get from localStorage)
  * @returns {Promise} - The created room data
  */
-const createRoom = async (roomData, token = null) => {
+// Tạo phòng mới (POST /api/rooms)
+const createRoom = async (formData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`, // KHÔNG cần set 'Content-Type' khi dùng FormData!
+    },
+  };
   try {
-    // If token not provided, try to get from localStorage
-    if (!token) {
-      token = JSON.parse(localStorage.getItem("user"))?.token;
-    }
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    const response = await axios.post(API_URL, roomData, config);
+    const response = await axios.post(API_URL, formData, config);
     return response.data;
   } catch (error) {
-    console.error("Error creating room:", error);
     throw error.response?.data?.message || error.message;
   }
 };
 
-// Update room (requires token) with error handling
-const updateRoom = async (id, roomData) => {
+// Cập nhật phòng (PUT /api/rooms/:id)
+const updateRoom = async (id, formData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
   try {
-    const token = JSON.parse(localStorage.getItem("user"))?.token;
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    const response = await axios.put(`${API_URL}/${id}`, roomData, config);
+    // Now we can safely concatenate the ID directly
+    const response = await axios.put(API_URL + id, formData, config);
     return response.data;
   } catch (error) {
-    console.error("Error updating room:", error);
     throw error.response?.data?.message || error.message;
   }
 };

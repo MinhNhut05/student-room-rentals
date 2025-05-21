@@ -1,72 +1,390 @@
 @use "../../scss/abstracts/variables" as *;
 
+// Variables
+$primary-color-dark: darken($primary-color, 10%);
+$primary-color-light: lighten($primary-color, 45%);
+$text-color: #25252c;
+$light-text-color: #fff;
+$border-color: #ddd;
+$background-color: #ffffff;
+$overlay-background: rgba(0, 0, 0, 0.6);
+$input-background: #f8f9fa;
+$tag-background: #f0f4f8;
+
 .room-list-page {
   padding: 2rem 0;
 
-  h1 {
-    margin-bottom: 2rem;
-    text-align: center;
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: $text-color;
+    }
   }
 
-  .error {
-    color: red;
-    text-align: center;
-  }
+  .filter-toggle-button {
+    background-color: $primary-color;
+    color: $light-text-color;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
 
-  .room-list-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-}    
-
-.room-list {
-  padding: 2rem 0;
-
-  h1 {
-    margin-bottom: 2rem;
-  }
-
-  .room-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-
-  .room-card {
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background: white;
-
-    h3 {
-      margin-bottom: 0.5rem;
+    svg {
+      margin-right: 8px;
     }
 
-    .price {
-      color: $primary-color;
-      font-weight: bold;
-      margin: 1rem 0;
+    &:hover {
+      background-color: $primary-color-dark;
     }
+  }
 
-    a {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background: $primary-color;
-      color: white;
-      border-radius: 4px;
-      text-decoration: none;
+  
 
-      &:hover {
-        opacity: 0.9;
+  .applied-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+
+    .filter-tag {
+      display: inline-flex;
+      align-items: center;
+      background-color: $tag-background;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: $text-color;
+      gap: 8px;
+
+      button {
+        background: none;
+        border: none;
+        color: #777;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          color: $primary-color;
+        }
       }
     }
   }
 
-  &__filters {
-    .filter-option {
-      &.active {
-        color: $primary-color;
+  .room-list-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    margin-top: 30px;
+
+    // Add modern NFT grid effects
+    perspective: 1000px; // For a subtle 3D effect
+
+    // Make cards appear one by one with a staggered animation
+    & > div {
+      opacity: 0;
+      animation: fadeInUp 0.5s ease forwards;
+
+      @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+          animation-delay: $i * 0.1s;
+        }
+      }
+    }
+  }
+
+  .loader {
+    text-align: center;
+    padding: 30px 0;
+    color: $primary-color;
+    font-weight: 500;
+  }
+
+  .error-message {
+    color: #d90429;
+    text-align: center;
+    font-weight: bold;
+    padding: 20px;
+    background-color: rgba(#d90429, 0.1);
+    border-radius: 8px;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 40px 0;
+    color: #666;
+
+    svg {
+      color: #aaa;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+  }
+}
+
+// Overlay filter modal styles
+.room-filter-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $overlay-background;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.room-filter-container {
+  background-color: $background-color;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: $primary-color;
+    color: $light-text-color;
+    border-bottom: 1px solid darken($primary-color, 5%);
+
+    h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: $light-text-color;
+      font-size: 1.8em;
+      cursor: pointer;
+      padding: 0 5px;
+      line-height: 1;
+
+      &:hover {
+        color: darken($light-text-color, 15%);
+      }
+    }
+  }
+
+  .filter-scrollable-content {
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+
+    .filter-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: $text-color;
+        font-size: 0.95em;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid $border-color;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 1em;
+        background-color: $input-background;
+        color: $text-color;
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+      }
+
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 1em;
+        padding-right: 30px;
+      }
+
+      input[type="text"] + input[type="text"],
+      input[type="text"] + select,
+      select + input[type="text"] {
+        margin-top: 10px;
+      }
+
+      .range-inputs {
+        display: flex;
+        align-items: center;
+
+        input[type="number"] {
+          flex: 1;
+        }
+
+        span {
+          margin: 0 10px;
+          color: $text-color;
+        }
+      }
+    }
+
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+
+      .amenity-item {
+        display: flex;
+        align-items: center;
+        background-color: $primary-color-light;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: darken($primary-color-light, 5%);
+        }
+
+        input[type="checkbox"] {
+          margin-right: 8px;
+          width: 16px;
+          height: 16px;
+          accent-color: $primary-color;
+        }
+
+        label {
+          margin-bottom: 0;
+          font-weight: normal;
+          color: darken($primary-color, 15%);
+          font-size: 0.9em;
+          flex-grow: 1;
+        }
+      }
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-top: 1px solid $border-color;
+    background-color: #f9f9f9;
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+
+      &.reset-btn {
+        background-color: #f3f3f3;
+        color: $text-color;
+        border: 1px solid #ccc;
+
+        &:hover {
+          background-color: #e0e0e0;
+        }
+      }
+
+      &.apply-btn {
+        background-color: $primary-color;
+        color: $light-text-color;
+
+        &:hover {
+          background-color: $primary-color-dark;
+        }
+      }
+    }
+  }
+}
+
+// Keyframe animation for cards
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Media queries for responsive design
+@media (max-width: 768px) {
+  .room-list-page {
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .room-filter-container {
+    .filter-scrollable-content .amenities-grid {
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+
+    .filter-actions {
+      flex-direction: column;
+      gap: 10px;
+
+      button {
+        width: 100%;
       }
     }
   }

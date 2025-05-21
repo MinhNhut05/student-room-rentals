@@ -23,7 +23,11 @@ const MyRoomsPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const roomsData = await roomService.getRooms(user._id, user.token);
+        // Update to pass filters as an object - this is the key fix
+        const roomsData = await roomService.getRooms({
+          ownerId: user._id,
+          token: user.token,
+        });
         setMyRooms(roomsData);
       } catch (err) {
         setError(err);

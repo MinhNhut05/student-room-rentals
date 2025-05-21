@@ -1,4 +1,15 @@
-@use "../../scss/abstracts/variables" as *;
+@import "../../scss/abstracts/variables";
+
+// Variables for dark card style
+$card-bg: #2a2d3a;
+$card-bg-info: #343746;
+$text-color-light: #f0f0f0;
+$text-color-secondary: #b0b0c0;
+$accent-purple: $primary-color;
+$accent-purple-light: lighten($accent-purple, 15%);
+$accent-purple-dark: darken($accent-purple, 10%);
+$card-border-radius: 12px;
+$card-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 
 .room-detail {
   padding: 2rem 0;
@@ -60,45 +71,226 @@
 }
 
 .room-detail-page {
-  padding: 30px;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 2rem 0;
+  color: #333;
 
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
+  .room-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
 
-  .room-detail-image {
-    width: 100%;
-    height: 400px;
-    margin-bottom: 20px;
+  .room-detail-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 8px;
+  .room-detail-main {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
     }
   }
 
-  p {
-    font-size: 1rem;
-    margin-bottom: 10px;
+  .room-detail-gallery {
+    border-radius: $card-border-radius;
+    overflow: hidden;
+    box-shadow: $card-shadow;
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-auto-rows: 200px;
+      gap: 12px;
+      padding: 12px;
+      background-color: $card-bg;
+
+      .image-container {
+        height: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+
+      // Make first image larger
+      .image-container:first-child {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+    }
+
+    .room-detail-image {
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+    }
   }
 
-  .image-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
+  .room-detail-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 
-    .room-image {
-      width: 100%;
-      height: 240px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .info-card {
+      background-color: $card-bg;
+      border-radius: $card-border-radius;
+      padding: 20px;
+      box-shadow: $card-shadow;
+      color: $text-color-light;
+
+      .info-section {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .detail-icon {
+          font-size: 1.5rem;
+          margin-right: 15px;
+          color: $accent-purple-light;
+          min-width: 30px;
+          text-align: center;
+        }
+
+        .info-content {
+          .info-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: $text-color-secondary;
+            margin-bottom: 5px;
+          }
+
+          .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .room-description-card {
+      background-color: $card-bg;
+      border-radius: $card-border-radius;
+      padding: 20px;
+      box-shadow: $card-shadow;
+      color: $text-color-light;
+
+      .description-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .description-content {
+        font-size: 1rem;
+        line-height: 1.6;
+        white-space: pre-line;
+      }
+    }
+  }
+}
+
+// Loader animation styles
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: 30px 0;
+  text-align: center;
+
+  p {
+    color: $primary-color;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+
+  // Pencil loader animation styles (same as RoomListPage)
+  .pencil {
+    display: block;
+    width: 10em;
+    height: 10em;
+  }
+
+  .pencil__body1,
+  .pencil__body2,
+  .pencil__body3,
+  .pencil__eraser,
+  .pencil__eraser-skew,
+  .pencil__point,
+  .pencil__rotate,
+  .pencil__stroke {
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  // ... (include all the pencil animation keyframes here) ...
+}
+
+.error-message,
+.not-found-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #e74c3c;
+  padding: 2rem;
+
+  &::before {
+    content: "⚠️";
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.not-found-message {
+  color: #7f8c8d;
+
+  &::before {
+    content: "🔍";
+  }
+}
+
+// Media queries for responsive design
+@media (max-width: 768px) {
+  .room-detail-page {
+    .room-detail-title {
+      font-size: 1.8rem;
+    }
+
+    .room-detail-gallery {
+      .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-auto-rows: 150px;
+      }
     }
   }
 }

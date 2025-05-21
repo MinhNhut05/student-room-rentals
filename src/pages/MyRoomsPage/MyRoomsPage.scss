@@ -4,52 +4,106 @@
   padding: 2rem 0;
 
   h1 {
-    margin-bottom: 2rem;
-    color: $secondary-color;
-    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #25252c;
   }
 
-  .post-new-room-link {
-    display: inline-block;
-    background-color: $primary-color;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border-radius: 4px;
+  .page-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 2rem;
-    text-decoration: none;
-    font-weight: 500;
-    transition: background-color 0.3s;
 
-    &:hover {
-      background-color: darken($primary-color, 10%);
+    .post-new-room-link {
+      display: inline-flex;
+      align-items: center;
+      background-color: $primary-color;
+      color: white;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+
+      &::before {
+        content: "+";
+        margin-right: 8px;
+        font-size: 1.2em;
+      }
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
     }
   }
 
   .my-room-list-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-  }
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    margin-top: 30px;
 
-  .error-message {
-    color: #d32f2f;
-    background-color: #ffebee;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-  }
+    // Add modern NFT grid effects
+    perspective: 1000px; // For a subtle 3D effect
 
-  // Fix: Use map-get to access breakpoints
-  @media (max-width: map-get($breakpoints, md)) {
-    .my-room-list-grid {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    // Make cards appear one by one with a staggered animation
+    & > div {
+      opacity: 0;
+      animation: fadeInUp 0.5s ease forwards;
+
+      @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+          animation-delay: $i * 0.1s;
+        }
+      }
     }
   }
 
-  // Fix: Use map-get to access breakpoints
-  @media (max-width: map-get($breakpoints, sm)) {
-    .my-room-list-grid {
-      grid-template-columns: 1fr;
+  .error-message {
+    color: #d90429;
+    padding: 1rem;
+    background-color: rgba(#d90429, 0.1);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 0;
+
+    p {
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #aaa;
+    }
+  }
+}
+
+// Keyframe animation for cards
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .my-rooms-page {
+    .page-actions {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
     }
   }
 }

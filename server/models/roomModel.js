@@ -4,12 +4,15 @@ const Schema = mongoose.Schema;
 const roomSchema = new Schema(
   {
     title: { type: String, required: true },
-    description: String,
+    description: { type: String, required: true },
     price: { type: Number, required: true },
-    location: {
-      type: String,
-      required: true,
-    },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    district: String,
+    location: { type: String }, // Not required anymore
+    area: Number,
+    bedrooms: Number,
+    bathrooms: Number,
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",

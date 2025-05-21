@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import roomService from "../../services/roomService";
 import "./PostRoomPage.scss";
 
 const PostRoomPage = () => {
-  // State cho các trường form
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -15,53 +18,77 @@ const PostRoomPage = () => {
   const [area, setArea] = useState("");
   const [bedrooms, setBedrooms] = useState("");
   const [bathrooms, setBathrooms] = useState("");
-  const [location, setLocation] = useState(""); // Nếu model yêu cầu trường này!
-  const [images, setImages] = useState([""]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [fileNames, setFileNames] = useState("Chưa có tệp nào được chọn");
 
+  // Form submission state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  // Check authentication
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
-  const submitHandler = async (e) => {
+  // Handle file selection
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 10) {
+      setError("Bạn chỉ được chọn tối đa 10 ảnh");
+      return;
+    }
+
+    setSelectedFiles(files);
+    setFileNames(
+      files.length > 0
+        ? `${files.length} tệp đã được chọn`
+        : "Chưa có tệp nào được chọn"
+    );
+  };
+
+  // Trigger file input click
+  const handleFileButtonClick = () => {
+    document.getElementById("room-images").click();
+  };
+
+  // Form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
     setLoading(true);
 
-    // Validation tối thiểu phía client
-    if (!title || !description || !price || !address || !city || !location) {
+    // Validation
+    if (!title || !description || !price || !address || !city) {
       setError("Vui lòng điền đầy đủ các trường bắt buộc (*)");
       setLoading(false);
       return;
     }
-    if (parseFloat(price) <= 0) {
-      setError("Giá phòng phải lớn hơn 0");
-      setLoading(false);
-      return;
-    }
-
-    const token = user?.token;
-    const roomData = {
-      title,
-      description,
-      price: parseFloat(price),
-      address,
-      city,
-      district,
-      area: area ? parseFloat(area) : undefined,
-      bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
-      bathrooms: bathrooms ? parseInt(bathrooms) : undefined,
-      location,
-      images: images.filter((url) => url.trim() !== ""),
-    };
 
     try {
-      await roomService.createRoom(roomData, token);
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("address", address);
+      formData.append("city", city);
+      formData.append("district", district);
+      formData.append("area", area);
+      formData.append("bedrooms", bedrooms);
+      formData.append("bathrooms", bathrooms);
+
+      // Add all selected image files
+      selectedFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      await roomService.createRoom(formData, user.token);
       setSuccess(true);
-      // Reset form nếu muốn
+
+      // Reset form
       setTitle("");
       setDescription("");
       setPrice("");
@@ -71,180 +98,195 @@ const PostRoomPage = () => {
       setArea("");
       setBedrooms("");
       setBathrooms("");
-      setLocation("");
-      setImages([""]);
-      // Tùy chọn: Điều hướng sang trang khác sau khi thành công
-      // navigate('/rooms');
+      setSelectedFiles([]);
+      setFileNames("Chưa có tệp nào được chọn");
+
+      // Redirect after success
+      setTimeout(() => {
+        navigate("/my-rooms");
+      }, 2000);
     } catch (err) {
-      setError(err);
+      setError(
+        err.message || "Đã xảy ra lỗi khi đăng tin. Vui lòng thử lại sau."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  // Hàm xử lý input ảnh
-  const handleImageChange = (index, value) => {
-    const newImages = [...images];
-    newImages[index] = value;
-    setImages(newImages);
-  };
-
-  const handleAddImageInput = () => {
-    if (images[images.length - 1].trim() !== "") {
-      setImages([...images, ""]);
-    }
-  };
-
-  const handleRemoveImageInput = (index) => {
-    const newImages = images.filter((_, i) => i !== index);
-    setImages(newImages.length ? newImages : [""]);
-  };
+  if (!user) return null;
 
   return (
-    <div className="post-room-page auth-page">
-      <h1>Đăng tin phòng trọ mới</h1>
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">Đăng tin thành công!</p>}
+    <div className="dark-theme-container">
+      <div className="form-page-wrapper">
+        <div className="form-header">
+          <h1>ĐĂNG TIN PHÒNG TRỌ MỚI</h1>
+          <p>
+            Chia sẻ thông tin chi tiết về phòng trọ của bạn để tiếp cận người
+            thuê tiềm năng
+          </p>
+        </div>
 
-      <form onSubmit={submitHandler}>
-        <div className="form-group">
-          <label>
-            Tiêu đề <span className="required">*</span>:
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>
-            Mô tả <span className="required">*</span>:
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows="4"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>
-            Giá (VNĐ/tháng) <span className="required">*</span>:
-          </label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-            min="1"
-          />
-        </div>
-        <div className="form-group">
-          <label>
-            Địa chỉ chi tiết <span className="required">*</span>:
-          </label>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>
-            Tỉnh/Thành phố <span className="required">*</span>:
-          </label>
-          <input
-            type="text"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Quận/Huyện:</label>
-          <input
-            type="text"
-            value={district}
-            onChange={(e) => setDistrict(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Diện tích (m²):</label>
-          <input
-            type="number"
-            value={area}
-            onChange={(e) => setArea(e.target.value)}
-            min="0"
-          />
-        </div>
-        <div className="form-group">
-          <label>Số phòng ngủ:</label>
-          <input
-            type="number"
-            value={bedrooms}
-            onChange={(e) => setBedrooms(e.target.value)}
-            min="0"
-          />
-        </div>
-        <div className="form-group">
-          <label>Số phòng tắm:</label>
-          <input
-            type="number"
-            value={bathrooms}
-            onChange={(e) => setBathrooms(e.target.value)}
-            min="0"
-          />
-        </div>
-        <div className="form-group">
-          <label>
-            Location <span className="required">*</span>:
-          </label>
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-          />
-        </div>
-        {/* Phần nhập URL ảnh */}
-        <div className="form-group">
-          <label>URL Ảnh:</label>
-          {images.map((url, idx) => (
-            <div key={idx} className="image-input-group">
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">Đăng tin thành công!</div>}
+
+        <form className="post-room-form" onSubmit={handleSubmit}>
+          <div className="form-field-group">
+            <div className="input-with-icon">
               <input
                 type="text"
-                value={url}
-                onChange={(e) => handleImageChange(idx, e.target.value)}
-                placeholder={`URL Ảnh ${idx + 1}`}
+                id="title"
+                placeholder="Tiêu đề tin đăng *"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
               />
-              {images.length > 1 && (
-                <button
-                  type="button"
-                  className="remove-image-btn"
-                  onClick={() => handleRemoveImageInput(idx)}
-                >
-                  Xóa
-                </button>
-              )}
+              <span className="icon-placeholder">✎</span>
             </div>
-          ))}
-          {images[images.length - 1].trim() !== "" && (
-            <button
-              type="button"
-              className="add-image-btn"
-              onClick={handleAddImageInput}
-            >
-              + Thêm ảnh
+          </div>
+
+          <div className="form-field-group">
+            <div className="input-with-icon">
+              <input
+                type="number"
+                id="price"
+                placeholder="Giá (VNĐ/tháng) *"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                required
+              />
+              <span className="icon-placeholder">₫</span>
+            </div>
+          </div>
+
+          <div className="form-field-group">
+            <textarea
+              id="description"
+              placeholder="Mô tả chi tiết về phòng trọ *"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <div className="form-row">
+            <div className="form-field-group">
+              <div className="input-with-icon">
+                <input
+                  type="text"
+                  id="address"
+                  placeholder="Địa chỉ chi tiết *"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+                <span className="icon-placeholder">📍</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-field-group">
+              <div className="input-with-icon">
+                <input
+                  type="text"
+                  id="city"
+                  placeholder="Tỉnh/Thành phố *"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  required
+                />
+                <span className="icon-placeholder">🏙️</span>
+              </div>
+            </div>
+
+            <div className="form-field-group">
+              <div className="input-with-icon">
+                <input
+                  type="text"
+                  id="district"
+                  placeholder="Quận/Huyện"
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                />
+                <span className="icon-placeholder">🏘️</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-field-group">
+              <div className="input-with-icon">
+                <input
+                  type="number"
+                  id="area"
+                  placeholder="Diện tích (m²)"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                />
+                <span className="icon-placeholder">📐</span>
+              </div>
+            </div>
+
+            <div className="form-field-group">
+              <div className="input-with-icon">
+                <input
+                  type="number"
+                  id="bedrooms"
+                  placeholder="Số phòng ngủ"
+                  value={bedrooms}
+                  onChange={(e) => setBedrooms(e.target.value)}
+                />
+                <span className="icon-placeholder">🛏️</span>
+              </div>
+            </div>
+
+            <div className="form-field-group">
+              <div className="input-with-icon">
+                <input
+                  type="number"
+                  id="bathrooms"
+                  placeholder="Số phòng tắm"
+                  value={bathrooms}
+                  onChange={(e) => setBathrooms(e.target.value)}
+                />
+                <span className="icon-placeholder">🚿</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="form-field-group">
+            <label htmlFor="room-images" className="file-upload-label">
+              Chọn ảnh phòng (Tối đa 10 ảnh)
+            </label>
+            <div className="custom-file-upload">
+              <input
+                type="file"
+                id="room-images"
+                multiple
+                accept="image/*"
+                className="native-file-input"
+                onChange={handleFileChange}
+              />
+              <button
+                type="button"
+                className="file-upload-button"
+                onClick={handleFileButtonClick}
+              >
+                <span className="icon-placeholder">📁</span> Chọn Tệp
+              </button>
+              <span className="file-upload-text">{fileNames}</span>
+            </div>
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading ? "ĐANG XỬ LÝ..." : "ĐĂNG TIN NGAY"}
             </button>
-          )}
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Đang đăng tin..." : "Đăng tin"}
-        </button>
-      </form>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
