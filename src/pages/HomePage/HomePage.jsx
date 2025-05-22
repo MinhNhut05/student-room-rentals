@@ -19,9 +19,7 @@ const HomePage = () => {
       <HeroSection />
       <AboutSection />
       <div className="content-section">
-        <h2>Welcome to Student Room Rentals</h2>
-        <p>Find your perfect student accommodation</p>
-        {/* Add more content for authenticated users */}
+        
       </div>
     </div>
   );
