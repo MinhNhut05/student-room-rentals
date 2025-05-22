@@ -75,111 +75,10 @@ const ProfilePage = () => {
   if (loading) {
     return (
       <div className="loader-container">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="200px"
-          width="200px"
-          viewBox="0 0 200 200"
-          className="pencil"
-        >
-          <defs>
-            <clipPath id="pencil-eraser">
-              <rect height="30" width="30" ry="5" rx="5"></rect>
-            </clipPath>
-          </defs>
-          <circle
-            transform="rotate(-113,100,100)"
-            strokeLinecap="round"
-            strokeDashoffset="439.82"
-            strokeDasharray="439.82 439.82"
-            strokeWidth="2"
-            stroke="currentColor"
-            fill="none"
-            r="70"
-            className="pencil__stroke"
-          ></circle>
-          <g transform="translate(100,100)" className="pencil__rotate">
-            <g fill="none">
-              <circle
-                transform="rotate(-90)"
-                strokeDashoffset="402"
-                strokeDasharray="402.12 402.12"
-                strokeWidth="30"
-                stroke="hsl(223,90%,50%)"
-                r="64"
-                className="pencil__body1"
-              ></circle>
-              <circle
-                transform="rotate(-90)"
-                strokeDashoffset="465"
-                strokeDasharray="464.96 464.96"
-                strokeWidth="10"
-                stroke="hsl(223,90%,60%)"
-                r="74"
-                className="pencil__body2"
-              ></circle>
-              <circle
-                transform="rotate(-90)"
-                strokeDashoffset="339"
-                strokeDasharray="339.29 339.29"
-                strokeWidth="10"
-                stroke="hsl(223,90%,40%)"
-                r="54"
-                className="pencil__body3"
-              ></circle>
-            </g>
-            <g
-              transform="rotate(-90) translate(49,0)"
-              className="pencil__eraser"
-            >
-              <g className="pencil__eraser-skew">
-                <rect
-                  height="30"
-                  width="30"
-                  ry="5"
-                  rx="5"
-                  fill="hsl(223,90%,70%)"
-                ></rect>
-                <rect
-                  clipPath="url(#pencil-eraser)"
-                  height="30"
-                  width="5"
-                  fill="hsl(223,90%,60%)"
-                ></rect>
-                <rect height="20" width="30" fill="hsl(223,10%,90%)"></rect>
-                <rect height="20" width="15" fill="hsl(223,10%,70%)"></rect>
-                <rect height="20" width="5" fill="hsl(223,10%,80%)"></rect>
-                <rect
-                  height="2"
-                  width="30"
-                  y="6"
-                  fill="hsla(223,10%,10%,0.2)"
-                ></rect>
-                <rect
-                  height="2"
-                  width="30"
-                  y="13"
-                  fill="hsla(223,10%,10%,0.2)"
-                ></rect>
-              </g>
-            </g>
-            <g
-              transform="rotate(-90) translate(49,-30)"
-              className="pencil__point"
-            >
-              <polygon
-                points="15 0,30 30,0 30"
-                fill="hsl(33,90%,70%)"
-              ></polygon>
-              <polygon points="15 0,6 30,0 30" fill="hsl(33,90%,50%)"></polygon>
-              <polygon
-                points="15 0,20 10,10 10"
-                fill="hsl(223,10%,10%)"
-              ></polygon>
-            </g>
-          </g>
-        </svg>
-        <p>Đang tải thông tin...</p>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p>Đang tải thông tin cá nhân...</p>
       </div>
     );
   }
@@ -188,7 +87,14 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page">
+      {/* Floating gradient shapes (bên ngoài container) */}
+      <div className="profile-bg-shape shape-1"></div>
+      <div className="profile-bg-shape shape-2"></div>
+      <div className="profile-bg-shape shape-3"></div>
+
       <div className="profile-container">
+        {/* Sticker hoặc floating icon */}
+
         <h1>Thông tin cá nhân</h1>
         {success && <div className="success-message">Cập nhật thành công!</div>}
 
@@ -196,49 +102,60 @@ const ProfilePage = () => {
           <div className="profile-info">
             <div className="profile-avatar">
               <img
-                src={profile?.avatar || "/default-avatar.png"}
-                alt="Profile Avatar"
+                src={
+                  profile?.avatar ||
+                  "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses-green-hair_23-2149436201.jpg?ga=GA1.1.1684504587.1744996293&semt=ais_hybrid&w=740"
+                }
+                alt="Ảnh đại diện"
                 className="avatar"
               />
             </div>
 
             <div className="info-group">
               <label>Họ tên:</label>
-              <p>{profile?.name}</p>
+              <p>{profile?.name || "Chưa cập nhật"}</p>
             </div>
 
             <div className="info-group">
               <label>Email:</label>
-              <p>{profile?.email}</p>
+              <p>{profile?.email || "Chưa cập nhật"}</p>
             </div>
 
             <div className="info-group">
-              <label>Số điện thoại:</label>
+              <label>Điện thoại:</label>
               <p>{profile?.phone || "Chưa cập nhật"}</p>
             </div>
+
+            <hr className="divider" />
+            <h3 className="section-heading">Thông tin tài khoản</h3>
 
             <div className="info-group">
               <label>Ngày đăng ký:</label>
               <p>
                 {profile?.createdAt
-                  ? new Date(profile.createdAt).toLocaleString()
-                  : "N/A"}
+                  ? new Date(profile.createdAt).toLocaleDateString("vi-VN", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "Chưa có thông tin"}
               </p>
             </div>
 
             <button onClick={() => setEditMode(true)} className="edit-btn">
-              Chỉnh sửa
+              <i className="fas fa-pen-to-square"></i> Chỉnh sửa
             </button>
           </div>
         ) : (
           <form onSubmit={handleSave} className="edit-form">
             <div className="form-group">
-              <label>Họ tên</label>
+              <label>Họ và tên</label>
               <input
                 type="text"
                 name="name"
                 value={form.name}
                 onChange={handleChange}
+                placeholder="Nhập họ và tên"
                 required
               />
             </div>
@@ -250,6 +167,7 @@ const ProfilePage = () => {
                 name="email"
                 value={form.email}
                 onChange={handleChange}
+                placeholder="Email của bạn"
                 required
               />
             </div>
@@ -261,21 +179,30 @@ const ProfilePage = () => {
                 name="phone"
                 value={form.phone}
                 onChange={handleChange}
+                placeholder="Số điện thoại liên hệ"
               />
             </div>
 
             <div className="form-actions">
-              <button type="submit" className="save-btn" disabled={saving}>
-                {saving ? "Đang lưu..." : "Lưu thay đổi"}
-              </button>
-
               <button
                 type="button"
                 className="cancel-btn"
                 onClick={() => setEditMode(false)}
                 disabled={saving}
               >
-                Hủy
+                <i className="fas fa-times"></i> Hủy
+              </button>
+
+              <button type="submit" className="save-btn" disabled={saving}>
+                {saving ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i> Đang lưu...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-check"></i> Lưu thay đổi
+                  </>
+                )}
               </button>
             </div>
           </form>

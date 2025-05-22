@@ -1,193 +1,295 @@
 @use "../../styles/global.scss" as *;
 @use "../../scss/abstracts/variables" as *;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 @import "../../scss/abstracts/variables";
 
 // Footer variables
-$footer-bg-color: #262626; // Dark grey background for footer
-$text-light: #ffffff; // White text for logo, titles
-$text-subtle: #a0a0a0; // Lighter grey for description, copyright
-$link-color: #c0c0c0; // Slightly brighter grey for links
-$link-hover-color: $primary-color; // Green on hover for links
-$social-icon-color: #e0e0e0; // Color for social icons
-$social-icon-hover: $primary-color; // Green on hover for social icons
+$footer-bg: #18181d;
+$footer-accent: #ffd43b;
+$footer-accent2: #e96fff;
+$footer-text: #fff;
+$footer-subtext: #bbbbbb;
+$footer-link: #fff;
+$footer-link-hover: $footer-accent;
+$footer-border: #23232b;
 
 .footer {
-  background-color: $footer-bg-color;
-  color: $text-light;
+  background: $footer-bg;
+  color: $footer-text;
   font-family: "Inter", sans-serif;
-  padding: 45px 20px 15px; // Top, right/left, bottom padding
-  margin-top: 70px; // Space from content above
+  padding: 56px 0 0 0;
+  position: relative;
+  border-top: 2px solid $footer-border;
+  box-shadow: 0 -3px 24px 0 rgba(24, 24, 29, 0.09);
 
   .container {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr 1.2fr;
+    gap: 38px;
     max-width: 1400px;
     margin: 0 auto;
-    display: grid; // Use CSS Grid for robust column layout
-    grid-template-columns: 2fr repeat(4, 1fr); // First column wider, then 4 equal columns
-    gap: 40px; // Gap between columns
-    justify-content: space-between; // Distribute space
+    padding: 0 28px 32px 28px;
 
-    // Styles for each column
-    .column {
-      .column-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 25px;
-        color: $text-light;
+    @media (max-width: 1100px) {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 26px;
+    }
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-bottom: 16px;
+    }
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+
+    .logo {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: $footer-accent;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &::before {
+        content: "🏠";
+        font-size: 1.7rem;
+        margin-right: 4px;
       }
+    }
+    .description {
+      font-size: 1.04rem;
+      color: $footer-subtext;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+    .social-icons {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
 
-      .logo {
-        font-size: 24px;
-        font-weight: 700;
-        color: $text-light;
-        margin-bottom: 20px;
+      a {
+        background: #23232b;
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        justify-content: center;
+        color: $footer-link;
+        font-size: 1.12rem;
+        border: 1.5px solid transparent;
+        transition: all 0.19s;
 
-        // House icon using pseudo-element (matching header)
-        &::before {
-          content: "🏠"; // House emoji as placeholder (can be replaced with SVG)
-          font-size: 24px;
+        &:hover {
+          color: $footer-accent;
+          background: #25252b;
+          border-color: $footer-accent;
+          transform: translateY(-2px) scale(1.12);
+        }
+      }
+    }
+
+    // Extra bottom margin for first col on mobile
+    @media (max-width: 700px) {
+      margin-bottom: 32px;
+    }
+  }
+
+  .column-title {
+    font-weight: 700;
+    color: $footer-accent;
+    font-size: 1.11rem;
+    margin-bottom: 9px;
+    letter-spacing: 0.8px;
+  }
+  .link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .link {
+      display: block;
+      color: $footer-link;
+      text-decoration: none;
+      font-size: 1.01rem;
+      padding: 6px 0;
+      opacity: 0.92;
+      border-radius: 4px;
+      transition: color 0.17s, background 0.15s;
+
+      &:hover {
+        color: $footer-link-hover;
+        background: #23232b;
+        padding-left: 10px;
+      }
+    }
+  }
+
+  // Newsletter form
+  .newsletter {
+    margin-top: 10px;
+
+    .newsletter-form {
+      position: relative;
+      margin-top: 15px;
+
+      input {
+        background: #23232b;
+        border: 1px solid #2a2a33;
+        color: #fff;
+        padding: 12px 15px;
+        border-radius: 6px;
+        width: 100%;
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+
+        &:focus {
+          outline: none;
+          border-color: $footer-accent;
+          box-shadow: 0 0 0 2px rgba($footer-accent, 0.2);
+        }
+
+        &::placeholder {
+          color: #888;
         }
       }
 
-      .description {
-        font-size: 14px;
-        line-height: 1.6;
-        color: $text-subtle;
-        margin-bottom: 30px;
-      }
+      button {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        background: $footer-accent;
+        color: #18181d;
+        border: none;
+        border-radius: 4px;
+        padding: 7px 15px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
 
-      .social-icons {
-        display: flex;
-        gap: 20px; // Space between icons
-
-        a {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 38px; // Size of the icon area
-          height: 38px;
-          border-radius: 50%; // Make them circular if desired
-          background-color: transparent; // No background by default
-          color: $social-icon-color; // Icon color
-          font-size: 20px; // Font Awesome icon size
-          transition: color 0.3s ease, background-color 0.3s ease,
-            transform 0.3s ease;
-
-          &:hover {
-            color: $social-icon-hover; // Green on hover
-            transform: translateY(-2px); // Subtle lift
-          }
-        }
-      }
-
-      .link-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-
-        li {
-          margin-bottom: 15px; // Space between links
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-
-          .link {
-            color: $link-color;
-            text-decoration: none;
-            font-size: 15px;
-            transition: color 0.3s ease, text-decoration 0.3s ease;
-
-            &:hover {
-              color: $link-hover-color; // Green on hover
-              text-decoration: underline; // Underline on hover
-            }
-          }
+        &:hover {
+          background: $footer-accent2;
+          color: #fff;
         }
       }
     }
   }
 
+  // Copyright
   .copyright {
     text-align: center;
-    padding-top: 20px; // Space from columns above
-    margin-top: 20px; // Space from columns above
-    border-top: 1px solid lighten($footer-bg-color, 10%); // Subtle top border
-    font-size: 14px;
-    color: $text-subtle; // Lighter grey for copyright text
-  }
-}
+    padding: 22px 0 20px 0;
+    color: $footer-subtext;
+    background: #131316;
+    font-size: 1.01rem;
+    border-top: 1px solid $footer-border;
+    letter-spacing: 0.2px;
 
-// Responsive adjustments
-@media (max-width: 992px) {
-  .footer {
-    padding: 40px 15px 20px; // Adjust padding
+    p {
+      margin: 0;
+      font-weight: 400;
 
-    .container {
-      grid-template-columns: 1fr 1fr; // 2 columns on medium screens
-      gap: 30px;
-      padding: 0 10px; // Adjust container padding
-    }
+      a {
+        color: $footer-accent;
+        text-decoration: none;
 
-    .column {
-      .column-title {
-        margin-bottom: 20px;
-        font-size: 17px;
-      }
-      .logo {
-        font-size: 22px;
-      }
-      .description {
-        font-size: 13px;
-        margin-bottom: 20px;
-      }
-      .social-icons {
-        gap: 15px;
-        a {
-          width: 35px;
-          height: 35px;
-          font-size: 18px;
-        }
-      }
-      .link-list li {
-        margin-bottom: 12px;
-        .link {
-          font-size: 14px;
+        &:hover {
+          text-decoration: underline;
         }
       }
     }
-    .copyright {
-      padding-top: 30px;
-      margin-top: 30px;
-      font-size: 13px;
+
+    .footer-links {
+      margin-top: 8px;
+
+      a {
+        color: $footer-subtext;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 0.9rem;
+
+        &:hover {
+          color: $footer-accent;
+        }
+      }
     }
   }
 }
 
-@media (max-width: 600px) {
-  .footer {
-    .container {
-      grid-template-columns: 1fr; // Single column on small screens
-      gap: 30px;
-    }
+// Responsive
+@media (max-width: 1100px) {
+  .footer .container {
+    grid-template-columns: 1fr 1fr 1fr;
+
     .column {
-      text-align: center; // Center text in columns
-      .logo {
-        justify-content: center; // Center logo
-      }
-      .social-icons {
-        justify-content: center; // Center social icons
-      }
-      .description {
-        text-align: center; // Center description
+      margin-bottom: 24px;
+    }
+  }
+}
+@media (max-width: 700px) {
+  .footer {
+    padding-top: 38px;
+
+    .container {
+      grid-template-columns: 1fr;
+      padding-left: 10px;
+      padding-right: 10px;
+
+      .column {
+        margin-bottom: 22px;
       }
     }
     .copyright {
-      text-align: center;
+      font-size: 0.97rem;
+      padding: 16px 0 13px 0;
     }
+  }
+}
+
+// Back to top button
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: rgba($footer-accent, 0.8);
+  color: #18181d;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 99;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &:hover {
+    background: $footer-accent;
+    transform: translateY(-5px);
+  }
+
+  @media (max-width: 768px) {
+    width: 38px;
+    height: 38px;
+    bottom: 20px;
+    right: 20px;
   }
 }

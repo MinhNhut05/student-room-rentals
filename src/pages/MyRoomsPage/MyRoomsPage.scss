@@ -1,12 +1,19 @@
-@use "../../scss/abstracts/variables" as *;
+@import "../../scss/abstracts/variables";
 
 .my-rooms-page {
-  padding: 2rem 0;
+  background: #18181d;
+  min-height: 100vh;
+  color: #fff;
+  padding: 40px 0 60px;
+    width: 100vw; // Make hero section full width
+  margin-left: calc(-50vw + 50%); // Center the section if parent has width constraints
 
   h1 {
-    margin-bottom: 1rem;
-    font-size: 1.8rem;
-    color: #25252c;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 24px 0;
+    letter-spacing: 0.5px;
   }
 
   .page-actions {
@@ -14,17 +21,19 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-
-    .post-new-room-link {
-      display: inline-flex;
-      align-items: center;
-      background-color: $primary-color;
-      color: white;
+  }
+  .post-new-room-link {
+      display: inline-block;
+      background: #ffd43b;
+      color: #23232b;
+      padding: 12px 26px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1.08rem;
       text-decoration: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
+      margin-bottom: 32px;
+      transition: all 0.2s;
+      box-shadow: 0 3px 15px rgba(255, 212, 59, 0.25);
 
       &::before {
         content: "+";
@@ -33,16 +42,150 @@
       }
 
       &:hover {
-        background-color: darken($primary-color, 10%);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(255, 212, 59, 0.35);
+        background: #e96fff;
+        color: #fff;
+      }
+    }
+
+  .loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0;
+    text-align: center;
+    margin-top: 40px;
+
+    p {
+      color: #ffd43b;
+      font-weight: 500;
+      margin-top: 10px;
+      font-size: 1.22rem;
+    }
+
+    /* From Uiverse.io by gustavofusco */
+    .pencil {
+      display: block;
+      width: 10em;
+      height: 10em;
+    }
+
+    .pencil__body1,
+    .pencil__body2,
+    .pencil__body3,
+    .pencil__eraser,
+    .pencil__eraser-skew,
+    .pencil__point,
+    .pencil__rotate,
+    .pencil__stroke {
+      animation-duration: 3s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    .pencil__body1,
+    .pencil__body2,
+    .pencil__body3 {
+      transform: rotate(-90deg);
+    }
+
+    .pencil__body1 {
+      animation-name: pencilBody1;
+    }
+
+    .pencil__body2 {
+      animation-name: pencilBody2;
+    }
+
+    .pencil__body3 {
+      animation-name: pencilBody3;
+    }
+
+    .pencil__eraser {
+      animation-name: pencilEraser;
+      transform: rotate(-90deg) translate(49px, 0);
+    }
+
+    .pencil__eraser-skew {
+      animation-name: pencilEraserSkew;
+      animation-timing-function: ease-in-out;
+    }
+
+    .pencil__point {
+      animation-name: pencilPoint;
+      transform: rotate(-90deg) translate(49px, -30px);
+    }
+
+    .pencil__rotate {
+      animation-name: pencilRotate;
+    }
+
+    .pencil__stroke {
+      animation-name: pencilStroke;
+      transform: translate(100px, 100px) rotate(-113deg);
+    }
+  }
+
+  .error-message {
+    color: #e96fff;
+    background: #2b182c;
+    padding: 16px 20px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 10px;
+    margin: 30px auto;
+    max-width: 460px;
+  }
+
+  .empty-state {
+    background: #23232b;
+    border-radius: 15px;
+    padding: 40px 20px;
+    text-align: center;
+    margin: 40px auto;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+    .empty-icon {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      color: #ffd43b;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+      color: #d8d8d8;
+    }
+
+    .btn-add {
+      background: #ffd43b;
+      color: #23232b;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #e96fff;
+        color: #fff;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(233, 111, 255, 0.3);
       }
     }
   }
 
   .my-room-list-grid {
     display: grid;
-    gap: 24px;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    margin-top: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+    margin: 20px 50px 0;
 
     // Add modern NFT grid effects
     perspective: 1000px; // For a subtle 3D effect
@@ -60,33 +203,332 @@
     }
   }
 
-  .error-message {
-    color: #d90429;
-    padding: 1rem;
-    background-color: rgba(#d90429, 0.1);
-    border-radius: 8px;
-    margin-bottom: 1rem;
-  }
+  // Stats section
+  .my-rooms-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0 35px;
+    flex-wrap: wrap;
 
-  .empty-state {
-    text-align: center;
-    padding: 3rem 0;
+    .stat-item {
+      text-align: center;
+      background: #23232b;
+      border-radius: 12px;
+      padding: 20px 30px;
+      min-width: 150px;
+      transition: transform 0.2s;
 
-    p {
-      margin-bottom: 1.5rem;
-      color: #666;
-      font-size: 1.1rem;
-    }
+      &:hover {
+        transform: translateY(-5px);
+      }
 
-    .empty-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      color: #aaa;
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ffd43b;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 0.95rem;
+        color: #b0b0c0;
+      }
     }
   }
 }
 
-// Keyframe animation for cards
+// MyRoomCard styles
+
+.page-header{
+    margin-left: 50px;
+}
+
+.my-room-card {
+  background: #23232b;
+  border-radius: 17px;
+  overflow: hidden;
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.13);
+  position: relative;
+  transition: transform 0.17s, box-shadow 0.15s;
+  border: 2px solid transparent;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover,
+  &:focus-within {
+    box-shadow: 0 6px 32px rgba(255, 212, 59, 0.13);
+    border-color: rgba(255, 212, 59, 0.47);
+    transform: translateY(-3px) scale(1.015);
+    z-index: 2;
+  }
+
+  .my-room-card-image-link {
+    display: block;
+
+    .my-room-card-image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      border-radius: 17px 17px 0 0;
+      background: #111;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.04);
+      }
+    }
+  }
+
+  .my-room-card-info {
+    padding: 18px 18px 0 18px;
+    flex: 1;
+
+    h3 {
+      margin: 0 0 7px 0;
+      font-size: 1.13rem;
+      color: #ffd43b;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.5px;
+    }
+
+    .my-room-card-price {
+      color: #e96fff;
+      font-weight: bold;
+      margin: 0 0 8px 0;
+      font-size: 1.05rem;
+      letter-spacing: 0.4px;
+    }
+
+    .my-room-card-location {
+      color: #8fc1ff;
+      font-size: 0.98rem;
+      margin-bottom: 10px;
+
+      span {
+        margin-right: 4px;
+      }
+    }
+
+    .my-room-card-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 14px;
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        color: #b0b0c0;
+
+        .stat-icon {
+          color: #ffd43b;
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .room-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+
+      &.status-active {
+        background-color: rgba(77, 201, 255, 0.15);
+        color: #4dc9ff;
+      }
+
+      &.status-pending {
+        background-color: rgba(255, 212, 59, 0.15);
+        color: #ffd43b;
+      }
+
+      &.status-rejected {
+        background-color: rgba(255, 107, 107, 0.15);
+        color: #ff6b6b;
+      }
+    }
+  }
+
+  .my-room-card-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 18px 15px 18px;
+
+    .btn {
+      border: none;
+      border-radius: 20px;
+      padding: 7px 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.13s, color 0.13s, box-shadow 0.13s;
+
+      &.btn-edit {
+        background: #4dc9ff;
+        color: #23232b;
+        margin-right: 2px;
+
+        &:hover {
+          background: #ffd43b;
+          color: #23232b;
+          box-shadow: 0 3px 10px rgba(255, 212, 59, 0.3);
+        }
+      }
+
+      &.btn-delete {
+        background: #e96fff;
+        color: #fff;
+
+        &:hover {
+          background: #ffd43b;
+          color: #23232b;
+          box-shadow: 0 3px 10px rgba(255, 212, 59, 0.3);
+        }
+
+        &[disabled] {
+          opacity: 0.55;
+          pointer-events: none;
+        }
+      }
+
+      &.btn-view {
+        background: #23232b;
+        color: #fff;
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+
+        &:hover {
+          background: #fff;
+          color: #23232b;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .my-rooms-page {
+    padding: 30px 0 50px;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .my-room-list-grid {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .my-rooms-stats {
+      gap: 15px;
+
+      .stat-item {
+        padding: 15px 20px;
+        min-width: 130px;
+      }
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes pencilBody1 {
+  from,
+  to {
+    stroke-dashoffset: 351.86;
+    transform: rotate(-90deg);
+  }
+  50% {
+    stroke-dashoffset: 150.8;
+    transform: rotate(-225deg);
+  }
+}
+
+@keyframes pencilBody2 {
+  from,
+  to {
+    stroke-dashoffset: 351.86;
+    transform: rotate(-90deg);
+  }
+  50% {
+    stroke-dashoffset: 150.8;
+    transform: rotate(-225deg);
+  }
+}
+
+@keyframes pencilBody3 {
+  from,
+  to {
+    stroke-dashoffset: 351.86;
+    transform: rotate(-90deg);
+  }
+  50% {
+    stroke-dashoffset: 150.8;
+    transform: rotate(-225deg);
+  }
+}
+
+@keyframes pencilEraser {
+  from {
+    transform: rotate(-90deg) translate(49px, 0);
+  }
+  to {
+    transform: rotate(-90deg) translate(49px, 0);
+  }
+}
+
+@keyframes pencilEraserSkew {
+  from {
+    transform: rotate(-90deg) translate(49px, 0);
+  }
+  to {
+    transform: rotate(-90deg) translate(49px, 0);
+  }
+}
+
+@keyframes pencilPoint {
+  from {
+    transform: rotate(-90deg) translate(49px, -30px);
+  }
+  to {
+    transform: rotate(-90deg) translate(49px, -30px);
+  }
+}
+
+@keyframes pencilRotate {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(-90deg);
+  }
+}
+
+@keyframes pencilStroke {
+  from {
+    transform: translate(100px, 100px) rotate(-113deg);
+  }
+  to {
+    transform: translate(100px, 100px) rotate(-113deg);
+  }
+}
+
+// Card appearance animation
+.my-room-card {
+  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -98,12 +540,9 @@
   }
 }
 
-@media (max-width: 768px) {
-  .my-rooms-page {
-    .page-actions {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
+// Staggered animation delay
+@for $i from 1 through 20 {
+  .my-room-list-grid .my-room-card:nth-child(#{$i}) {
+    animation-delay: #{$i * 0.05}s;
   }
 }

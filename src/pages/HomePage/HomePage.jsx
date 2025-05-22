@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import HeroSection from "../../components/HeroSection/HeroSection";
+import AboutSection from "../../components/AboutSection/AboutSection";
+import "./HomePage.scss";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -12,10 +15,14 @@ const HomePage = () => {
   }, [navigate]);
 
   return (
-    <div className="home-page">
-      <h1>Welcome to Student Room Rentals</h1>
-      <p>Find your perfect student accommodation</p>
-      {/* Add more content for authenticated users */}
+    <div className="home-page container-home">
+      <HeroSection />
+      <AboutSection />
+      <div className="content-section">
+        <h2>Welcome to Student Room Rentals</h2>
+        <p>Find your perfect student accommodation</p>
+        {/* Add more content for authenticated users */}
+      </div>
     </div>
   );
 };

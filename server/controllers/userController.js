@@ -4,7 +4,7 @@ const generateToken = require("../utils/generateToken");
 
 // Đăng ký người dùng
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone } = req.body; // Added phone field
 
   const userExists = await User.findOne({ email });
   if (userExists) {
@@ -12,13 +12,14 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
 
-  const user = await User.create({ name, email, password });
+  const user = await User.create({ name, email, password, phone }); // Added phone field
 
   if (user) {
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone, // Include phone in the response
       isAdmin: user.isAdmin,
       token: generateToken(user._id),
     });

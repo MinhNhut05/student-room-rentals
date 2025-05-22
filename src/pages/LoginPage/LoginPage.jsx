@@ -63,24 +63,15 @@ const LoginPage = () => {
 
           <div className="social-login-buttons">
             <button className="social-button google">
-              <img
-                src="https://img.icons8.com/color/16/000000/google-logo.png"
-                alt="Google"
-              />
+              <i className="fab fa-google"></i>
               <span>Google</span>
             </button>
             <button className="social-button facebook">
-              <img
-                src="https://img.icons8.com/color/16/000000/facebook-new.png"
-                alt="Facebook"
-              />
+              <i className="fab fa-facebook-f"></i>
               <span>Facebook</span>
             </button>
             <button className="social-button apple">
-              <img
-                src="https://img.icons8.com/ios-filled/16/000000/mac-os.png"
-                alt="Apple"
-              />
+              <i className="fab fa-apple"></i>
               <span>Apple</span>
             </button>
           </div>
@@ -119,17 +110,11 @@ const LoginPage = () => {
                   className="toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? (
-                    <img
-                      src="https://img.icons8.com/ios-glyphs/20/000000/hide.png"
-                      alt="Hide"
-                    />
-                  ) : (
-                    <img
-                      src="https://img.icons8.com/ios-glyphs/20/000000/visible--v1.png"
-                      alt="Show"
-                    />
-                  )}
+                  <i
+                    className={`fas ${
+                      showPassword ? "fa-eye-slash" : "fa-eye"
+                    }`}
+                  ></i>
                 </span>
               </div>
             </div>
@@ -150,7 +135,13 @@ const LoginPage = () => {
             </div>
 
             <button type="submit" className="login-button" disabled={isLoading}>
-              {isLoading ? "Đang xử lý..." : "Đăng nhập"}
+              {isLoading ? (
+                <>
+                  <i className="fas fa-spinner fa-spin"></i> Đang xử lý...
+                </>
+              ) : (
+                "Đăng nhập"
+              )}
             </button>
           </form>
 
@@ -163,6 +154,11 @@ const LoginPage = () => {
         </div>
 
         <div className="illustration-section">
+          {/* Floating decoration shapes */}
+          <div className="floating-shape shape1"></div>
+          <div className="floating-shape shape2"></div>
+          <div className="floating-shape shape3"></div>
+
           <div className="illustration-content">
             <h3>Tìm phòng trọ dễ dàng</h3>
             <p>Kết nối sinh viên với phòng trọ chất lượng, giá tốt</p>

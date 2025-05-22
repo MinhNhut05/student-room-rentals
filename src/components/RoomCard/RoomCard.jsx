@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./RoomCard.scss";
 
 const RoomCard = ({ room }) => {
   const { _id, title, price, address, city, district, area, images } = room;
+  const [isSaved, setIsSaved] = useState(false);
 
   // Find the first available image or use placeholder
   const displayImage =
@@ -20,21 +21,51 @@ const RoomCard = ({ room }) => {
   const maxOccupancy = room.maxOccupancy || "2";
   const type = room.type || "Phòng trọ";
 
+  // Check if room is new (posted within last 3 days)
+  const isNew =
+    room.createdAt &&
+    (new Date() - new Date(room.createdAt)) / (1000 * 60 * 60 * 24) < 3;
+
+  // Toggle save room
+  const handleSaveClick = (e) => {
+    e.preventDefault();
+    setIsSaved(!isSaved);
+    // Here you would implement actual save functionality
+    // saveRoomToFavorites(_id);
+  };
+
   return (
     <div className="room-card">
       <Link to={`/rooms/${_id}`} className="room-card-link">
-        <div className="room-card-image-container">
+        <div
+          className="room-card-image-container"
+          data-badge={
+            room.nearbySchools ? `Gần ${room.nearbySchools} trường` : ""
+          }
+        >
           <img
             src={displayImage}
             alt={title || "Phòng trọ"}
             className="room-card-image"
           />
           <div className="room-card-price-overlay">
-            <span className="price-icon">$</span>
-            <span>
-              {price ? price.toLocaleString("vi-VN") : "N/A"} VNĐ/tháng
-            </span>
+            <span className="price-icon">₫</span>
+            <span>{price ? price.toLocaleString("vi-VN") : "N/A"}/tháng</span>
           </div>
+
+          <button
+            className={`save-button ${isSaved ? "saved" : ""}`}
+            onClick={handleSaveClick}
+            aria-label={isSaved ? "Đã lưu" : "Lưu phòng"}
+          >
+            {isSaved ? "♥" : "♡"}
+          </button>
+
+          {isNew && <div className="status-ribbon new">Mới</div>}
+          {room.isHot && <div className="status-ribbon hot">Hot</div>}
+          {room.isVerified && (
+            <div className="status-ribbon verified">Xác thực</div>
+          )}
         </div>
 
         <div className="room-card-info">

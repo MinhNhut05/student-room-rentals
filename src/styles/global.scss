@@ -18,7 +18,22 @@ body {
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 90vw;
   margin: 0 auto;
   padding: 0 15px;
+}
+
+.container:has(
+    .form-page-wrapper,
+    .register-page,
+    .room-detail-page,
+    .profile-page
+  ) {
+  max-width: 100vw;
+  padding: 0;
+}
+
+.container-home {
+  max-width: 100vw;
+  padding: 0;
 }

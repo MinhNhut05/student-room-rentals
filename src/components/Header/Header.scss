@@ -2,11 +2,11 @@
 @import "../../scss/abstracts/variables";
 
 // Header variables
-$header-bg-color: #262626; // Dark background for header
+$header-bg-color: #17171c; // Dark background for header
 $text-light: #ffffff; // White text for general links
 $text-light-hover: #e0e0e0; // Slightly greyed out on hover for non-primary links
 $border-color-light: #f0f0f0; // Light border for login button
-$button-text-dark: #333333; // Dark text for sign-up button
+$button-text-dark: #17171c; // Dark text for sign-up button
 
 .header {
   background-color: $header-bg-color;
@@ -18,11 +18,13 @@ $button-text-dark: #333333; // Dark text for sign-up button
   z-index: 1000; // Ensure header is on top of other content
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); // Subtle shadow
   transition: padding 0.3s ease; // Add transition for smooth padding change
+  border-radius: 0 0 5px 5px; // Rounded corners at the bottom
 
   // Class added when scrolled
   &.scrolled {
-    padding: 10px 0; // Reduced padding when scrolled
-    background-color: rgba($header-bg-color, 0.95); // Slightly transparent
+    padding: 0; // Reduced padding when scrolled
+    background-color: rgba($header-bg-color, 0.7); // Slightly transparent
+    border-radius: 0 0 15px 15px; // Rounded corners at the bottom
   }
 
   .container {

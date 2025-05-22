@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/authContext";
 import userService from "../../services/userService";
+import { useAuth } from "../../context/authContext";
 import "./RegisterPage.scss";
 
 const RegisterPage = () => {
@@ -9,224 +9,182 @@ const RegisterPage = () => {
   const { login } = useAuth();
 
   // Form state
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Xử lý submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    // Basic validation
-    if (!email || !password || !confirmPassword) {
+    if (!name || !email || !phone || !password || !confirmPassword) {
       setError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
-    if (password.length < 6) {
-      setError("Mật khẩu phải có ít nhất 6 ký tự.");
-      return;
-    }
     if (password !== confirmPassword) {
-      setError("Xác nhận mật khẩu không khớp.");
+      setError("Mật khẩu nhập lại không khớp.");
       return;
     }
-    if (!agreeToTerms) {
-      setError("Bạn phải đồng ý với Điều khoản dịch vụ và Chính sách bảo mật.");
+    if (password.length < 6) {
+      setError("Mật khẩu phải từ 6 ký tự.");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const userData = {
-        name: email.split("@")[0], // Using part of email as name
+      const newUser = await userService.register({
+        name,
         email,
+        phone,
         password,
-      };
-
-      const data = await userService.register(userData);
-      login(data); // Auto-login after registration
-      navigate("/rooms"); // Redirect to rooms page
+      });
+      // Tự động đăng nhập luôn nếu muốn
+      login(newUser);
+      navigate("/rooms");
     } catch (err) {
-      setError(err.message || "Đăng ký thất bại. Vui lòng thử lại.");
+      setError(err.message || "Đăng ký thất bại. Vui lòng thử lại!");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSwitchToLogin = () => {
-    navigate("/login");
-  };
-
   return (
     <div className="register-page">
-      <div className="register-form-container">
-        <div className="left-panel">
-          <div className="logo">Phòng Trọ Sinh Viên</div>
+      <div className="register-container">
+        {/* Phần trang trí, ảnh nền, hiệu ứng */}
+        <div className="register-illustration">
+          <div className="bg-deco bg-deco1"></div>
+          <div className="bg-deco bg-deco2"></div>
+          <div className="register-info">
+            <h2>
+              Chào mừng bạn đến với
+              <br />
+              <span>Phòng Trọ Sinh Viên</span>
+            </h2>
+            <p>
+              Tìm kiếm, kết nối và đăng phòng trọ chỉ với một tài khoản miễn
+              phí.
+              <br />
+              Đăng ký để trải nghiệm tiện ích hiện đại, an toàn và bảo mật!
+            </p>
+            <ul className="feature-list">
+              <li>
+                <span className="feature-dot green"></span>
+                Dễ dàng tìm phòng, tìm bạn ở ghép
+              </li>
+              <li>
+                <span className="feature-dot purple"></span>
+                Đăng tin nhanh chóng, giao diện thân thiện
+              </li>
+              <li>
+                <span className="feature-dot orange"></span>
+                Bảo mật thông tin cá nhân tuyệt đối
+              </li>
+            </ul>
+          </div>
+        </div>
 
-          <div className="auth-tabs">
-            <button className="tab-button active">Đăng ký</button>
-            <button className="tab-button" onClick={handleSwitchToLogin}>
-              Đăng nhập
-            </button>
+        {/* Form đăng ký */}
+        <div className="register-form-section">
+          <div className="form-header">
+            <h2>Tạo tài khoản mới</h2>
+            <p className="desc">Miễn phí. Không quảng cáo. An toàn dữ liệu.</p>
           </div>
 
-          {/* Khối ưu đãi */}
-          <div className="free-offers">
-            <div className="offer-item">
-              <div className="offer-icon">🏠</div>
-              <p className="offer-title">5 Tin đăng miễn phí</p>
-              <p className="offer-desc">cho sinh viên mới</p>
+          {error && <div className="error-message">{error}</div>}
+
+          <form
+            className="register-form"
+            onSubmit={handleSubmit}
+            autoComplete="off"
+          >
+            <div className="form-group">
+              <label htmlFor="name">Họ tên</label>
+              <input
+                type="text"
+                id="name"
+                placeholder="Nhập họ và tên"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoFocus
+              />
             </div>
-            <div className="offer-item">
-              <div className="offer-icon">📞</div>
-              <p className="offer-title">50 Lượt liên hệ miễn phí</p>
-              <p className="offer-desc">mỗi tháng</p>
-            </div>
-          </div>
-
-          <div className="or-separator">
-            <span>Hoặc tiếp tục với</span>
-          </div>
-
-          {/* Các nút đăng nhập nhanh */}
-          <div className="social-login-buttons">
-            <button className="social-button google">
-              <img
-                src="https://img.icons8.com/color/16/000000/google-logo.png"
-                alt="Google"
-              />
-            </button>
-            <button className="social-button apple">
-              <img
-                src="https://img.icons8.com/ios-filled/16/000000/mac-os.png"
-                alt="Apple"
-              />
-            </button>
-            <button className="social-button facebook">
-              <img
-                src="https://img.icons8.com/color/16/000000/facebook-new.png"
-                alt="Facebook"
-              />
-            </button>
-          </div>
-
-          <form onSubmit={handleSubmit}>
-            <div className="input-group">
-              <label htmlFor="registerEmail">Email</label>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
               <input
                 type="email"
-                id="registerEmail"
-                placeholder="nhap.email.cua.ban@example.com"
+                id="email"
+                placeholder="nhap.email@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={error && !email ? "input-error" : ""}
               />
             </div>
-
-            <div className="input-group">
-              <label htmlFor="registerPassword">Mật khẩu</label>
+            <div className="form-group">
+              <label htmlFor="phone">Số điện thoại</label>
+              <input
+                type="tel"
+                id="phone"
+                placeholder="VD: 0912345678"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Mật khẩu</label>
               <div className="password-input-wrapper">
                 <input
                   type={showPassword ? "text" : "password"}
-                  id="registerPassword"
-                  placeholder="Mật khẩu (ít nhất 6 ký tự)"
+                  id="password"
+                  placeholder="Tạo mật khẩu"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={error && !password ? "input-error" : ""}
                 />
                 <span
                   className="toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
+                  title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                 >
-                  {showPassword ? (
-                    <i className="fas fa-eye-slash"></i>
-                  ) : (
-                    <i className="fas fa-eye"></i>
-                  )}
+                  <i
+                    className={`fas ${
+                      showPassword ? "fa-eye-slash" : "fa-eye"
+                    }`}
+                  ></i>
                 </span>
               </div>
             </div>
-
-            <div className="input-group">
-              <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
-              <div className="password-input-wrapper">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="confirmPassword"
-                  placeholder="Xác nhận mật khẩu"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={
-                    error && (password !== confirmPassword || !confirmPassword)
-                      ? "input-error"
-                      : ""
-                  }
-                />
-                <span
-                  className="toggle-password"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <i className="fas fa-eye-slash"></i>
-                  ) : (
-                    <i className="fas fa-eye"></i>
-                  )}
-                </span>
-              </div>
-            </div>
-
-            <div className="terms-checkbox">
+            <div className="form-group">
+              <label htmlFor="confirmPassword">Nhập lại mật khẩu</label>
               <input
-                type="checkbox"
-                id="agreeToTerms"
-                checked={agreeToTerms}
-                onChange={(e) => setAgreeToTerms(e.target.checked)}
+                type={showPassword ? "text" : "password"}
+                id="confirmPassword"
+                placeholder="Nhập lại mật khẩu"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              <label htmlFor="agreeToTerms">
-                Tôi đồng ý với <Link to="/terms">Điều khoản dịch vụ</Link>,{" "}
-                <Link to="/general-terms">Điều khoản chung</Link> và{" "}
-                <Link to="/privacy">Chính sách bảo mật</Link>.
-              </label>
             </div>
-
-            {error && <p className="global-error">{error}</p>}
-
-            <button
-              type="submit"
-              className="signup-button"
-              disabled={isLoading}
-            >
-              {isLoading ? "Đang xử lý..." : "Đăng ký"}
+            <button type="submit" className="register-btn" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <i className="fas fa-spinner fa-spin"></i> Đang xử lý...
+                </>
+              ) : (
+                "Đăng ký"
+              )}
             </button>
           </form>
-        </div>
 
-        {/* Phần hình ảnh minh họa bên phải */}
-        <div className="right-panel">
-          <h3 className="right-panel-title">
-            Tìm phòng trọ lý tưởng trong nháy mắt!
-          </h3>
-          <div className="image-flow">
-            <div className="flow-step">
-              <div className="step-image student-image"></div>
-              <p>Bước 1: Tìm kiếm phòng trọ</p>
-            </div>
-            <span className="flow-arrow"></span>
-            <div className="flow-step">
-              <div className="step-image matching-image"></div>
-              <p>Bước 2: Tự động gợi ý phòng phù hợp</p>
-            </div>
-            <span className="flow-arrow"></span>
-            <div className="flow-step">
-              <div className="step-image room-image"></div>
-              <p>Bước 3: Chọn phòng hoàn hảo</p>
-            </div>
+          <div className="login-switch">
+            Đã có tài khoản?{" "}
+            <Link to="/login" className="login-link">
+              Đăng nhập ngay
+            </Link>
           </div>
         </div>
       </div>

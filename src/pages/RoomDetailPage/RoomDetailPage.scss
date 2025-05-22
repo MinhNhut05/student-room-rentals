@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+
 @import "../../scss/abstracts/variables";
 
 // Variables for dark card style
@@ -10,6 +12,17 @@ $accent-purple-light: lighten($accent-purple, 15%);
 $accent-purple-dark: darken($accent-purple, 10%);
 $card-border-radius: 12px;
 $card-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+$color-bg: #191a1f;
+$color-panel: #23242b;
+$color-highlight: linear-gradient(90deg, #2cd4ab 0%, #a163f7 45%, #ff9040 100%);
+$color-green: #2cd4ab;
+$color-purple: #a163f7;
+$color-orange: #ff9040;
+$color-white: #fff;
+$color-gray: #9ea4b2;
+$color-border: rgba(255, 255, 255, 0.06);
+$shadow: 0 2px 24px 0 rgba(37, 30, 64, 0.24);
 
 .room-detail {
   padding: 2rem 0;
@@ -71,226 +84,479 @@ $card-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .room-detail-page {
-  padding: 2rem 0;
-  color: #333;
+  min-height: 100vh;
+  background: $color-bg;
+  padding: 48px 0 24px 0;
+  font-family: "Inter", sans-serif;
 
   .room-detail-container {
-    max-width: 1200px;
+    background: $color-panel;
+    border-radius: 2rem;
+    box-shadow: $shadow;
+    max-width: 1160px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 38px 36px 30px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+
+    @media (max-width: 900px) {
+      padding: 20px 8px;
+    }
   }
 
   .room-detail-title {
-    font-size: 2.2rem;
+    font-size: 2.6rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: #1a1a1a;
+    background: $color-highlight;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 18px;
+    text-align: center;
+    letter-spacing: 0.5px;
   }
 
   .room-detail-main {
-    display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: 30px;
+    display: flex;
+    gap: 44px;
+    align-items: flex-start;
 
-    @media (max-width: 992px) {
-      grid-template-columns: 1fr;
+    @media (max-width: 1100px) {
+      flex-direction: column;
+      gap: 28px;
     }
   }
 
   .room-detail-gallery {
-    border-radius: $card-border-radius;
-    overflow: hidden;
-    box-shadow: $card-shadow;
-
+    flex: 1.4;
+    min-width: 320px;
     .image-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      grid-auto-rows: 200px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 12px;
-      padding: 12px;
-      background-color: $card-bg;
-
-      .image-container {
-        height: 100%;
-        border-radius: 8px;
-        overflow: hidden;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-
-          &:hover {
-            transform: scale(1.05);
-          }
-        }
-      }
-
-      // Make first image larger
-      .image-container:first-child {
-        grid-column: span 2;
-        grid-row: span 2;
-      }
+      border-radius: 1.3rem;
+      overflow: hidden;
     }
-
-    .room-detail-image {
+    .image-container {
+      aspect-ratio: 4/3;
+      background: #222;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(162, 99, 247, 0.09);
       img {
         width: 100%;
-        height: auto;
+        height: 100%;
+        object-fit: cover;
         display: block;
+        transition: transform 0.3s;
+        border-radius: 1rem;
+        &:hover {
+          transform: scale(1.07) rotate(-1deg);
+        }
+      }
+    }
+    .room-detail-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1c1c21;
+      border-radius: 1.3rem;
+      height: 320px;
+      img {
+        height: 85%;
+        opacity: 0.7;
       }
     }
   }
 
   .room-detail-info {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 20px;
 
+    // Info card nhỏ lại và fade-in
     .info-card {
-      background-color: $card-bg;
-      border-radius: $card-border-radius;
-      padding: 20px;
-      box-shadow: $card-shadow;
-      color: $text-color-light;
+      // Gradient border và glow
+      background: linear-gradient(120deg, #21222e 95%, #312a3d 100%);
+      border-radius: 1.3rem;
+      padding: 14px 16px 10px 16px;
+      margin-bottom: 0;
+      box-shadow: 0 4px 16px 0 rgba(101, 38, 255, 0.1),
+        0 1.5px 12px 0 rgba(74, 222, 128, 0.16), 0 0 12px 0 #ff9a44aa; // Cam nhạt glow
+
+      border: 2.5px solid transparent;
+      background-clip: padding-box, border-box;
+      position: relative;
+      z-index: 1;
+
+      // Custom border glow bằng ::before
+      &::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        border-radius: inherit;
+        padding: 2.5px;
+        background: linear-gradient(
+          120deg,
+          #3b8663 0%,
+          #4d2877 60%,
+          #90572e 100%
+        );
+        opacity: 0.98;
+        filter: blur(2px);
+        transition: opacity 0.4s;
+        pointer-events: none;
+      }
+      // Hover: border rực lên
+      &:hover::before {
+        opacity: 1;
+        filter: blur(4px) brightness(1.05);
+      }
+
+      // Fade-in xuất hiện mềm mại
+      animation: fadeInInfoCard 0.9s cubic-bezier(0.38, 1.5, 0.5, 1);
+
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0px 22px;
+
+      @media (max-width: 650px) {
+        grid-template-columns: 1fr;
+        padding: 10px 6px 6px 6px;
+        gap: 8px;
+      }
 
       .info-section {
         display: flex;
-        align-items: flex-start;
-        padding: 15px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 0;
+        background: rgba(130, 79, 250, 0.07); // tím nhạt translucent
+        border-radius: 0.8rem;
+        padding: 0px 10px 0px 10px;
+        box-shadow: 0 1px 8px 0 rgba(255, 166, 43, 0.09);
 
-        &:last-child {
-          border-bottom: none;
-        }
-
+        // Icon nổi bật
         .detail-icon {
-          font-size: 1.5rem;
-          margin-right: 15px;
-          color: $accent-purple-light;
-          min-width: 30px;
-          text-align: center;
+          font-size: 1.6rem;
+          padding: 12px;
+          border-radius: 50%;
+          background: linear-gradient(
+            135deg,
+            #7cffcb 10%,
+            #bc6ff1 60%,
+            #ff9950 100%
+          );
+          color: #fff;
+          box-shadow: 0 0 8px 0 #8effcf99;
+          filter: drop-shadow(0 0 7px #bc6ff1aa);
+          transition: filter 0.3s;
+        }
+        // Khi hover info-section thì icon phát sáng hơn
+        &:hover .detail-icon {
+          filter: drop-shadow(0 0 14px #fff) brightness(1.25);
         }
 
         .info-content {
           .info-title {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: $text-color-secondary;
-            margin-bottom: 5px;
-          }
-
-          .info-value {
-            font-size: 1.1rem;
+            font-size: 1.01rem;
             font-weight: 600;
+            color: #7d58c2;
+            letter-spacing: 0.03em;
+            margin-bottom: 2px;
+          }
+          .info-value {
+            font-size: 1.09rem;
+            font-weight: 500;
+            color: #54ba5c;
           }
         }
       }
     }
 
     .room-description-card {
-      background-color: $card-bg;
-      border-radius: $card-border-radius;
-      padding: 20px;
-      box-shadow: $card-shadow;
-      color: $text-color-light;
-
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 1.1rem;
+      padding: 20px 20px 18px 20px;
+      box-shadow: 0 1px 16px 0 rgba(44, 212, 171, 0.09);
       .description-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 1.16rem;
+        font-weight: 700;
+        color: $color-purple;
+        margin-bottom: 8px;
+      }
+      .description-content {
+        color: $color-gray;
+        font-size: 1.09rem;
+        line-height: 1.65;
+      }
+    }
+  }
+
+  .amenities-section {
+    margin-top: 40px;
+
+    .amenities-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $color-green;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .amenities-icon {
+        font-size: 1.3rem;
+      }
+    }
+
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+
+      .amenity-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+        color: $color-gray;
+
+        &.available {
+          color: $color-white;
+          .amenity-icon {
+            color: $color-green;
+          }
+        }
+
+        .amenity-icon {
+          font-size: 1.3rem;
+          width: 24px;
+          text-align: center;
+        }
+
+        .amenity-text {
+          font-size: 1.05rem;
+        }
+      }
+    }
+  }
+
+  .contact-section {
+    margin-top: 40px;
+    background: linear-gradient(
+      135deg,
+      rgba(44, 212, 171, 0.1),
+      rgba(162, 99, 247, 0.1)
+    );
+    border-radius: 1.1rem;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .contact-info {
+      .contact-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: $color-purple;
+        margin-bottom: 10px;
       }
 
-      .description-content {
-        font-size: 1rem;
-        line-height: 1.6;
-        white-space: pre-line;
+      .contact-text {
+        color: $color-gray;
+        font-size: 1.05rem;
+        margin-bottom: 16px;
       }
+    }
+
+    .contact-button {
+      background: $color-highlight;
+      color: $color-white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(44, 212, 171, 0.3);
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+
+      .contact-button {
+        width: 100%;
+      }
+    }
+  }
+
+  .map-section {
+    margin-top: 40px;
+
+    .map-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $color-orange;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .map-icon {
+        font-size: 1.3rem;
+      }
+    }
+
+    .map-container {
+      height: 300px;
+      border-radius: 1.1rem;
+      overflow: hidden;
+      border: 2px solid rgba(255, 144, 64, 0.2);
     }
   }
 }
 
-// Loader animation styles
+/* Loader + error state (có thể dùng chung toàn app) */
 .loader-container {
+  min-height: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 50vh;
-  padding: 30px 0;
-  text-align: center;
-
-  p {
-    color: $primary-color;
-    font-weight: 500;
-    margin-top: 10px;
-  }
-
-  // Pencil loader animation styles (same as RoomListPage)
   .pencil {
-    display: block;
-    width: 10em;
-    height: 10em;
+    margin-bottom: 12px;
   }
-
-  .pencil__body1,
-  .pencil__body2,
-  .pencil__body3,
-  .pencil__eraser,
-  .pencil__eraser-skew,
-  .pencil__point,
-  .pencil__rotate,
-  .pencil__stroke {
-    animation-duration: 3s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+  p {
+    color: $color-purple;
   }
-
-  // ... (include all the pencil animation keyframes here) ...
 }
-
 .error-message,
 .not-found-message {
+  background: #332020;
+  color: #ff9040;
+  border-radius: 8px;
+  padding: 18px 24px;
+  text-align: center;
+  margin: 60px auto 0 auto;
+  font-size: 1.18rem;
+  max-width: 420px;
+  box-shadow: 0 0 10px 0 rgba(255, 144, 64, 0.08);
+}
+
+/* Animation for elements */
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gallery modal */
+.gallery-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 40vh;
-  text-align: center;
-  font-size: 1.2rem;
-  color: #e74c3c;
-  padding: 2rem;
+  z-index: 100;
 
-  &::before {
-    content: "⚠️";
-    font-size: 3rem;
-    margin-bottom: 1rem;
-  }
-}
+  .gallery-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
 
-.not-found-message {
-  color: #7f8c8d;
-
-  &::before {
-    content: "🔍";
-  }
-}
-
-// Media queries for responsive design
-@media (max-width: 768px) {
-  .room-detail-page {
-    .room-detail-title {
-      font-size: 1.8rem;
+    img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
     }
 
-    .room-detail-gallery {
-      .image-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        grid-auto-rows: 150px;
+    .close-button {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.prev {
+        left: -70px;
+      }
+
+      &.next {
+        right: -70px;
+      }
+
+      @media (max-width: 768px) {
+        width: 40px;
+        height: 40px;
+
+        &.prev {
+          left: 10px;
+        }
+
+        &.next {
+          right: 10px;
+        }
       }
     }
+  }
+}
+
+// Fade-in animation
+@keyframes fadeInInfoCard {
+  0% {
+    opacity: 0;
+    transform: translateY(36px) scale(0.98);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }

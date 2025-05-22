@@ -8,6 +8,8 @@ const RoomDetailPage = () => {
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -24,6 +26,74 @@ const RoomDetailPage = () => {
 
     fetchRoom();
   }, [id]);
+
+  const openImageModal = (imgUrl, index) => {
+    setSelectedImage(imgUrl);
+    setCurrentImageIndex(index);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeImageModal = () => {
+    setSelectedImage(null);
+    document.body.style.overflow = "auto";
+  };
+
+  const navigateImage = (direction) => {
+    if (!room || !room.images) return;
+
+    const totalImages = room.images.length;
+    let newIndex;
+
+    if (direction === "next") {
+      newIndex = (currentImageIndex + 1) % totalImages;
+    } else {
+      newIndex = (currentImageIndex - 1 + totalImages) % totalImages;
+    }
+
+    setCurrentImageIndex(newIndex);
+    setSelectedImage(room.images[newIndex]);
+  };
+
+  const renderAmenities = () => {
+    if (!room || !room.amenities) return null;
+
+    const amenitiesList = [
+      { key: "wifi", label: "Wi-Fi", icon: "fa-wifi" },
+      { key: "air_conditioner", label: "Máy lạnh", icon: "fa-snowflake" },
+      { key: "washing_machine", label: "Máy giặt", icon: "fa-washing-machine" },
+      { key: "fridge", label: "Tủ lạnh", icon: "fa-refrigerator" },
+      { key: "parking", label: "Chỗ để xe", icon: "fa-motorcycle" },
+      { key: "security", label: "Bảo vệ", icon: "fa-shield-alt" },
+      { key: "private_bathroom", label: "WC riêng", icon: "fa-toilet" },
+      { key: "kitchen", label: "Nhà bếp", icon: "fa-utensils" },
+      { key: "window", label: "Cửa sổ", icon: "fa-window-maximize" },
+      { key: "balcony", label: "Ban công", icon: "fa-door-open" },
+      { key: "water_heater", label: "Máy nước nóng", icon: "fa-hot-tub" },
+      { key: "tv", label: "TV", icon: "fa-tv" },
+    ];
+
+    return (
+      <div className="amenities-section fade-in">
+        <h3 className="amenities-title">
+          <i className="fas fa-check-circle amenities-icon"></i>
+          Tiện nghi
+        </h3>
+        <div className="amenities-grid">
+          {amenitiesList.map((item) => (
+            <div
+              key={item.key}
+              className={`amenity-item ${
+                room.amenities[item.key] ? "available" : ""
+              }`}
+            >
+              <i className={`fas ${item.icon} amenity-icon`}></i>
+              <span className="amenity-text">{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   if (loading) {
     return (
@@ -147,7 +217,7 @@ const RoomDetailPage = () => {
         <h1 className="room-detail-title">{room.title}</h1>
 
         <div className="room-detail-main">
-          <div className="room-detail-gallery">
+          <div className="room-detail-gallery fade-in">
             {room.images && room.images.length > 0 ? (
               <div className="image-grid">
                 {room.images.map((imgUrl, index) => (
@@ -156,6 +226,7 @@ const RoomDetailPage = () => {
                       src={imgUrl}
                       alt={`Ảnh ${index + 1}`}
                       className="room-image"
+                      onClick={() => openImageModal(imgUrl, index)}
                     />
                   </div>
                 ))}
@@ -171,7 +242,7 @@ const RoomDetailPage = () => {
           </div>
 
           <div className="room-detail-info">
-            <div className="info-card">
+            <div className="info-card fade-in">
               <div className="info-section price-section">
                 <span className="detail-icon price-icon">₫</span>
                 <div className="info-content">
@@ -187,13 +258,9 @@ const RoomDetailPage = () => {
                 <div className="info-content">
                   <h3 className="info-title">Địa chỉ</h3>
                   <p className="info-value">
-                    {[
-                      room.address,
-                      room.district ? `${room.district},` : "",
-                      room.city || "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ") || "Chưa có địa chỉ"}
+                    {room.address}
+                    {room.district ? `, ${room.district}` : ""}
+                    {room.city ? `, ${room.city}` : ""}
                   </p>
                 </div>
               </div>
@@ -207,15 +274,102 @@ const RoomDetailPage = () => {
                   </div>
                 </div>
               )}
+
+              {room.bedrooms && (
+                <div className="info-section area-section">
+                  <span className="detail-icon area-icon">
+                    <i className="fas fa-bed"></i>
+                  </span>
+                  <div className="info-content">
+                    <h3 className="info-title">Phòng ngủ</h3>
+                    <p className="info-value">{room.bedrooms}</p>
+                  </div>
+                </div>
+              )}
+
+              {room.bathrooms && (
+                <div className="info-section area-section">
+                  <span className="detail-icon area-icon">
+                    <i className="fas fa-bath"></i>
+                  </span>
+                  <div className="info-content">
+                    <h3 className="info-title">Phòng tắm</h3>
+                    <p className="info-value">{room.bathrooms}</p>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div className="room-description-card">
+            <div className="room-description-card fade-in">
               <h3 className="description-title">Mô tả chi tiết</h3>
               <div className="description-content">{room.description}</div>
             </div>
           </div>
         </div>
+
+        {renderAmenities()}
+
+        <div className="contact-section fade-in">
+          <div className="contact-info">
+            <h3 className="contact-title">Bạn quan tâm đến phòng này?</h3>
+            <p className="contact-text">
+              Liên hệ với chủ nhà để biết thêm thông tin và đặt lịch xem phòng
+            </p>
+          </div>
+          <button className="contact-button">
+            <i className="fas fa-phone-alt"></i> Liên hệ ngay
+          </button>
+        </div>
+
+        <div className="map-section fade-in">
+          <h3 className="map-title">
+            <i className="fas fa-map-marker-alt map-icon"></i>
+            Vị trí trên bản đồ
+          </h3>
+          <div className="map-container">
+            <iframe
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                [room.address, room.district, room.city]
+                  .filter(Boolean)
+                  .join(", ")
+              )}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              style={{ border: 0 }}
+              allowFullScreen
+              title="room-location"
+            ></iframe>
+          </div>
+        </div>
       </div>
+
+      {selectedImage && (
+        <div className="gallery-modal" onClick={closeImageModal}>
+          <div className="gallery-content" onClick={(e) => e.stopPropagation()}>
+            <img src={selectedImage} alt="Room detail" />
+            <button className="close-button" onClick={closeImageModal}>
+              <i className="fas fa-times"></i>
+            </button>
+            {room.images && room.images.length > 1 && (
+              <>
+                <button
+                  className="nav-button prev"
+                  onClick={() => navigateImage("prev")}
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </button>
+                <button
+                  className="nav-button next"
+                  onClick={() => navigateImage("next")}
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

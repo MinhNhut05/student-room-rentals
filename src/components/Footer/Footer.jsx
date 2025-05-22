@@ -1,20 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Footer.scss";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [email, setEmail] = useState("");
+
+  // Check if we need to show the back-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleBackToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    // Add newsletter signup logic here
+    alert(`Thanks for subscribing with email: ${email}`);
+    setEmail("");
+  };
 
   return (
     <footer className="footer">
       <div className="container">
-        {/* Column 1: Logo and Description */}
+        {/* Company Info Column */}
         <div className="column">
           <div className="logo">Phòng Trọ Sinh Viên</div>
           <p className="description">
-            Phòng Trọ Sinh Viên là nền tảng giúp sinh viên tìm kiếm và đăng tin
-            phòng trọ, ở ghép một cách dễ dàng và nhanh chóng, kết nối cộng
-            đồng.
+            Nền tảng kết nối sinh viên với giải pháp ở trọ an toàn, tiện lợi và
+            phù hợp với nhu cầu học tập - giúp các bạn sinh viên tìm được không
+            gian sống lý tưởng.
           </p>
           <div className="social-icons">
             <a
@@ -26,6 +52,14 @@ const Footer = () => {
               <i className="fab fa-facebook-f"></i>
             </a>
             <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <i className="fab fa-instagram"></i>
+            </a>
+            <a
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
@@ -34,107 +68,92 @@ const Footer = () => {
               <i className="fab fa-twitter"></i>
             </a>
             <a
-              href="https://youtube.com"
+              href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="YouTube"
+              aria-label="LinkedIn"
             >
-              <i className="fab fa-youtube"></i>
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-            >
-              <i className="fab fa-instagram"></i>
+              <i className="fab fa-linkedin-in"></i>
             </a>
           </div>
         </div>
 
-        {/* Column 2: Search */}
+        {/* Links Column 1 */}
         <div className="column">
-          <h4 className="column-title">Tìm kiếm</h4>
+          <h3 className="column-title">Dành cho sinh viên</h3>
           <ul className="link-list">
             <li>
               <Link to="/rooms" className="link">
-                Phòng cho thuê
+                Tìm phòng trọ
               </Link>
             </li>
             <li>
-              <Link to="/rooms?type=roommate" className="link">
-                Tìm bạn ở ghép
+              <Link to="/rooms?roommate=true" className="link">
+                Tìm ở ghép
               </Link>
             </li>
             <li>
-              <Link to="/rooms?type=shared" className="link">
-                Phòng ở ghép
+              <Link to="/dormitories" className="link">
+                Ký túc xá
               </Link>
             </li>
             <li>
-              <Link to="/rooms" className="link">
-                Tìm phòng theo khu vực
+              <Link to="/blog/student-tips" className="link">
+                Mẹo cho sinh viên
+              </Link>
+            </li>
+            <li>
+              <Link to="/safety" className="link">
+                An toàn & Bảo mật
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Column 3: Services */}
+        {/* Links Column 2 */}
         <div className="column">
-          <h4 className="column-title">Dịch vụ</h4>
+          <h3 className="column-title">Dành cho chủ nhà</h3>
           <ul className="link-list">
             <li>
-              <Link to="/post-room" className="link">
-                Đăng tin phòng trọ
+              <Link to="/rooms/new" className="link">
+                Đăng phòng
               </Link>
             </li>
             <li>
-              <Link to="/my-rooms" className="link">
-                Quản lý tin đăng
+              <Link to="/pricing" className="link">
+                Bảng giá dịch vụ
               </Link>
             </li>
             <li>
-              <Link to="/services" className="link">
-                Dịch vụ quảng cáo
+              <Link to="/blog/landlord-tips" className="link">
+                Kinh nghiệm cho thuê
+              </Link>
+            </li>
+            <li>
+              <Link to="/regulations" className="link">
+                Quy định & Điều khoản
+              </Link>
+            </li>
+            <li>
+              <Link to="/support" className="link">
+                Hỗ trợ
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Column 4: Support */}
+        {/* Links Column 3 */}
         <div className="column">
-          <h4 className="column-title">Hỗ trợ</h4>
-          <ul className="link-list">
-            <li>
-              <Link to="/faq" className="link">
-                Câu hỏi thường gặp (FAQ)
-              </Link>
-            </li>
-            <li>
-              <Link to="/guide" className="link">
-                Hướng dẫn sử dụng
-              </Link>
-            </li>
-            <li>
-              <Link to="/help" className="link">
-                Trung tâm trợ giúp
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="link">
-                Liên hệ chúng tôi
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Column 5: Company */}
-        <div className="column">
-          <h4 className="column-title">Công ty</h4>
+          <h3 className="column-title">Thông tin</h3>
           <ul className="link-list">
             <li>
               <Link to="/about" className="link">
                 Về chúng tôi
+              </Link>
+            </li>
+            <li>
+              <Link to="/partners" className="link">
+                Đối tác
               </Link>
             </li>
             <li>
@@ -143,27 +162,68 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link to="/privacy" className="link">
-                Chính sách bảo mật
+              <Link to="/blog" className="link">
+                Blog
               </Link>
             </li>
             <li>
-              <Link to="/terms" className="link">
-                Điều khoản dịch vụ
-              </Link>
-            </li>
-            <li>
-              <Link to="/sitemap" className="link">
-                Sơ đồ trang web
+              <Link to="/contact" className="link">
+                Liên hệ
               </Link>
             </li>
           </ul>
         </div>
+
+        {/* Newsletter Column */}
+        <div className="column">
+          <h3 className="column-title">Nhận thông báo phòng mới</h3>
+          <p className="description">
+            Đăng ký nhận thông báo về các phòng trọ mới, phù hợp với nhu cầu của
+            bạn.
+          </p>
+          <div className="newsletter">
+            <form onSubmit={handleNewsletterSubmit} className="newsletter-form">
+              <input
+                type="email"
+                placeholder="Email của bạn"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button type="submit">Đăng ký</button>
+            </form>
+          </div>
+        </div>
       </div>
 
-      {/* Copyright section */}
+      {/* Copyright Section */}
       <div className="copyright">
-        <p>&copy; {currentYear} Phòng Trọ Sinh Viên. All rights reserved.</p>
+        <p>
+          © {new Date().getFullYear()} Phòng Trọ Sinh Viên. Đã đăng ký bản
+          quyền. Phát triển bởi{" "}
+          <a
+            href="https://yourwebsite.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Student Room Rentals Team
+          </a>
+        </p>
+        <div className="footer-links">
+          <Link to="/terms">Điều khoản sử dụng</Link>
+          <Link to="/privacy">Chính sách riêng tư</Link>
+          <Link to="/cookie-policy">Chính sách Cookie</Link>
+          <Link to="/sitemap">Sơ đồ trang</Link>
+        </div>
+      </div>
+
+      {/* Back to Top Button */}
+      <div
+        className={`back-to-top ${showBackToTop ? "visible" : ""}`}
+        onClick={handleBackToTop}
+        aria-label="Back to top"
+      >
+        <i className="fas fa-arrow-up"></i>
       </div>
     </footer>
   );

@@ -3,7 +3,33 @@ import { Link } from "react-router-dom";
 import "./MyRoomCard.scss";
 
 const MyRoomCard = ({ room, onDelete, isDeleting }) => {
-  const { _id, title, price, address, city, district, area, images } = room;
+  const {
+    _id,
+    title,
+    price,
+    address,
+    city,
+    district,
+    images,
+    status = "active",
+    viewCount = 0,
+  } = room;
+
+  // Determine status display
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "active":
+        return "Đang hoạt động";
+      case "pending":
+        return "Chờ duyệt";
+      case "rejected":
+        return "Đã từ chối";
+      case "expired":
+        return "Đã hết hạn";
+      default:
+        return "Chưa xác định";
+    }
+  };
 
   // Find the first available image or use placeholder
   const displayImage =
@@ -16,70 +42,55 @@ const MyRoomCard = ({ room, onDelete, isDeleting }) => {
     .filter(Boolean)
     .join(" ");
 
-  // Placeholder values for missing data
-  const maxOccupancy = room.maxOccupancy || "2";
-  const type = room.type || "Phòng trọ";
-
-  const handleDelete = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onDelete();
-  };
-
   return (
     <div className="my-room-card">
-      <div className="room-card-image-container">
-        <img
-          src={displayImage}
-          alt={title || "Phòng trọ"}
-          className="room-card-image"
-        />
-        <div className="room-card-price-overlay">
-          <span className="price-icon">$</span>
-          <span>{price ? price.toLocaleString("vi-VN") : "N/A"} VNĐ/tháng</span>
+      <Link to={`/rooms/${_id}`} className="my-room-card-image-link">
+        <img src={displayImage} alt={title} className="my-room-card-image" />
+      </Link>
+
+      <div className="my-room-card-info">
+        <h3 title={title}>{title || "Chưa có tiêu đề"}</h3>
+        <p className="my-room-card-price">
+          {price ? price.toLocaleString("vi-VN") : "N/A"} VNĐ/tháng
+        </p>
+        <p className="my-room-card-location">
+          <span>📍</span> {displayAddress || "Chưa rõ địa chỉ"}
+        </p>
+
+        <div className="my-room-card-stats">
+          <div className="stat-item">
+            <span className="stat-icon">👁️</span> {viewCount} lượt xem
+          </div>
+          <div className="stat-item">
+            <span className="stat-icon">📅</span>{" "}
+            {room.updatedAt
+              ? new Date(room.updatedAt).toLocaleDateString("vi-VN")
+              : "N/A"}
+          </div>
         </div>
-        <div className="room-card-actions">
-          <Link to={`/edit-room/${_id}`} className="edit-button">
-            ✏️ Sửa
-          </Link>
-          <button
-            className="delete-button"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting ? "Đang xóa..." : "🗑️ Xóa"}
-          </button>
+
+        <div className={`room-status status-${status}`}>
+          {getStatusLabel(status)}
         </div>
       </div>
 
-      <div className="room-card-info">
-        <Link to={`/rooms/${_id}`} className="room-card-link">
-          <h3 className="room-card-title" title={title}>
-            {title || "Chưa có tiêu đề"}
-          </h3>
+      <div className="my-room-card-actions">
+        <Link to={`/rooms/${_id}`} className="btn btn-view">
+          Xem
         </Link>
-
-        <div className="room-card-details">
-          <div className="room-card-detail-item">
-            <span className="detail-icon area-icon">⊡</span>
-            <span>{area || "N/A"} m²</span>
-          </div>
-          <div className="room-card-detail-item">
-            <span className="detail-icon occupancy-icon">👥</span>
-            <span>{maxOccupancy} người</span>
-          </div>
-          <div className="room-card-detail-item room-card-type">
-            <span className="detail-icon type-icon">🛏️</span>
-            <span>{type}</span>
-          </div>
-        </div>
-
-        <div className="room-card-location">
-          <span className="location-icon">📍</span>
-          <span title={displayAddress}>
-            {displayAddress || "Chưa rõ địa chỉ"}
-          </span>
-        </div>
+        <Link to={`/edit-room/${_id}`} className="btn btn-edit">
+          Sửa
+        </Link>
+        <button
+          className="btn btn-delete"
+          onClick={(e) => {
+            e.preventDefault();
+            onDelete();
+          }}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Đang xóa..." : "Xóa"}
+        </button>
       </div>
     </div>
   );
