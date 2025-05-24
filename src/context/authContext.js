@@ -19,8 +19,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    // Remove token from localStorage
+    localStorage.removeItem("userToken");
+
+    // Clear user state
     setUser(null);
-    localStorage.removeItem("user");
+
+    // Log the logout action
+    console.log("User logged out, token removed from storage");
   };
 
   // Add the update user function

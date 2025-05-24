@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   getRooms,
+  getMyRooms,
   getRoomById,
   createRoom,
   updateRoom,
@@ -13,18 +14,16 @@ const {
   uploadErrorHandler,
 } = require("../middleware/uploadMiddleware");
 
-// Combine routes with the same path
-router.route("/").get(getRooms).post(
-  protect,
-  uploadImages, // Xử lý file upload từ form-data, tạo req.files
-  uploadErrorHandler, // Bắt lỗi upload
-  createRoom
-);
+// IMPORTANT: Specific routes before parameterized routes
+router.get("/my", protect, getMyRooms);
 
-router
-  .route("/:id")
-  .get(getRoomById)
-  .put(protect, uploadImages, uploadErrorHandler, updateRoom)
-  .delete(protect, deleteRoom);
+// Public routes
+router.get("/", getRooms);
+router.get("/:id", getRoomById);
+
+// Protected routes with file upload
+router.post("/", protect, uploadImages, createRoom);
+router.put("/:id", protect, uploadImages, updateRoom);
+router.delete("/:id", protect, deleteRoom);
 
 module.exports = router;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./RoomCard.scss";
 
-const RoomCard = ({ room }) => {
+const RoomCard = ({ room, onDelete, user }) => {
   const { _id, title, price, address, city, district, area, images } = room;
   const [isSaved, setIsSaved] = useState(false);
 
@@ -32,6 +32,23 @@ const RoomCard = ({ room }) => {
     setIsSaved(!isSaved);
     // Here you would implement actual save functionality
     // saveRoomToFavorites(_id);
+  };
+
+  // If there's a delete action in the RoomCard component
+  const handleDelete = async () => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa phòng trọ này?")) {
+      try {
+        // Make sure to pass the user token
+        await roomService.deleteRoom(room._id, user.token);
+
+        if (onDelete) {
+          onDelete(room._id);
+        }
+      } catch (err) {
+        console.error("Error deleting room:", err);
+        // Handle error
+      }
+    }
   };
 
   return (

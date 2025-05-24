@@ -14,16 +14,18 @@ const roomSchema = new Schema(
     bedrooms: Number,
     bathrooms: Number,
     owner: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: true, // Ensure this is required
     },
     images: {
-      type: [String],
-      default: [],
+      type: [String], // Array of strings for image URLs
+      default: [], // Default to empty array if no images
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Room", roomSchema);

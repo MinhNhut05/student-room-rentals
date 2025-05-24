@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import roomService from "../../services/roomService";
 import "./RoomDetailPage.scss";
 
 const RoomDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+  const [user, setUser] = useState({}); // Assuming user state is managed here
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -52,6 +55,27 @@ const RoomDetailPage = () => {
 
     setCurrentImageIndex(newIndex);
     setSelectedImage(room.images[newIndex]);
+  };
+
+  const handleDeleteRoom = async () => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa phòng trọ này?")) {
+      try {
+        setDeleting(true);
+
+        // Make sure to pass the user token
+        await roomService.deleteRoom(id, user.token);
+
+        // Use alert instead of toast
+        alert("Xóa phòng trọ thành công");
+        navigate("/my-rooms");
+      } catch (err) {
+        console.error("Error deleting room:", err);
+        // Use alert instead of toast
+        alert("Không thể xóa phòng trọ. Vui lòng thử lại sau.");
+      } finally {
+        setDeleting(false);
+      }
+    }
   };
 
   const renderAmenities = () => {
@@ -342,6 +366,19 @@ const RoomDetailPage = () => {
             ></iframe>
           </div>
         </div>
+
+        <button
+          className="delete-room-button"
+          onClick={handleDeleteRoom}
+          disabled={deleting}
+        >
+          {deleting ? (
+            <i className="fas fa-spinner fa-spin"></i>
+          ) : (
+            <i className="fas fa-trash"></i>
+          )}
+          Xóa phòng trọ
+        </button>
       </div>
 
       {selectedImage && (

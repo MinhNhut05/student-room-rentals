@@ -25,41 +25,62 @@ const MyRoomsPage = () => {
       navigate("/login");
       return;
     }
+
     const fetchMyRooms = async () => {
       try {
         setLoading(true);
         setError(null);
-        // Update to pass filters as an object - this is the key fix
-        const roomsData = await roomService.getRooms({
-          ownerId: user._id,
-          token: user.token,
-        });
-        setMyRooms(roomsData);
 
-        // Calculate stats
-        const active = roomsData.filter(
-          (room) => room.status === "active"
-        ).length;
-        const pending = roomsData.filter(
-          (room) => room.status === "pending"
-        ).length;
-        const totalViews = roomsData.reduce(
-          (sum, room) => sum + (room.viewCount || 0),
-          0
-        );
+        console.log("Fetching my rooms with token:", user.token);
+        const res = await roomService.getMyRooms(user.token);
 
-        setStats({
-          total: roomsData.length,
-          active,
-          pending,
-          views: totalViews,
-        });
+        // Handle different response formats
+        let roomsData;
+        if (res.data) {
+          roomsData = res.data;
+        } else {
+          roomsData = res;
+        }
+
+        console.log("My rooms data:", roomsData);
+
+        if (Array.isArray(roomsData)) {
+          setMyRooms(roomsData);
+
+          // Calculate stats correctly
+          const totalRooms = roomsData.length;
+          const activeRooms =
+            roomsData.filter((room) => room.status === "active").length ||
+            totalRooms; // Default to total if status not set
+          const pendingRooms =
+            roomsData.filter((room) => room.status === "pending").length || 0;
+          const totalViews = roomsData.reduce(
+            (sum, room) => sum + (room.views || 0),
+            0
+          );
+
+          setStats({
+            total: totalRooms,
+            active: activeRooms,
+            pending: pendingRooms,
+            views: totalViews,
+          });
+        } else {
+          console.error("Unexpected response format:", roomsData);
+          setMyRooms([]);
+          setStats({
+            activeListings: 0,
+            totalViews: 0,
+          });
+        }
       } catch (err) {
+        console.error("Error fetching my rooms:", err);
         setError("Không thể tải danh sách phòng trọ của bạn.");
       } finally {
         setLoading(false);
       }
     };
+
     fetchMyRooms();
   }, [user, navigate]);
 
@@ -69,6 +90,7 @@ const MyRoomsPage = () => {
       return;
     try {
       setDeletingId(roomId);
+      // Make sure to pass the user token when calling deleteRoom
       await roomService.deleteRoom(roomId, user.token);
       setMyRooms(myRooms.filter((room) => room._id !== roomId));
 
@@ -215,19 +237,23 @@ const MyRoomsPage = () => {
           <>
             <div className="my-rooms-stats">
               <div className="stat-item">
-                <div className="stat-value">{stats.total}</div>
+                <div className="stat-value">
+                  {stats.total || myRooms.length}
+                </div>
                 <div className="stat-label">Tổng phòng</div>
               </div>
               <div className="stat-item">
-                <div className="stat-value">{stats.active}</div>
+                <div className="stat-value">
+                  {stats.active || myRooms.length}
+                </div>
                 <div className="stat-label">Đang hoạt động</div>
               </div>
               <div className="stat-item">
-                <div className="stat-value">{stats.pending}</div>
+                <div className="stat-value">{stats.pending || 0}</div>
                 <div className="stat-label">Chờ duyệt</div>
               </div>
               <div className="stat-item">
-                <div className="stat-value">{stats.views}</div>
+                <div className="stat-value">{stats.views || 0}</div>
                 <div className="stat-label">Lượt xem</div>
               </div>
             </div>

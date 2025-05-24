@@ -17,7 +17,7 @@ const register = async (userData) => {
 
 // Đăng nhập người dùng
 const login = async (userData) => {
-  const response = await axios.post(API_URL + "/login", userData);
+  const response = await axios.post(API_URL + "login", userData);
   return response.data; // thường trả về token
 };
 

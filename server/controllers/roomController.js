@@ -72,51 +72,86 @@ const getRoomById = asyncHandler(async (req, res) => {
 // @route   POST /api/rooms
 // @access  Private
 const createRoom = asyncHandler(async (req, res) => {
-  const {
-    title,
-    description,
-    price,
-    address,
-    city,
-    district,
-    area,
-    bedrooms,
-    bathrooms,
-    location,
-  } = req.body;
-  const ownerId = req.user._id;
+  console.log("=== CREATE ROOM REQUEST ===");
+  console.log("req.body:", req.body);
+  console.log("req.files:", req.files);
 
-  // Lấy URLs của các ảnh đã upload (file.path chính là URL trên Cloudinary)
-  const imageUrls = req.files ? req.files.map((file) => file.path) : [];
+  try {
+    // Extract image URLs from Cloudinary uploads
+    let imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      // Extract either path or secure_url depending on what Cloudinary provides
+      imageUrls = req.files.map((file) => file.path || file.secure_url);
+      console.log("Cloudinary image URLs:", imageUrls);
+    } else {
+      console.warn("No files found in the request");
+    }
 
-  if (!title || !description || !price || !address || !city) {
-    res.status(400);
-    throw new Error("Vui lòng điền đầy đủ các trường bắt buộc!");
+    // Get user ID from authenticated user
+    const ownerId = req.user._id;
+
+    // Extract data from request body
+    const {
+      title,
+      description,
+      price,
+      address,
+      city,
+      district,
+      area,
+      bedrooms,
+      bathrooms,
+    } = req.body;
+
+    // Process amenities
+    const amenities = {};
+    Object.keys(req.body).forEach((key) => {
+      if (key.startsWith("amenities[") && key.endsWith("]")) {
+        const amenityKey = key.substring(10, key.length - 1);
+        amenities[amenityKey] = req.body[key] === "true";
+      }
+    });
+
+    // Create new room with image URLs
+    const roomData = {
+      title,
+      description,
+      price: Number(price),
+      address,
+      city,
+      district: district || "",
+      area: area ? Number(area) : 0,
+      bedrooms: bedrooms ? Number(bedrooms) : 0,
+      bathrooms: bathrooms ? Number(bathrooms) : 0,
+      amenities,
+      images: imageUrls, // Save the extracted image URLs
+      owner: ownerId,
+    };
+
+    console.log("Creating room with data:", {
+      ...roomData,
+      images:
+        roomData.images.length > 0
+          ? roomData.images.map((url) => url.substring(0, 30) + "...")
+          : "No images",
+    });
+
+    const room = new Room(roomData);
+    const createdRoom = await room.save();
+
+    console.log("Room saved to database:", {
+      id: createdRoom._id,
+      title: createdRoom.title,
+      images: createdRoom.images,
+    });
+
+    res.status(201).json(createdRoom);
+  } catch (error) {
+    console.error("Error creating room:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to create room", error: error.message });
   }
-
-  // Check price after type conversion
-  if (Number(price) <= 0) {
-    res.status(400);
-    throw new Error("Giá phòng phải lớn hơn 0");
-  }
-
-  const room = new Room({
-    owner: ownerId,
-    title,
-    description,
-    price: Number(price), // Standard type casting
-    address,
-    city,
-    district,
-    area: area ? Number(area) : undefined,
-    bedrooms: bedrooms ? Number(bedrooms) : undefined,
-    bathrooms: bathrooms ? Number(bathrooms) : undefined,
-    location,
-    images: imageUrls,
-  });
-
-  const createdRoom = await room.save();
-  res.status(201).json(createdRoom);
 });
 
 // @desc    Update room
@@ -202,10 +237,35 @@ const deleteRoom = asyncHandler(async (req, res) => {
   res.json({ message: "Room removed" });
 });
 
+// Get rooms owned by the logged-in user
+const getMyRooms = asyncHandler(async (req, res) => {
+  try {
+    // Get the user ID directly from the token - set by protect middleware
+    const userId = req.user._id;
+
+    // Log for debugging
+    console.log(`Getting rooms for authenticated user ID: ${userId}`);
+
+    // Find only rooms owned by the currently logged-in user
+    const rooms = await Room.find({ owner: userId }).populate(
+      "owner",
+      "name email"
+    );
+
+    console.log(`Found ${rooms.length} rooms for user ${userId}`);
+
+    res.json(rooms);
+  } catch (error) {
+    console.error("Error fetching my rooms:", error);
+    res.status(500).json({ message: "Failed to fetch rooms" });
+  }
+});
+
 module.exports = {
   getRooms,
   getRoomById,
   createRoom,
   updateRoom,
   deleteRoom,
+  getMyRooms,
 };

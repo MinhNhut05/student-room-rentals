@@ -7,9 +7,8 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "student-room-rentals",
-    format: async (req, file) => "png", // Hoặc dùng file.mimetype.split('/')[1] nếu muốn giữ định dạng gốc
-    public_id: (req, file) =>
-      `room-${Date.now()}-${file.originalname.replace(/\s/g, "_")}`,
+    allowed_formats: ["jpg", "png", "jpeg", "gif", "webp"],
+    transformation: [{ width: 1200, height: 800, crop: "limit" }],
   },
 });
 
@@ -41,18 +40,27 @@ const upload = multer({
 });
 
 // Middleware upload nhiều file (tối đa 10) với field name là 'images'
-const uploadImages = upload.array("images", 10);
+const uploadImages = (req, res, next) => {
+  upload.array("images", 10)(req, res, (err) => {
+    if (err) {
+      console.error("Multer upload error:", err);
+      return res
+        .status(400)
+        .json({ message: `Lỗi tải lên ảnh: ${err.message}` });
+    }
 
-// Middleware xử lý lỗi upload
-const uploadErrorHandler = (err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-    // Lỗi Multer như quá số lượng file, file quá lớn
-    return res.status(400).json({ message: `Lỗi tải lên ảnh: ${err.message}` });
-  } else if (err) {
-    // Các lỗi khác
-    return res.status(400).json({ message: `Lỗi tải lên ảnh: ${err.message}` });
-  }
-  next();
+    // Log successful uploads
+    console.log("Upload successful:", req.files?.length || 0, "files received");
+    if (req.files?.length > 0) {
+      console.log("First file details:", {
+        path: req.files[0].path,
+        filename: req.files[0].filename,
+        originalname: req.files[0].originalname,
+      });
+    }
+
+    next();
+  });
 };
 
-module.exports = { uploadImages, uploadErrorHandler };
+module.exports = { uploadImages };
