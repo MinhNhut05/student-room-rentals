@@ -53,9 +53,6 @@ const RoomListPage = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        setLoading(true);
-        setError(null);
-        // Gom các filter thành object
         const filters = {
           keyword: keyword.trim(),
           city: city.trim(),
@@ -68,16 +65,15 @@ const RoomListPage = () => {
         const data = await roomService.getRooms(filters);
         setRooms(data);
       } catch (err) {
-        setError("Không thể tải danh sách phòng trọ. Vui lòng thử lại sau.");
+        setError("Không thể tải danh sách phòng trọ");
       } finally {
         setLoading(false);
       }
     };
     fetchRooms();
-    // Chạy lại khi bất kỳ filter nào thay đổi
   }, [keyword, city, district, minPrice, maxPrice, minArea, maxArea]);
 
-  // Function to handle amenity checkbox changes
+  // Xử lý thay đổi tiện nghi
   const handleAmenityChange = (amenityId) => {
     if (amenities.includes(amenityId)) {
       setAmenities(amenities.filter((id) => id !== amenityId));

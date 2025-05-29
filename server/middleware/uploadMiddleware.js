@@ -2,7 +2,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
 
-// Cấu hình Cloudinary Storage cho Multer
+// Cấu hình lưu trữ Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -12,52 +12,38 @@ const storage = new CloudinaryStorage({
   },
 });
 
-// Lọc chỉ nhận file ảnh
+// Chỉ cho phép file ảnh
 const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/gif" ||
-    file.mimetype === "image/webp"
-  ) {
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+  if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(
-      new Error("Chỉ cho phép tải lên file ảnh (jpeg, png, gif, webp)!"),
-      false
-    );
+    cb(new Error("Chỉ cho phép file ảnh!"), false);
   }
 };
 
-// Cấu hình Multer
+// Cấu hình multer
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 1024 * 1024 * 5, // 5MB
+    fileSize: 5 * 1024 * 1024, // 5MB
     files: 10, // Tối đa 10 ảnh
   },
 });
 
-// Middleware upload nhiều file (tối đa 10) với field name là 'images'
+// Middleware upload ảnh
 const uploadImages = (req, res, next) => {
   upload.array("images", 10)(req, res, (err) => {
     if (err) {
-      console.error("Multer upload error:", err);
-      return res
-        .status(400)
-        .json({ message: `Lỗi tải lên ảnh: ${err.message}` });
+      console.error("Upload error:", err.message);
+      return res.status(400).json({ message: `Lỗi upload: ${err.message}` });
     }
 
-    // Log successful uploads
-    console.log("Upload successful:", req.files?.length || 0, "files received");
-    if (req.files?.length > 0) {
-      console.log("First file details:", {
-        path: req.files[0].path,
-        filename: req.files[0].filename,
-        originalname: req.files[0].originalname,
-      });
-    }
+    // Log số lượng file đã upload
+    const fileCount = req.files?.length || 0;
+    console.log(`Uploaded ${fileCount} files`);
 
     next();
   });

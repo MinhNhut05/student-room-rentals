@@ -1,54 +1,183 @@
 @import "../../scss/abstracts/variables";
 
-// --- Biến Màu Sắc và Style Cơ Bản ---
-$dark-page-bg: #1a1d24; // Màu nền tối cho toàn trang
-$form-text-light: #e0e0e5; // Màu chữ sáng chung
-$form-text-placeholder: #9090a0; // Màu cho placeholder
-$input-bg-translucent: rgba(255, 255, 255, 0.08); // Nền mờ cho input
-$input-border-translucent: rgba(255, 255, 255, 0.15); // Viền mờ cho input
-$input-focus-border: #87d98a; // Màu viền khi input được focus (màu cam/vàng ấm)
-$button-accent-bg: #87d98a; // Màu nền cho nút chính (cam/vàng ấm)
-$button-accent-text: #1a1d24; // Màu chữ cho nút chính (tối để tương phản với nền cam)
-$icon-color: #b0b0c0; // Màu cho icon trong input
-$success-color: #4caf50; // Màu cho thông báo thành công
-$error-color: #f44336; // Màu cho thông báo lỗi
-
-$font-family-main: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-$input-border-radius: 8px;
-$form-padding: 20px; // Padding chung cho form elements
-
 // --- Style Toàn Trang và Form Wrapper ---
 .dark-theme-container {
-  background: $dark-page-bg;
+  background: $bg-secondary;
   background-size: cover;
   background-attachment: fixed;
-  font-family: $font-family-main;
-  color: $form-text-light;
-  padding: 40px $form-padding;
-  min-height: calc(100vh - 140px); // Accounting for header and footer
+  font-family: $font-family;
+  color: $light-text;
+  padding: $spacing-xl $spacing-lg;
+  min-height: calc(100vh - 140px);
   width: 100%;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+// Shared decorative background shapes (matching ProfilePage but with more variety)
+.profile-bg-shape {
+  position: absolute;
+  z-index: 0;
+  border-radius: 60%;
+  filter: blur(48px);
+  opacity: 0.35;
+  pointer-events: none;
+  transition: filter $transition-slow;
+
+  &.shape-1 {
+    width: 340px;
+    height: 250px;
+    top: -40px;
+    left: -80px;
+    background: radial-gradient(
+      circle at 40% 60%,
+      $primary-color 70%,
+      $secondary-color 100%
+    );
+    animation: floatShape1 6s infinite alternate
+      cubic-bezier(0.77, 0.17, 0.37, 1.16);
+  }
+
+  &.shape-2 {
+    width: 280px;
+    height: 210px;
+    bottom: -60px;
+    right: -60px;
+    background: radial-gradient(
+      circle at 60% 40%,
+      $accent-color 60%,
+      $warning-color 100%
+    );
+    animation: floatShape2 7s infinite alternate
+      cubic-bezier(0.6, 1.2, 0.25, 0.87);
+  }
+
+  &.shape-3 {
+    width: 180px;
+    height: 150px;
+    left: 70%;
+    top: 66%;
+    background: radial-gradient(circle, $text-light 70%, $secondary-color 100%);
+    opacity: 0.28;
+    animation: floatShape3 8s infinite alternate cubic-bezier(0.55, 1, 0.6, 1.2);
+  }
+
+  &.shape-4 {
+    width: 220px;
+    height: 180px;
+    top: 20%;
+    right: 10%;
+    background: radial-gradient(
+      circle at 30% 70%,
+      $success-color 60%,
+      $primary-color 100%
+    );
+    opacity: 0.25;
+    animation: floatShape4 9s infinite alternate cubic-bezier(0.4, 0.8, 0.6, 1);
+  }
+
+  &.shape-5 {
+    width: 160px;
+    height: 140px;
+    bottom: 25%;
+    left: 5%;
+    background: radial-gradient(
+      circle at 80% 20%,
+      $warning-color 50%,
+      $accent-color 100%
+    );
+    opacity: 0.3;
+    animation: floatShape5 5s infinite alternate
+      cubic-bezier(0.3, 1.4, 0.7, 0.9);
+  }
+
+  &.shape-6 {
+    width: 200px;
+    height: 160px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle at 50% 50%,
+      $secondary-color 40%,
+      $primary-color 80%
+    );
+    opacity: 0.2;
+    animation: floatShape6 10s infinite alternate
+      cubic-bezier(0.2, 0.9, 0.8, 1.1);
+  }
+}
+
+@keyframes floatShape1 {
+  to {
+    top: 30px;
+    left: -50px;
+    filter: blur(32px);
+  }
+}
+
+@keyframes floatShape2 {
+  to {
+    bottom: -20px;
+    right: -30px;
+    filter: blur(38px);
+  }
+}
+
+@keyframes floatShape3 {
+  to {
+    left: 68%;
+    top: 63%;
+    filter: blur(22px);
+  }
+}
+
+@keyframes floatShape4 {
+  to {
+    top: 15%;
+    right: 5%;
+    filter: blur(40px);
+  }
+}
+
+@keyframes floatShape5 {
+  to {
+    bottom: 30%;
+    left: 8%;
+    filter: blur(35px);
+  }
+}
+
+@keyframes floatShape6 {
+  to {
+    top: 45%;
+    left: 55%;
+    filter: blur(45px);
+  }
 }
 
 .form-page-wrapper {
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .form-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: $spacing-xl;
 
   h1 {
-    font-size: 2.8em;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 10px;
+    font-size: $font-size-xxl * 1.8;
+    font-weight: $font-weight-semibold;
+    color: $light-text;
+    margin-bottom: $spacing-sm;
   }
 
   p {
-    font-size: 1.1em;
-    color: $form-text-placeholder;
+    font-size: $font-size-lg;
+    color: $text-light;
   }
 }
 
@@ -56,11 +185,11 @@ $form-padding: 20px; // Padding chung cho form elements
   .form-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    gap: $spacing-lg;
   }
 
   .form-field-group {
-    margin-bottom: 25px;
+    margin-bottom: $spacing-lg + $spacing-xs;
   }
 
   // --- Style cho Input và Textarea ---
@@ -75,23 +204,23 @@ $form-padding: 20px; // Padding chung cho form elements
     input[type="password"],
     select {
       width: 100%;
-      padding: 15px 45px 15px 20px;
-      background-color: $input-bg-translucent;
-      border: 1px solid $input-border-translucent;
-      border-radius: $input-border-radius;
-      color: $form-text-light;
-      font-size: 1em;
+      padding: $spacing-md $spacing-xl + $spacing-lg $spacing-md $spacing-lg;
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: $border-radius;
+      color: $light-text;
+      font-size: $font-size-base;
       outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: border-color $transition-base, box-shadow $transition-base;
 
       &::placeholder {
-        color: $form-text-placeholder;
+        color: $text-light;
         opacity: 1;
       }
 
       &:focus {
-        border-color: $input-focus-border;
-        box-shadow: 0 0 0 3px rgba($input-focus-border, 0.3);
+        border-color: $success-color;
+        box-shadow: 0 0 0 3px rgba($success-color, 0.3);
       }
     }
 
@@ -100,48 +229,48 @@ $form-padding: 20px; // Padding chung cho form elements
       right: 18px;
       top: 50%;
       transform: translateY(-50%);
-      color: $icon-color;
-      font-size: 1.2em;
+      color: $text-light;
+      font-size: $font-size-lg;
       pointer-events: none;
     }
   }
 
   textarea {
     width: 100%;
-    padding: 15px 20px;
-    background-color: $input-bg-translucent;
-    border: 1px solid $input-border-translucent;
-    border-radius: $input-border-radius;
-    color: $form-text-light;
-    font-size: 1em;
+    padding: $spacing-md $spacing-lg;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $border-radius;
+    color: $light-text;
+    font-size: $font-size-base;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color $transition-base, box-shadow $transition-base;
     resize: vertical;
     min-height: 120px;
 
     &::placeholder {
-      color: $form-text-placeholder;
+      color: $text-light;
       opacity: 1;
     }
 
     &:focus {
-      border-color: $input-focus-border;
-      box-shadow: 0 0 0 3px rgba($input-focus-border, 0.3);
+      border-color: $success-color;
+      box-shadow: 0 0 0 3px rgba($success-color, 0.3);
     }
   }
 
   // --- Style cho File Upload ---
   .file-upload-label {
     display: block;
-    margin-bottom: 12px;
-    font-weight: 500;
-    color: $form-text-light;
+    margin-bottom: $spacing-sm;
+    font-weight: $font-weight-medium;
+    color: $light-text;
   }
 
   .custom-file-upload {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: $spacing-sm;
 
     .native-file-input {
       width: 0.1px;
@@ -153,20 +282,21 @@ $form-padding: 20px; // Padding chung cho form elements
     }
 
     .file-upload-button {
-      padding: 12px 20px;
-      background-color: $input-bg-translucent;
-      border: 1px solid $input-border-translucent;
-      color: $form-text-light;
-      border-radius: $input-border-radius;
+      padding: $spacing-sm $spacing-lg;
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: $light-text;
+      border-radius: $border-radius;
       cursor: pointer;
-      font-size: 0.95em;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
+      font-size: $font-size-sm;
+      transition: background-color $transition-base,
+        border-color $transition-base;
       display: inline-flex;
       align-items: center;
 
       .icon-placeholder {
-        margin-right: 8px;
-        color: $icon-color;
+        margin-right: $spacing-xs;
+        color: $text-light;
       }
 
       &:hover:not(:disabled) {
@@ -181,34 +311,34 @@ $form-padding: 20px; // Padding chung cho form elements
     }
 
     .file-upload-text {
-      color: $form-text-placeholder;
-      font-size: 0.9em;
+      color: $text-light;
+      font-size: $font-size-sm;
     }
   }
 
   // --- Style for Existing Images ---
   .existing-images-section,
   .new-images-preview {
-    margin-bottom: 25px;
+    margin-bottom: $spacing-lg + $spacing-xs;
   }
 
   .existing-images-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 15px;
-    margin-top: 10px;
+    gap: $spacing-md;
+    margin-top: $spacing-sm;
 
     .existing-image-container {
       position: relative;
       height: 120px;
-      border-radius: $input-border-radius;
+      border-radius: $border-radius;
       overflow: hidden;
 
       .existing-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        transition: transform $transition-base;
       }
 
       &:hover .existing-image {
@@ -222,7 +352,7 @@ $form-padding: 20px; // Padding chung cho form elements
         width: 24px;
         height: 24px;
         background-color: rgba(0, 0, 0, 0.6);
-        color: white;
+        color: $light-text;
         border: none;
         border-radius: 50%;
         font-size: 18px;
@@ -231,7 +361,7 @@ $form-padding: 20px; // Padding chung cho form elements
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        transition: background-color $transition-fast;
 
         &:hover {
           background-color: $error-color;
@@ -243,23 +373,23 @@ $form-padding: 20px; // Padding chung cho form elements
   // --- Style cho Nút Submit ---
   .form-actions {
     text-align: center;
-    margin-top: 30px;
+    margin-top: $spacing-xl;
   }
 
   .submit-button {
-    padding: 15px 40px;
-    background-color: $button-accent-bg;
-    color: $button-accent-text;
+    padding: $spacing-md $spacing-xl;
+    background-color: $success-color;
+    color: $dark-text;
     border: none;
-    border-radius: $input-border-radius;
-    font-size: 1.1em;
-    font-weight: 600;
+    border-radius: $border-radius;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color $transition-base, transform $transition-fast;
     text-transform: uppercase;
 
     &:hover {
-      background-color: darken($button-accent-bg, 8%);
+      background-color: darken($success-color, 8%);
       transform: translateY(-2px);
     }
 
@@ -268,7 +398,7 @@ $form-padding: 20px; // Padding chung cho form elements
     }
 
     &:disabled {
-      background-color: darken($button-accent-bg, 20%);
+      background-color: darken($success-color, 20%);
       cursor: not-allowed;
       transform: none;
     }
@@ -280,15 +410,15 @@ $form-padding: 20px; // Padding chung cho form elements
 .error-message,
 .success-message {
   text-align: center;
-  padding: 12px 20px;
-  border-radius: $input-border-radius;
-  margin-bottom: 25px;
-  font-weight: 500;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius;
+  margin-bottom: $spacing-lg + $spacing-xs;
+  font-weight: $font-weight-medium;
 }
 
 .loader {
-  background-color: rgba($input-focus-border, 0.1);
-  color: lighten($input-focus-border, 15%);
+  background-color: rgba($success-color, 0.1);
+  color: lighten($success-color, 15%);
 }
 
 .error-message {
@@ -304,13 +434,45 @@ $form-padding: 20px; // Padding chung cho form elements
 }
 
 // --- Media Queries cho Responsive ---
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-md) {
   .dark-theme-container {
-    padding: 20px $form-padding;
+    padding: $spacing-lg $spacing-lg;
+  }
+
+  .profile-bg-shape {
+    &.shape-1 {
+      width: 250px;
+      height: 180px;
+    }
+
+    &.shape-2 {
+      width: 200px;
+      height: 150px;
+    }
+
+    &.shape-3 {
+      width: 120px;
+      height: 100px;
+    }
+
+    &.shape-4 {
+      width: 150px;
+      height: 120px;
+    }
+
+    &.shape-5 {
+      width: 100px;
+      height: 90px;
+    }
+
+    &.shape-6 {
+      width: 130px;
+      height: 110px;
+    }
   }
 
   .form-header h1 {
-    font-size: 2.2em;
+    font-size: $font-size-xxl * 1.4;
   }
 
   .post-room-form {

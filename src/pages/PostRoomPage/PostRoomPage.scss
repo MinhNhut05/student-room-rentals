@@ -398,6 +398,144 @@
   }
 }
 
+// Shared decorative background shapes
+.profile-bg-shape {
+  position: absolute;
+  z-index: 0;
+  border-radius: 60%;
+  filter: blur(48px);
+  opacity: 0.35;
+  pointer-events: none;
+  transition: filter $transition-slow;
+
+  &.shape-1 {
+    width: 340px;
+    height: 250px;
+    top: -40px;
+    left: -80px;
+    background: radial-gradient(
+      circle at 40% 60%,
+      $primary-color 70%,
+      $secondary-color 100%
+    );
+    animation: floatShape1 6s infinite alternate
+      cubic-bezier(0.77, 0.17, 0.37, 1.16);
+  }
+
+  &.shape-2 {
+    width: 280px;
+    height: 210px;
+    bottom: -60px;
+    right: -60px;
+    background: radial-gradient(
+      circle at 60% 40%,
+      $accent-color 60%,
+      $warning-color 100%
+    );
+    animation: floatShape2 7s infinite alternate
+      cubic-bezier(0.6, 1.2, 0.25, 0.87);
+  }
+
+  &.shape-3 {
+    width: 180px;
+    height: 150px;
+    left: 70%;
+    top: 66%;
+    background: radial-gradient(circle, $text-light 70%, $secondary-color 100%);
+    opacity: 0.28;
+    animation: floatShape3 8s infinite alternate cubic-bezier(0.55, 1, 0.6, 1.2);
+  }
+
+  &.shape-4 {
+    width: 220px;
+    height: 180px;
+    top: 20%;
+    right: 10%;
+    background: radial-gradient(
+      circle at 30% 70%,
+      $success-color 60%,
+      $primary-color 100%
+    );
+    opacity: 0.25;
+    animation: floatShape4 9s infinite alternate cubic-bezier(0.4, 0.8, 0.6, 1);
+  }
+
+  &.shape-5 {
+    width: 160px;
+    height: 140px;
+    bottom: 25%;
+    left: 5%;
+    background: radial-gradient(
+      circle at 80% 20%,
+      $warning-color 50%,
+      $accent-color 100%
+    );
+    opacity: 0.3;
+    animation: floatShape5 5s infinite alternate
+      cubic-bezier(0.3, 1.4, 0.7, 0.9);
+  }
+
+  &.shape-6 {
+    width: 200px;
+    height: 160px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle at 50% 50%,
+      $secondary-color 40%,
+      $primary-color 80%
+    );
+    opacity: 0.2;
+    animation: floatShape6 10s infinite alternate
+      cubic-bezier(0.2, 0.9, 0.8, 1.1);
+  }
+}
+
+// Include all the same keyframe animations from EditRoomPage
+@keyframes floatShape1 {
+  to {
+    top: 30px;
+    left: -50px;
+    filter: blur(32px);
+  }
+}
+@keyframes floatShape2 {
+  to {
+    bottom: -20px;
+    right: -30px;
+    filter: blur(38px);
+  }
+}
+@keyframes floatShape3 {
+  to {
+    left: 68%;
+    top: 63%;
+    filter: blur(22px);
+  }
+}
+@keyframes floatShape4 {
+  to {
+    top: 15%;
+    right: 5%;
+    filter: blur(40px);
+  }
+}
+@keyframes floatShape5 {
+  to {
+    bottom: 30%;
+    left: 8%;
+    filter: blur(35px);
+  }
+}
+@keyframes floatShape6 {
+  to {
+    top: 45%;
+    left: 55%;
+    filter: blur(45px);
+  }
+}
+
 // Responsive (tối ưu cho mobile/tablet)
 @media (max-width: 700px) {
   .form-page-wrapper {

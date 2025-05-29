@@ -2,34 +2,36 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../utils/generateToken");
 
-// Đăng ký người dùng
+// Đăng ký user mới
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, phone } = req.body; // Added phone field
+  const { name, email, password, phone } = req.body;
 
+  // Kiểm tra email đã tồn tại
   const userExists = await User.findOne({ email });
   if (userExists) {
     res.status(400);
-    throw new Error("User already exists");
+    throw new Error("Email đã được sử dụng");
   }
 
-  const user = await User.create({ name, email, password, phone }); // Added phone field
+  // Tạo user mới
+  const user = await User.create({ name, email, password, phone });
 
   if (user) {
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      phone: user.phone, // Include phone in the response
+      phone: user.phone,
       isAdmin: user.isAdmin,
       token: generateToken(user._id),
     });
   } else {
     res.status(400);
-    throw new Error("Invalid user data");
+    throw new Error("Dữ liệu user không hợp lệ");
   }
 });
 
-// Đăng nhập người dùng
+// Đăng nhập user
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -45,35 +47,41 @@ const authUser = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(401);
-    throw new Error("Invalid email or password");
+    throw new Error("Email hoặc mật khẩu không đúng");
   }
 });
 
-// Lấy thông tin cá nhân
+// Lấy thông tin profile
 const getProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
+
   if (!user) {
     res.status(404);
-    throw new Error("User not found");
+    throw new Error("Không tìm thấy user");
   }
+
   res.json(user);
 });
 
-// Cập nhật thông tin cá nhân
+// Cập nhật profile
 const updateProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
+
   if (!user) {
     res.status(404);
-    throw new Error("User not found");
+    throw new Error("Không tìm thấy user");
   }
+
   user.name = req.body.name || user.name;
   user.email = req.body.email || user.email;
   user.phone = req.body.phone || user.phone;
-  // Nếu muốn cho đổi password
+
   if (req.body.password) {
-    user.password = req.body.password; // Hash trong model
+    user.password = req.body.password;
   }
+
   await user.save();
+
   res.json({
     _id: user._id,
     name: user.name,

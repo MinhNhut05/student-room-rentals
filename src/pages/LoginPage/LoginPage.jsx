@@ -56,28 +56,7 @@ const LoginPage = () => {
         <div className="login-form-section">
           <div className="form-header">
             <h2>Đăng nhập</h2>
-            <p className="welcome-text">
-              Chào mừng bạn quay trở lại! Tìm kiếm phòng trọ ưng ý.
-            </p>
-          </div>
-
-          <div className="social-login-buttons">
-            <button className="social-button google">
-              <i className="fab fa-google"></i>
-              <span>Google</span>
-            </button>
-            <button className="social-button facebook">
-              <i className="fab fa-facebook-f"></i>
-              <span>Facebook</span>
-            </button>
-            <button className="social-button apple">
-              <i className="fab fa-apple"></i>
-              <span>Apple</span>
-            </button>
-          </div>
-
-          <div className="or-separator">
-            <span>Hoặc tiếp tục với</span>
+            <p className="welcome-text">Chào mừng bạn quay trở lại!</p>
           </div>
 
           {error && <div className="error-message">{error}</div>}
@@ -88,7 +67,7 @@ const LoginPage = () => {
               <input
                 type="email"
                 id="email"
-                placeholder="nhap.email.cua.ban@example.com"
+                placeholder="Email của bạn"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -101,7 +80,7 @@ const LoginPage = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
-                  placeholder="Nhập mật khẩu của bạn"
+                  placeholder="Mật khẩu"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -135,13 +114,7 @@ const LoginPage = () => {
             </div>
 
             <button type="submit" className="login-button" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <i className="fas fa-spinner fa-spin"></i> Đang xử lý...
-                </>
-              ) : (
-                "Đăng nhập"
-              )}
+              {isLoading ? "Đang xử lý..." : "Đăng nhập"}
             </button>
           </form>
 
@@ -154,28 +127,9 @@ const LoginPage = () => {
         </div>
 
         <div className="illustration-section">
-          {/* Floating decoration shapes */}
-          <div className="floating-shape shape1"></div>
-          <div className="floating-shape shape2"></div>
-          <div className="floating-shape shape3"></div>
-
           <div className="illustration-content">
             <h3>Tìm phòng trọ dễ dàng</h3>
-            <p>Kết nối sinh viên với phòng trọ chất lượng, giá tốt</p>
-            <div className="feature-points">
-              <div className="feature">
-                <div className="feature-icon blue"></div>
-                <span>Tìm kiếm nhanh chóng</span>
-              </div>
-              <div className="feature">
-                <div className="feature-icon red"></div>
-                <span>Đa dạng lựa chọn</span>
-              </div>
-              <div className="feature">
-                <div className="feature-icon yellow"></div>
-                <span>An toàn, uy tín</span>
-              </div>
-            </div>
+            <p>Kết nối sinh viên với phòng trọ chất lượng</p>
           </div>
         </div>
       </div>

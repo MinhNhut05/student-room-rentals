@@ -8,7 +8,6 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  // Form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -18,21 +17,20 @@ const RegisterPage = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Xử lý submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     if (!name || !email || !phone || !password || !confirmPassword) {
-      setError("Vui lòng điền đầy đủ thông tin.");
+      setError("Vui lòng điền đầy đủ thông tin");
       return;
     }
     if (password !== confirmPassword) {
-      setError("Mật khẩu nhập lại không khớp.");
+      setError("Mật khẩu nhập lại không khớp");
       return;
     }
     if (password.length < 6) {
-      setError("Mật khẩu phải từ 6 ký tự.");
+      setError("Mật khẩu phải từ 6 ký tự");
       return;
     }
 
@@ -45,11 +43,10 @@ const RegisterPage = () => {
         phone,
         password,
       });
-      // Tự động đăng nhập luôn nếu muốn
       login(newUser);
       navigate("/rooms");
     } catch (err) {
-      setError(err.message || "Đăng ký thất bại. Vui lòng thử lại!");
+      setError(err.message || "Đăng ký thất bại");
     } finally {
       setIsLoading(false);
     }
@@ -58,7 +55,6 @@ const RegisterPage = () => {
   return (
     <div className="register-page">
       <div className="register-container">
-        {/* Phần trang trí, ảnh nền, hiệu ứng */}
         <div className="register-illustration">
           <div className="bg-deco bg-deco1"></div>
           <div className="bg-deco bg-deco2"></div>
@@ -91,7 +87,6 @@ const RegisterPage = () => {
           </div>
         </div>
 
-        {/* Form đăng ký */}
         <div className="register-form-section">
           <div className="form-header">
             <h2>Tạo tài khoản mới</h2>

@@ -13,7 +13,6 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  // Lấy thông tin profile từ backend khi vào trang
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -26,7 +25,7 @@ const ProfilePage = () => {
           phone: data.phone || "",
         });
       } catch (err) {
-        setError("Không thể tải thông tin cá nhân.");
+        setError("Không thể tải thông tin cá nhân");
       } finally {
         setLoading(false);
       }
@@ -37,7 +36,6 @@ const ProfilePage = () => {
     }
   }, [user]);
 
-  // Xử lý form thay đổi
   const handleChange = (e) => {
     setForm((f) => ({
       ...f,
@@ -45,7 +43,6 @@ const ProfilePage = () => {
     }));
   };
 
-  // Lưu cập nhật
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -57,7 +54,6 @@ const ProfilePage = () => {
       setEditMode(false);
       setSuccess(true);
 
-      // Cập nhật luôn info ở context
       const updatedUser = {
         ...user,
         name: updated.name,
@@ -66,7 +62,7 @@ const ProfilePage = () => {
       };
       updateUserInContext(updatedUser);
     } catch (err) {
-      setError("Cập nhật thất bại.");
+      setError("Cập nhật thất bại");
     } finally {
       setSaving(false);
     }
@@ -75,9 +71,6 @@ const ProfilePage = () => {
   if (loading) {
     return (
       <div className="loader-container">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
         <p>Đang tải thông tin cá nhân...</p>
       </div>
     );
@@ -87,14 +80,7 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page">
-      {/* Floating gradient shapes (bên ngoài container) */}
-      <div className="profile-bg-shape shape-1"></div>
-      <div className="profile-bg-shape shape-2"></div>
-      <div className="profile-bg-shape shape-3"></div>
-
       <div className="profile-container">
-        {/* Sticker hoặc floating icon */}
-
         <h1>Thông tin cá nhân</h1>
         {success && <div className="success-message">Cập nhật thành công!</div>}
 

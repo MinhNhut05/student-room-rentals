@@ -1,19 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
-// ===== MÀU CHỦ ĐẠO =====
-$green: #27e98d;
-$purple: #a28bfa;
-$orange: #ffb547;
-$cyan: #24e0c3;
-$pink: #ff57a6;
-$dark-bg: #23253d;
-$input-bg: #181828;
-$text-light: #fff;
+@import "../../styles/variables";
 
 // ===== LOGIN PAGE =====
 .login-page {
   min-height: 100vh;
-  background: $dark-bg url("../../assets/img/28.jpg") center/cover no-repeat;
+  background: $bg-secondary url("../../assets/img/28.jpg") center/cover
+    no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,13 +30,13 @@ $text-light: #fff;
     max-width: 99vw;
     min-height: 480px;
     margin: 60px 0;
-    border-radius: 32px;
+    border-radius: $border-radius-xl;
     background: linear-gradient(
       120deg,
-      rgba(39, 233, 141, 0.22) 0%,
-      rgba(162, 139, 250, 0.1) 80%
+      rgba($secondary-color, 0.22) 0%,
+      rgba($primary-color, 0.1) 80%
     );
-    box-shadow: 0 12px 54px 0 #27e98d32, 0 1.5px 48px 6px #a28bfa27;
+    box-shadow: $shadow-sm;
     overflow: hidden;
 
     @media (max-width: 900px) {
@@ -58,72 +50,76 @@ $text-light: #fff;
   .login-form-section {
     flex: 1.5;
     background: rgba(28, 29, 41, 0.98);
-    padding: 58px 42px 38px 42px;
+    padding: $spacing-xxl $spacing-xl $spacing-lg $spacing-xl;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-top-left-radius: 32px;
-    border-bottom-left-radius: 32px;
+    border-top-left-radius: $border-radius-xl;
+    border-bottom-left-radius: $border-radius-xl;
     min-width: 330px;
+
     @media (max-width: 900px) {
-      border-radius: 0 0 32px 32px;
-      padding: 42px 16px 28px 16px;
+      border-radius: 0 0 $border-radius-xl $border-radius-xl;
+      padding: $spacing-xl $spacing-md $spacing-lg $spacing-md;
     }
   }
+
   .form-header h2 {
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: $green;
-    background: linear-gradient(90deg, $green 30%, $purple 60%, $orange 100%);
+    font-size: $font-size-xxl * 1.5;
+    font-weight: $font-weight-bold;
+    color: $secondary-color;
+    background: $gradient-primary;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 6px;
+    margin-bottom: $spacing-xs;
     letter-spacing: -1.5px;
     text-align: center;
   }
+
   .welcome-text {
     color: #f6fdffcc;
-    font-size: 1.1rem;
-    margin-bottom: 18px;
+    font-size: $font-size-lg;
+    margin-bottom: $spacing-md;
     text-align: center;
-    font-weight: 500;
+    font-weight: $font-weight-medium;
     letter-spacing: 0.5px;
   }
+
   // ==== SOCIAL BUTTONS ====
   .social-login-buttons {
     display: flex;
-    gap: 12px;
+    gap: $spacing-sm;
     justify-content: center;
-    margin-bottom: 16px;
+    margin-bottom: $spacing-md;
 
     .social-button {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: $spacing-xs;
       background: #222333;
       border: none;
-      border-radius: 12px;
-      color: $text-light;
-      padding: 9px 0;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: background 0.19s, color 0.2s;
+      border-radius: $border-radius-sm;
+      color: #ffffff;
+      padding: $spacing-sm 0;
+      font-weight: $font-weight-semibold;
+      font-size: $font-size-base;
+      transition: all 0.2s ease;
       cursor: pointer;
-      box-shadow: 0 1.5px 10px #23253d2c;
+      box-shadow: $shadow-sm;
 
       &.google:hover {
-        background: $green;
-        color: #23253d;
+        background: $secondary-color;
+        color: $text-primary;
       }
       &.facebook:hover {
-        background: $purple;
-        color: #fff;
+        background: $primary-color;
+        color: #ffffff;
       }
       &.apple:hover {
-        background: $orange;
-        color: #23253d;
+        background: $accent-color;
+        color: $text-primary;
       }
     }
   }
@@ -134,7 +130,7 @@ $text-light: #fff;
     margin: 16px 0 8px 0;
     font-style: italic;
     span {
-      background: linear-gradient(90deg, $green 30%, $purple 60%, $orange 100%);
+      background: $gradient-primary;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -142,31 +138,42 @@ $text-light: #fff;
   // ==== FORM INPUTS ====
   form {
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: $spacing-md;
 
       label {
-        color: $purple;
-        font-weight: 500;
+        color: $primary-color;
+        font-weight: $font-weight-medium;
         display: block;
-        margin-bottom: 5px;
-        font-size: 1.08rem;
+        margin-bottom: $spacing-xs;
+        font-size: $font-size-lg;
         letter-spacing: 0.3px;
       }
+
       input {
-        background: $input-bg;
-        border: 2px solid #292b43;
-        border-radius: 14px;
-        color: $text-light;
-        font-size: 1.06rem;
         width: 100%;
-        padding: 13px 40px 13px 16px;
-        box-shadow: 0 2px 16px #a28bfa19 inset;
-        transition: border 0.19s, box-shadow 0.19s, background 0.18s;
+        padding: $spacing-sm $spacing-xl $spacing-sm $spacing-md;
+        border: 2px solid #292b43;
+        border-radius: $border-radius-md;
+        font-size: $font-size-lg;
+        font-family: $font-family;
+        transition: all 0.2s ease;
+        background: #181828;
+        color: #ffffff;
+        box-shadow: 0 2px 16px rgba($primary-color, 0.1) inset;
+
+        &::placeholder {
+          color: #666;
+        }
 
         &:focus {
-          border: 2px solid $purple;
-          box-shadow: 0 2px 20px #a28bfa33;
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 2px 20px rgba($primary-color, 0.2);
           background: #222341;
+        }
+
+        &.error {
+          border-color: $error-color;
         }
       }
     }
@@ -196,7 +203,7 @@ $text-light: #fff;
         display: flex;
         align-items: center;
         input[type="checkbox"] {
-          accent-color: $green;
+          accent-color: $secondary-color;
           width: 16px;
           height: 16px;
         }
@@ -208,7 +215,7 @@ $text-light: #fff;
         }
       }
       .forgot-password {
-        color: $orange;
+        color: $accent-color;
         font-size: 0.97rem;
         text-decoration: none;
         font-weight: 600;
@@ -218,29 +225,37 @@ $text-light: #fff;
       }
     }
     .login-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: $spacing-xs;
       width: 100%;
-      padding: 14px 0;
-      background: linear-gradient(90deg, $green 0%, $purple 80%, $orange 100%);
-      color: #fff;
-      font-weight: 800;
+      padding: $spacing-md 0;
+      border-radius: $border-radius-lg;
       border: none;
-      border-radius: 21px;
-      font-size: 1.15rem;
-      box-shadow: 0 2px 16px 0 #a28bfa33, 0 0 0 2px #27e98d27;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-lg;
+      font-family: $font-family;
       cursor: pointer;
-      transition: background 0.18s, color 0.18s, box-shadow 0.17s;
-      margin-top: 10px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      white-space: nowrap;
+      background: $gradient-primary;
+      color: #ffffff;
+      margin-top: $spacing-sm;
 
-      &:hover,
-      &:focus {
+      &:hover:not(:disabled) {
         background: linear-gradient(
           90deg,
-          $orange 10%,
-          $green 60%,
-          $purple 100%
+          $accent-color 10%,
+          $secondary-color 60%,
+          $primary-color 100%
         );
-        color: #23253d;
+        color: $text-primary;
+        filter: brightness(1.1);
+        transform: translateY(-1px);
       }
+
       &:disabled {
         opacity: 0.6;
         background: #24325a;
@@ -249,27 +264,30 @@ $text-light: #fff;
       }
     }
   }
+
   .error-message {
-    background: #ff57a6e6;
-    color: #fff;
-    font-weight: 700;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 14px;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    margin-bottom: $spacing-md;
+    font-size: $font-size-sm;
+    background: rgba($error-color, 0.9);
+    color: #ffffff;
+    font-weight: $font-weight-bold;
     text-align: center;
-    box-shadow: 0 2px 10px #ff57a622;
   }
   .signup-prompt {
-    margin-top: 20px;
+    margin-top: $spacing-lg;
     text-align: center;
     color: #eee;
-    font-size: 1rem;
+    font-size: $font-size-base;
+
     .signup-link {
-      color: $green;
-      font-weight: 700;
+      color: $secondary-color;
+      font-weight: $font-weight-bold;
       text-decoration: underline;
+
       &:hover {
-        color: $orange;
+        color: $accent-color;
       }
     }
   }
@@ -277,22 +295,26 @@ $text-light: #fff;
   // ==== ILLUSTRATION SECTION ====
   .illustration-section {
     flex: 1.1;
-    background: linear-gradient(120deg, $purple 0%, $cyan 100%);
-    color: #fff;
-    padding: 36px 34px 36px 34px;
+    background: linear-gradient(
+      120deg,
+      $primary-color 0%,
+      $secondary-color 100%
+    );
+    color: #ffffff;
+    padding: $spacing-xl $spacing-lg;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-top-right-radius: 32px;
-    border-bottom-right-radius: 32px;
+    border-top-right-radius: $border-radius-xl;
+    border-bottom-right-radius: $border-radius-xl;
     min-width: 260px;
     position: relative;
     overflow: hidden;
 
     @media (max-width: 900px) {
-      border-radius: 32px 32px 0 0;
+      border-radius: $border-radius-xl $border-radius-xl 0 0;
       min-height: 200px;
-      padding: 28px 12px 28px 12px;
+      padding: $spacing-lg $spacing-sm;
       text-align: center;
     }
     .illustration-content {
@@ -300,20 +322,24 @@ $text-light: #fff;
       z-index: 2;
     }
     h3 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: $orange;
-      background: linear-gradient(90deg, $orange 10%, $green 70%);
+      font-size: $font-size-xxl;
+      font-weight: $font-weight-bold;
+      color: $accent-color;
+      background: linear-gradient(
+        90deg,
+        $accent-color 10%,
+        $secondary-color 70%
+      );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 5px;
+      margin-bottom: $spacing-xs;
       letter-spacing: -1px;
     }
     p {
       color: #fffbe0;
       font-size: 1.11rem;
-      margin-bottom: 18px;
-      font-weight: 500;
+      margin-bottom: $spacing-md;
+      font-weight: $font-weight-medium;
     }
     .feature-points {
       margin-top: 8px;
@@ -329,16 +355,17 @@ $text-light: #fff;
           height: 18px;
           border-radius: 50%;
           &.blue {
-            background: $cyan;
+            background: $secondary-color;
           }
           &.red {
-            background: $pink;
+            background: $error-color;
           }
           &.yellow {
-            background: $orange;
+            background: $accent-color;
           }
         }
       }
+
       @media (max-width: 900px) {
         display: flex;
         justify-content: center;
@@ -361,7 +388,7 @@ $text-light: #fff;
       top: -30px;
       width: 200px;
       height: 180px;
-      background: $orange;
+      background: $accent-color;
       filter: blur(54px) opacity(0.25);
       border-radius: 50%;
       z-index: 1;
@@ -373,7 +400,7 @@ $text-light: #fff;
       bottom: -14px;
       width: 140px;
       height: 140px;
-      background: $green;
+      background: $secondary-color;
       filter: blur(48px) opacity(0.19);
       border-radius: 50%;
       z-index: 1;
@@ -389,7 +416,7 @@ $text-light: #fff;
       &.shape1 {
         width: 40px;
         height: 40px;
-        background: $cyan;
+        background: $secondary-color;
         top: 20%;
         right: 15%;
         animation-delay: 0s;
@@ -398,7 +425,7 @@ $text-light: #fff;
       &.shape2 {
         width: 60px;
         height: 60px;
-        background: $pink;
+        background: $error-color;
         bottom: 10%;
         left: 10%;
         animation-delay: 2s;
@@ -407,7 +434,7 @@ $text-light: #fff;
       &.shape3 {
         width: 30px;
         height: 30px;
-        background: $green;
+        background: $secondary-color;
         bottom: 30%;
         right: 20%;
         animation-delay: 4s;
@@ -431,32 +458,18 @@ $text-light: #fff;
     .login-container {
       flex-direction: column-reverse;
       min-width: 98vw;
-      margin: 20px 0;
-    }
-
-    .illustration-section {
-      min-height: 220px;
-      border-radius: 32px 32px 0 0;
-      padding: 24px 12px;
-
-      h3 {
-        font-size: 1.7rem;
-      }
-
-      p {
-        font-size: 1rem;
-        margin-bottom: 12px;
-      }
+      margin: $spacing-lg 0;
+      border-radius: $border-radius-xl;
     }
 
     .login-form-section {
-      border-radius: 0 0 32px 32px;
-      padding: 30px 18px 24px;
+      border-radius: 0 0 $border-radius-xl $border-radius-xl;
+      padding: $spacing-lg $spacing-md $spacing-lg;
     }
 
     .form-header h2 {
-      font-size: 2rem;
-      margin-bottom: 4px;
+      font-size: $font-size-xxl;
+      margin-bottom: $spacing-xs;
     }
 
     .welcome-text {

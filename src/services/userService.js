@@ -5,23 +5,24 @@ const API_URL =
     ? process.env.REACT_APP_API_URL + "/api/users/"
     : "/api/users/";
 
+// Đăng ký user
 const register = async (userData) => {
   try {
     const res = await axios.post(API_URL, userData);
     return res.data;
   } catch (error) {
     console.error("Registration error:", error.response?.data);
-    throw new Error(error.response?.data?.message || "Registration failed");
+    throw new Error(error.response?.data?.message || "Đăng ký thất bại");
   }
 };
 
-// Đăng nhập người dùng
+// Đăng nhập user
 const login = async (userData) => {
   const response = await axios.post(API_URL + "login", userData);
-  return response.data; // thường trả về token
+  return response.data;
 };
 
-// Lấy profile người dùng (cần token xác thực)
+// Lấy thông tin profile
 const getProfile = async (token) => {
   const res = await axios.get(API_URL + "profile", {
     headers: { Authorization: `Bearer ${token}` },
@@ -29,6 +30,7 @@ const getProfile = async (token) => {
   return res.data;
 };
 
+// Cập nhật profile
 const updateProfile = async (data, token) => {
   const res = await axios.put(API_URL + "profile", data, {
     headers: { Authorization: `Bearer ${token}` },

@@ -68,64 +68,6 @@ const HeroSection = () => {
           <span className="stat-label">Khách hài lòng</span>
         </div>
       </div>
-      <div className="hero-search">
-        <form className="search-form">
-          <div className="form-group">
-            <label>Khu vực</label>
-            <select defaultValue="">
-              <option value="" disabled>
-                Chọn thành phố
-              </option>
-              <option value="hanoi">Hà Nội</option>
-              <option value="hcm">TP. Hồ Chí Minh</option>
-              <option value="danang">Đà Nẵng</option>
-              <option value="cantho">Cần Thơ</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Loại phòng</label>
-            <select defaultValue="">
-              <option value="" disabled>
-                Chọn loại phòng
-              </option>
-              <option value="khepkin">Phòng trọ khép kín</option>
-              <option value="chungcu">Chung cư mini</option>
-              <option value="oghep">Ở ghép</option>
-              <option value="ktx">Ký túc xá</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Giá tiền</label>
-            <select defaultValue="">
-              <option value="" disabled>
-                Chọn mức giá
-              </option>
-              <option value="duoi-2">Dưới 2 triệu</option>
-              <option value="2-3">2 - 3 triệu</option>
-              <option value="3-5">3 - 5 triệu</option>
-              <option value="tren-5">Trên 5 triệu</option>
-            </select>
-          </div>
-          <button type="submit" className="search-button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            Tìm kiếm
-          </button>
-        </form>
-      </div>
     </section>
   );
 };

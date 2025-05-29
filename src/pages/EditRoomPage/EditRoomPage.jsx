@@ -9,7 +9,6 @@ const EditRoomPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // State cho input
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -20,28 +19,23 @@ const EditRoomPage = () => {
   const [bedrooms, setBedrooms] = useState("");
   const [bathrooms, setBathrooms] = useState("");
 
-  // State quản lý ảnh
   const [existingImages, setExistingImages] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [fileNames, setFileNames] = useState("Chưa có tệp mới nào được chọn");
 
-  // Trạng thái fetch
   const [fetchLoading, setFetchLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
-  // Trạng thái submit
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Cleanup preview khi unmount
   useEffect(() => {
     return () => {
       imagePreviews.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [imagePreviews]);
 
-  // Fetch room data
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -53,7 +47,6 @@ const EditRoomPage = () => {
         setFetchLoading(true);
         const roomData = await roomService.getRoomById(roomId);
 
-        // Kiểm tra quyền sở hữu
         if (roomData.owner._id.toString() !== user._id.toString()) {
           navigate("/my-rooms");
           return;
@@ -68,11 +61,9 @@ const EditRoomPage = () => {
         setArea(roomData.area?.toString() || "");
         setBedrooms(roomData.bedrooms?.toString() || "");
         setBathrooms(roomData.bathrooms?.toString() || "");
-
-        // Gán ảnh cũ
         setExistingImages(roomData.images || []);
       } catch (err) {
-        setFetchError("Không thể tải dữ liệu phòng!");
+        setFetchError("Không thể tải dữ liệu phòng");
       } finally {
         setFetchLoading(false);
       }
@@ -81,12 +72,11 @@ const EditRoomPage = () => {
     fetchRoom();
   }, [roomId, user, navigate]);
 
-  // Hàm chọn ảnh mới
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
 
     if (existingImages.length + files.length > 10) {
-      setSubmitError("Tổng số ảnh (cũ và mới) không vượt quá 10.");
+      setSubmitError("Tổng số ảnh không vượt quá 10");
       setSelectedFiles([]);
       setImagePreviews([]);
       setFileNames("Chưa có tệp mới nào được chọn");
@@ -101,23 +91,19 @@ const EditRoomPage = () => {
         : "Chưa có tệp mới nào được chọn"
     );
 
-    // Tạo preview cho ảnh mới
     const previews = files.map((file) => URL.createObjectURL(file));
     imagePreviews.forEach((url) => URL.revokeObjectURL(url));
     setImagePreviews(previews);
   };
 
-  // Hàm kích hoạt click vào input file
   const handleFileButtonClick = () => {
     document.getElementById("room-images").click();
   };
 
-  // Hàm xóa ảnh cũ khỏi danh sách (trên frontend)
   const handleRemoveExistingImage = (url) => {
     setExistingImages(existingImages.filter((img) => img !== url));
   };
 
-  // Xử lý submit update phòng
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
@@ -125,7 +111,7 @@ const EditRoomPage = () => {
     setSubmitLoading(true);
 
     if (!title || !description || !price || !address || !city) {
-      setSubmitError("Vui lòng nhập đủ thông tin bắt buộc!");
+      setSubmitError("Vui lòng nhập đủ thông tin bắt buộc");
       setSubmitLoading(false);
       return;
     }
@@ -141,10 +127,8 @@ const EditRoomPage = () => {
     if (bedrooms) formData.append("bedrooms", bedrooms);
     if (bathrooms) formData.append("bathrooms", bathrooms);
 
-    // Quan trọng: gửi danh sách URL ảnh cũ còn lại (sau khi đã xóa những ảnh muốn xóa)
     formData.append("existingImages", JSON.stringify(existingImages));
 
-    // Thêm file ảnh mới
     selectedFiles.forEach((file) => {
       formData.append("images", file);
     });
@@ -158,7 +142,7 @@ const EditRoomPage = () => {
 
       setTimeout(() => navigate("/my-rooms"), 2000);
     } catch (err) {
-      setSubmitError(err.message || "Cập nhật thất bại. Vui lòng thử lại.");
+      setSubmitError(err.message || "Cập nhật thất bại");
     } finally {
       setSubmitLoading(false);
     }
@@ -170,6 +154,14 @@ const EditRoomPage = () => {
 
   return (
     <div className="dark-theme-container">
+      {/* Floating gradient shapes */}
+      <div className="profile-bg-shape shape-1"></div>
+      <div className="profile-bg-shape shape-2"></div>
+      <div className="profile-bg-shape shape-3"></div>
+      <div className="profile-bg-shape shape-4"></div>
+      <div className="profile-bg-shape shape-5"></div>
+      <div className="profile-bg-shape shape-6"></div>
+
       <div className="form-page-wrapper">
         <div className="form-header">
           <h1>CHỈNH SỬA THÔNG TIN PHÒNG TRỌ</h1>
@@ -307,7 +299,6 @@ const EditRoomPage = () => {
             </div>
           </div>
 
-          {/* Existing images section */}
           {existingImages.length > 0 && (
             <div className="existing-images-section">
               <label className="file-upload-label">Ảnh hiện có:</label>
@@ -332,7 +323,6 @@ const EditRoomPage = () => {
             </div>
           )}
 
-          {/* New images upload */}
           <div className="form-field-group">
             <label htmlFor="room-images" className="file-upload-label">
               Chọn thêm ảnh phòng (Còn lại {10 - existingImages.length} ảnh)
@@ -359,7 +349,6 @@ const EditRoomPage = () => {
             </div>
           </div>
 
-          {/* New image previews */}
           {imagePreviews.length > 0 && (
             <div className="new-images-preview">
               <label className="file-upload-label">Ảnh mới đã chọn:</label>

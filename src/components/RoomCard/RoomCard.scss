@@ -1,20 +1,5 @@
 @import "../../scss/abstracts/variables";
 
-// --- Biến Màu Sắc và Kích Thước ---
-$card-bg: #2a2d3a; // Màu nền tối cho card (hơi ngả xanh/tím)
-$card-bg-info: #25252c; // Màu nền cho phần thông tin nếu muốn tách biệt nhẹ
-$text-color-light: #f0f0f0; // Màu chữ chính (sáng)
-$text-color-secondary: #b0b0c0; // Màu chữ phụ (nhạt hơn)
-$accent-purple: $primary-color; // Sử dụng màu primary từ biến project
-$accent-purple-light: lighten($accent-purple, 15%);
-$accent-purple-dark: darken($accent-purple, 10%);
-
-$card-border-radius: 12px;
-$card-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-$card-hover-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-$transition-speed: 0.3s;
-$font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-
 .room-card {
   background: #18181d;
   color: #fff;
@@ -31,16 +16,18 @@ $font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif
   max-width: 370px;
   height: 100%;
 
-  &:hover,
-  &:focus-within {
+  &:hover {
     border: 2.5px solid #ffd43b;
-    box-shadow: 0 4px 28px rgba(255, 212, 59, 0.2),
-      0 1.5px 12px rgba(16, 16, 24, 0.27);
+    box-shadow: 0 4px 28px rgba(255, 212, 59, 0.2);
     transform: translateY(-4px) scale(1.015);
-    z-index: 2;
 
     .room-card-image {
       transform: scale(1.05);
+    }
+
+    .save-button {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -63,8 +50,6 @@ $font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
-      border-radius: 0;
       transition: transform 0.4s ease;
     }
 
@@ -83,38 +68,12 @@ $font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif
       display: flex;
       align-items: center;
       gap: 7px;
-      z-index: 2;
-      transform: translateY(0);
-      transition: transform 0.2s ease;
 
       .price-icon {
         color: #e96fff;
         font-size: 1.16rem;
-        margin-right: 1px;
         font-weight: bold;
       }
-    }
-
-    // Badge for features or status
-    &::after {
-      content: attr(data-badge);
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: rgba(24, 24, 29, 0.85);
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 4px;
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: opacity 0.3s, transform 0.3s;
-    }
-
-    &[data-badge]:hover::after {
-      opacity: 1;
-      transform: translateY(0);
     }
   }
 
@@ -132,14 +91,10 @@ $font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif
       margin-bottom: 12px;
       color: #fff;
       line-height: 1.19;
-      transition: color 0.18s;
-      word-break: break-word;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
-      max-height: 2.4em;
 
       &:hover {
         color: #ffd43b;
@@ -163,27 +118,11 @@ $font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif
           font-size: 1.02rem;
           margin-right: 2px;
         }
-
-        &:hover {
-          color: #fff;
-        }
       }
 
       .room-card-type {
         color: #e96fff;
         font-weight: 600;
-
-        .type-icon {
-          color: #e96fff;
-        }
-
-        &:hover {
-          color: lighten(#e96fff, 10%);
-
-          .type-icon {
-            color: lighten(#e96fff, 10%);
-          }
-        }
       }
     }
 
@@ -200,50 +139,16 @@ $font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif
       .location-icon {
         font-size: 1.1rem;
         color: #4dc9ff;
-        margin-right: 2px;
       }
 
       span {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 100%;
-      }
-    }
-
-    // Added ribbons for special statuses
-    .status-ribbon {
-      position: absolute;
-      top: 20px;
-      right: -35px;
-      background: #e96fff;
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 40px;
-      transform: rotate(45deg);
-      box-shadow: 0 2px 10px rgba(233, 111, 255, 0.3);
-
-      &.new {
-        background: #4dc9ff;
-        box-shadow: 0 2px 10px rgba(77, 201, 255, 0.3);
-      }
-
-      &.hot {
-        background: #ff6b6b;
-        box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
-      }
-
-      &.verified {
-        background: #4caf50;
-        box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+        white-space: nowrap;
       }
     }
   }
 
-  // Add saveability
   .save-button {
     position: absolute;
     top: 16px;
@@ -255,15 +160,13 @@ $font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5;
     cursor: pointer;
     border: none;
     color: #fff;
     font-size: 1.2rem;
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 0.2s, transform 0.2s, background-color 0.2s;
-    backdrop-filter: blur(4px);
+    transition: all 0.2s;
 
     &:hover {
       background: rgba(255, 212, 59, 0.9);
@@ -278,49 +181,40 @@ $font-family-sans-serif: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif
     }
   }
 
-  &:hover .save-button {
-    opacity: 1;
-    transform: translateY(0);
+  .status-ribbon {
+    position: absolute;
+    top: 20px;
+    right: -35px;
+    background: #e96fff;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 40px;
+    transform: rotate(45deg);
+
+    &.new {
+      background: #4dc9ff;
+    }
+
+    &.hot {
+      background: #ff6b6b;
+    }
+
+    &.verified {
+      background: #4caf50;
+    }
   }
 }
 
-// Room list grid layout
 .room-list-grid,
 .my-room-list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-  gap: 38px 28px;
-  margin-top: 32px;
-  margin-bottom: 32px;
+  gap: 28px;
+  margin: 32px 0;
 
   @media (max-width: 640px) {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px 20px;
-  }
-}
-
-// Add animations when cards appear
-.room-card {
-  animation: fadeInUp 0.5s ease forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Staggered animation delay
-@for $i from 1 through 20 {
-  .room-list-grid .room-card:nth-child(#{$i}),
-  .my-room-list-grid .room-card:nth-child(#{$i}) {
-    animation-delay: #{$i * 0.05}s;
+    gap: 20px;
   }
 }

@@ -115,23 +115,13 @@ const Footer = () => {
           <h3 className="column-title">Dành cho chủ nhà</h3>
           <ul className="link-list">
             <li>
-              <Link to="/rooms/new" className="link">
+              <Link to="/post-room" className="link">
                 Đăng phòng
               </Link>
             </li>
             <li>
               <Link to="/pricing" className="link">
                 Bảng giá dịch vụ
-              </Link>
-            </li>
-            <li>
-              <Link to="/blog/landlord-tips" className="link">
-                Kinh nghiệm cho thuê
-              </Link>
-            </li>
-            <li>
-              <Link to="/regulations" className="link">
-                Quy định & Điều khoản
               </Link>
             </li>
             <li>
@@ -142,28 +132,12 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Links Column 3 */}
         <div className="column">
           <h3 className="column-title">Thông tin</h3>
           <ul className="link-list">
             <li>
               <Link to="/about" className="link">
                 Về chúng tôi
-              </Link>
-            </li>
-            <li>
-              <Link to="/partners" className="link">
-                Đối tác
-              </Link>
-            </li>
-            <li>
-              <Link to="/careers" className="link">
-                Tuyển dụng
-              </Link>
-            </li>
-            <li>
-              <Link to="/blog" className="link">
-                Blog
               </Link>
             </li>
             <li>
@@ -174,12 +148,10 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Newsletter Column */}
         <div className="column">
           <h3 className="column-title">Nhận thông báo phòng mới</h3>
           <p className="description">
-            Đăng ký nhận thông báo về các phòng trọ mới, phù hợp với nhu cầu của
-            bạn.
+            Đăng ký nhận thông báo về các phòng trọ mới
           </p>
           <div className="newsletter">
             <form onSubmit={handleNewsletterSubmit} className="newsletter-form">
@@ -196,28 +168,19 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Copyright Section */}
       <div className="copyright">
         <p>
-          © {new Date().getFullYear()} Phòng Trọ Sinh Viên. Đã đăng ký bản
-          quyền. Phát triển bởi{" "}
-          <a
-            href="https://yourwebsite.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          © {new Date().getFullYear()} Phòng Trọ Sinh Viên. Phát triển bởi{" "}
+          <a href="#" target="_blank" rel="noopener noreferrer">
             Student Room Rentals Team
           </a>
         </p>
         <div className="footer-links">
           <Link to="/terms">Điều khoản sử dụng</Link>
           <Link to="/privacy">Chính sách riêng tư</Link>
-          <Link to="/cookie-policy">Chính sách Cookie</Link>
-          <Link to="/sitemap">Sơ đồ trang</Link>
         </div>
       </div>
 
-      {/* Back to Top Button */}
       <div
         className={`back-to-top ${showBackToTop ? "visible" : ""}`}
         onClick={handleBackToTop}

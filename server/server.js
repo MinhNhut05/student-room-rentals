@@ -2,6 +2,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
+// Import routes
 const authRoutes = require("./routes/authRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -13,28 +15,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Kết nối DB
+// Kết nối MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("MongoDB connected"));
-
-mongoose.connection.on("connected", () => {
-  const dbHost = mongoose.connection.host;
-  console.log("✅ Đang kết nối tới MongoDB host:", dbHost);
-});
-
-mongoose.connection.on("connected", async () => {
-  const dbName = mongoose.connection.name;
-  console.log("📊 Database Name:", dbName);
-});
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("❌ MongoDB error:", err.message));
 
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 
+// Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

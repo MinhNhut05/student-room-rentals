@@ -45,7 +45,6 @@ const AboutSection = () => {
         </div>
       </div>
 
-      {/* Block 2: Text + image */}
       <div className="about-block">
         <div className="about-block-text">
           <h2>
@@ -60,87 +59,6 @@ const AboutSection = () => {
           </Link>
         </div>
         <img src={aboutImg2} alt="An toàn - hiện đại" className="about-img" />
-      </div>
-
-      {/* Block 3: Features map/network */}
-      <div className="about-integrations">
-        <h3>
-          <span className="highlight2">Kết nối</span> cộng đồng
-        </h3>
-        <p>
-          Kết nối với hàng nghìn sinh viên, chủ phòng, trường đại học, nhà tuyển
-          dụng – cùng chia sẻ cơ hội và thông tin hữu ích!
-        </p>
-        <div className="integration-map">
-          <div className="icon-link">
-            <span role="img" aria-label="Chat">
-              💬
-            </span>{" "}
-            Chat
-          </div>
-          <div className="icon-link">
-            <span role="img" aria-label="Map">
-              🗺️
-            </span>{" "}
-            Bản đồ
-          </div>
-          <div className="icon-link">
-            <span role="img" aria-label="Shield">
-              🛡️
-            </span>{" "}
-            An toàn
-          </div>
-          <div className="icon-link">
-            <span role="img" aria-label="Community">
-              👥
-            </span>{" "}
-            Cộng đồng
-          </div>
-          <div className="icon-link">
-            <span role="img" aria-label="Star">
-              ⭐
-            </span>{" "}
-            Đánh giá
-          </div>
-          <div className="icon-link">
-            <span role="img" aria-label="24h">
-              ⏰
-            </span>{" "}
-            24/7
-          </div>
-          <div className="icon-link">
-            <span role="img" aria-label="Handshake">
-              🤝
-            </span>{" "}
-            Hợp tác
-          </div>
-          <div className="icon-link">
-            <span role="img" aria-label="University">
-              🏫
-            </span>{" "}
-            Trường học
-          </div>
-        </div>
-      </div>
-
-      {/* Statistics Section */}
-      <div className="about-stats">
-        <div className="stat-item">
-          <div className="stat-number">5,000+</div>
-          <div className="stat-label">Phòng trọ</div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-number">10,000+</div>
-          <div className="stat-label">Sinh viên</div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-number">50+</div>
-          <div className="stat-label">Trường liên kết</div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-number">24/7</div>
-          <div className="stat-label">Hỗ trợ</div>
-        </div>
       </div>
     </section>
   );

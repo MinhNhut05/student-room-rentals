@@ -54,7 +54,7 @@ const Header = () => {
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
         </button>
-    
+
         <nav className={`nav ${isMobileMenuOpen ? "nav-open" : ""}`}>
           <ul className="nav-list">
             <li className="nav-item">
@@ -74,18 +74,8 @@ const Header = () => {
                 </Link>
               </li>
             )}
-            {/* <li className="nav-item">
-              <Link to="/about" className="nav-link">
-                Về chúng tôi
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/contact" className="nav-link">
-                Liên hệ
-              </Link>
-            </li> */}
           </ul>
-      
+
           <div className="auth-buttons">
             {user ? (
               <>
