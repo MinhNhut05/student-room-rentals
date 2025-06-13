@@ -367,136 +367,653 @@ $shadow: 0 2px 24px 0 rgba(37, 30, 64, 0.24);
       border: 2px solid rgba(255, 144, 64, 0.2);
     }
   }
-}
 
-/* Loader + error state (có thể dùng chung toàn app) */
-.loader-container {
-  min-height: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  .pencil {
-    margin-bottom: 12px;
-  }
-  p {
-    color: $color-purple;
-  }
-}
-.error-message,
-.not-found-message {
-  background: #332020;
-  color: #ff9040;
-  border-radius: 8px;
-  padding: 18px 24px;
-  text-align: center;
-  margin: 60px auto 0 auto;
-  font-size: 1.18rem;
-  max-width: 420px;
-  box-shadow: 0 0 10px 0 rgba(255, 144, 64, 0.08);
-}
+  .reviews-section {
+    margin-top: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1.1rem;
+    padding: 28px;
+    box-shadow: 0 2px 20px 0 rgba(44, 212, 171, 0.1);
 
-/* Animation for elements */
-.fade-in {
-  animation: fadeIn 0.6s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Gallery modal */
-.gallery-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-
-  .gallery-content {
-    position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
-
-    img {
-      max-width: 100%;
-      max-height: 90vh;
-      object-fit: contain;
-    }
-
-    .close-button {
-      position: absolute;
-      top: -40px;
-      right: 0;
-      background: none;
-      border: none;
-      color: white;
-      font-size: 2rem;
-      cursor: pointer;
-    }
-
-    .nav-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
+    .reviews-title {
       font-size: 1.5rem;
-      cursor: pointer;
+      font-weight: 700;
+      color: $color-orange;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 12px;
 
-      &.prev {
-        left: -70px;
+      .review-icon {
+        font-size: 1.3rem;
+        color: $color-orange;
+      }
+    }
+
+    .rating-summary {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: rgba(255, 144, 64, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 144, 64, 0.2);
+
+      .rating-stars {
+        display: flex;
+        gap: 4px;
+
+        .star {
+          font-size: 1.4rem;
+          color: rgba(255, 255, 255, 0.3);
+          transition: color 0.3s ease;
+
+          &.filled {
+            color: $color-orange;
+          }
+        }
       }
 
-      &.next {
-        right: -70px;
+      .rating-number {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $color-white;
+      }
+    }
+
+    .no-reviews {
+      color: $color-gray;
+      font-style: italic;
+      text-align: center;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+
+    .review-list {
+      margin-bottom: 32px;
+
+      .review-item {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(162, 99, 247, 0.2);
+        }
+
+        .review-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+
+          .reviewer-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: $color-green;
+          }
+
+          .review-rating {
+            display: flex;
+            gap: 2px;
+
+            .star {
+              font-size: 1rem;
+              color: rgba(255, 255, 255, 0.3);
+
+              &.filled {
+                color: $color-orange;
+              }
+            }
+          }
+        }
+
+        .review-comment {
+          color: $color-white;
+          font-size: 1rem;
+          line-height: 1.6;
+          margin-bottom: 12px;
+        }
+
+        .review-date {
+          color: $color-gray;
+          font-size: 0.9rem;
+        }
+
+        // Styling for replies section
+        .replies-list {
+          margin-top: 20px;
+          padding: 16px 20px;
+          background: rgba(255, 144, 64, 0.08);
+          border-radius: 10px;
+          border-left: 3px solid $color-orange;
+
+          .replies-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: $color-orange;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            &:before {
+              content: "↪";
+              font-size: 1.1rem;
+            }
+          }
+
+          .reply-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 144, 64, 0.15);
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            .reply-header {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              margin-bottom: 8px;
+              flex-wrap: wrap;
+
+              .reply-owner {
+                font-size: 1rem;
+                font-weight: 600;
+                color: $color-orange;
+              }
+
+              .owner-badge {
+                background: linear-gradient(90deg, $color-orange, #ff7043);
+                color: $color-white;
+                font-size: 0.75rem;
+                font-weight: 600;
+                padding: 2px 8px;
+                border-radius: 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+
+              .reply-date {
+                color: $color-gray;
+                font-size: 0.85rem;
+                margin-left: auto;
+              }
+            }
+
+            .reply-comment {
+              color: $color-white;
+              font-size: 0.95rem;
+              line-height: 1.5;
+              margin: 0;
+            }
+          }
+        }
+
+        // Styling for reply action section
+        .reply-action {
+          margin-top: 16px;
+          padding-top: 16px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+          .reply-btn {
+            background: linear-gradient(90deg, $color-orange, #ff7043);
+            color: $color-white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 4px 12px rgba(255, 144, 64, 0.3);
+            }
+
+            i {
+              font-size: 0.8rem;
+            }
+          }
+
+          .reply-form {
+            animation: slideDown 0.3s ease-out;
+
+            .reply-textarea {
+              width: 100%;
+              min-height: 80px;
+              padding: 12px 16px;
+              background: rgba(255, 255, 255, 0.08);
+              border: 1px solid rgba(255, 144, 64, 0.3);
+              border-radius: 8px;
+              color: $color-white;
+              font-size: 0.95rem;
+              font-family: inherit;
+              resize: vertical;
+              transition: all 0.3s ease;
+              margin-bottom: 12px;
+
+              &:focus {
+                outline: none;
+                border-color: $color-orange;
+                box-shadow: 0 0 0 3px rgba(255, 144, 64, 0.2);
+                background: rgba(255, 255, 255, 0.12);
+              }
+
+              &::placeholder {
+                color: $color-gray;
+              }
+            }
+
+            .reply-form-actions {
+              display: flex;
+              gap: 10px;
+              justify-content: flex-end;
+
+              .reply-submit-btn {
+                background: linear-gradient(90deg, $color-green, #26d8ee);
+                color: $color-white;
+                font-weight: 600;
+                font-size: 0.9rem;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &:hover:not(:disabled) {
+                  transform: translateY(-1px);
+                  box-shadow: 0 4px 12px rgba(44, 212, 171, 0.3);
+                }
+
+                &:disabled {
+                  opacity: 0.7;
+                  cursor: not-allowed;
+                  transform: none;
+                }
+              }
+
+              .reply-cancel-btn {
+                background: rgba(255, 255, 255, 0.1);
+                color: $color-gray;
+                font-weight: 500;
+                font-size: 0.9rem;
+                padding: 10px 20px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &:hover {
+                  background: rgba(255, 255, 255, 0.15);
+                  color: $color-white;
+                  border-color: rgba(255, 255, 255, 0.3);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: 20px 16px;
+
+      .reviews-title {
+        font-size: 1.3rem;
       }
 
-      @media (max-width: 768px) {
-        width: 40px;
-        height: 40px;
+      .rating-summary {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
 
-        &.prev {
-          left: 10px;
+      .review-item .review-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .review-form-container {
+        padding: 20px 16px;
+      }
+
+      .reply-action {
+        .reply-form-actions {
+          flex-direction: column;
+          gap: 8px;
+
+          .reply-submit-btn,
+          .reply-cancel-btn {
+            width: 100%;
+            text-align: center;
+          }
+        }
+      }
+
+      .replies-list {
+        padding: 12px 16px;
+
+        .reply-item .reply-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+
+          .reply-date {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .room-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+  }
+
+  .favorite-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: $color-white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 140px;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    &.favorited {
+      background: linear-gradient(135deg, #ff6b9d, #ff8a65);
+      border-color: #ff6b9d;
+      color: $color-white;
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #ff5722, #ff6b9d);
+        box-shadow: 0 4px 16px rgba(255, 107, 157, 0.4);
+      }
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    i {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+      max-width: 200px;
+    }
+  }
+
+  // Animation for reply form
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+      max-height: 0;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 300px;
+    }
+  }
+
+  .review-form {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1.1rem;
+    padding: 28px;
+    margin-top: 24px;
+    box-shadow: 0 2px 20px 0 rgba(44, 212, 171, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $color-green;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      &:before {
+        content: "✍️";
+        font-size: 1.2rem;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: $color-white;
+        font-size: 1rem;
+      }
+
+      select {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 144, 64, 0.3);
+        border-radius: 10px;
+        color: $color-white;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff9040' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 18px;
+        padding-right: 40px;
+
+        &:focus {
+          outline: none;
+          border-color: $color-orange;
+          background: rgba(255, 255, 255, 0.12);
+          box-shadow: 0 0 0 3px rgba(255, 144, 64, 0.2);
         }
 
-        &.next {
-          right: 10px;
+        option {
+          background: #2a2d3a;
+          color: $color-white;
+          padding: 8px 12px;
+          border: none;
+
+          &:hover,
+          &:focus {
+            background: rgba(255, 144, 64, 0.2);
+          }
         }
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(162, 99, 247, 0.3);
+        border-radius: 10px;
+        color: $color-white;
+        font-size: 1rem;
+        font-family: inherit;
+        resize: vertical;
+        transition: all 0.3s ease;
+        line-height: 1.5;
+
+        &:focus {
+          outline: none;
+          border-color: $color-purple;
+          background: rgba(255, 255, 255, 0.12);
+          box-shadow: 0 0 0 3px rgba(162, 99, 247, 0.2);
+        }
+
+        &::placeholder {
+          color: $color-gray;
+          opacity: 1;
+        }
+      }
+    }
+
+    .submit-review-btn {
+      width: 100%;
+      background: linear-gradient(135deg, $color-green, #26d8ee);
+      color: $color-white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 16px rgba(44, 212, 171, 0.3);
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #26d8ee, $color-green);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(44, 212, 171, 0.4);
+      }
+
+      &:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        color: $color-gray;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        opacity: 0.7;
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  // Spinner animation for loading button
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  // Owner notice styling (when room owner tries to review)
+  .owner-notice {
+    background: rgba(255, 144, 64, 0.1);
+    border: 1px solid rgba(255, 144, 64, 0.3);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: $color-white;
+    margin-top: 20px;
+
+    i {
+      color: $color-orange;
+      font-size: 1.2rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+
+  // Login prompt styling
+  .login-prompt {
+    text-align: center;
+    color: $color-gray;
+    margin-top: 20px;
+    font-size: 1rem;
+
+    .login-link {
+      color: $color-green;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: lighten($color-green, 15%);
+        text-decoration: underline;
       }
     }
   }
 }
 
-// Fade-in animation
-@keyframes fadeInInfoCard {
-  0% {
-    opacity: 0;
-    transform: translateY(36px) scale(0.98);
-    filter: blur(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+i {
+  color: $color-orange;
+  font-size: 1.2rem;
+}
+
+p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+// Login prompt styling
+.login-prompt {
+  text-align: center;
+  color: $color-gray;
+  margin-top: 20px;
+  font-size: 1rem;
+
+  .login-link {
+    color: $color-green;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: lighten($color-green, 15%);
+      text-decoration: underline;
+    }
   }
 }

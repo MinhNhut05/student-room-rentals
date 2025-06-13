@@ -1,0 +1,121 @@
+@import "../../scss/abstracts/variables";
+
+.my-favorites-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: #18181d;
+  width: 100vw;
+  margin-left: calc(-51vw + 50%);
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+
+      i {
+        color: #ff6b9d;
+        font-size: 2.2rem;
+      }
+    }
+
+    .page-subtitle {
+      font-size: 1.2rem;
+      color: #b0b3b8;
+      font-weight: 500;
+    }
+  }
+
+  .room-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .empty-favorites {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    .empty-icon {
+      font-size: 4rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #b0b3b8;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .browse-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff6b9d, #ff8a65);
+      color: white;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+      }
+    }
+  }
+
+  .loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+
+    p {
+      font-size: 1.2rem;
+      color: #b0b3b8;
+    }
+  }
+
+  .error-message {
+    background: rgba(255, 64, 64, 0.1);
+    color: #ff6b6b;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 2rem auto;
+    border: 1px solid rgba(255, 64, 64, 0.3);
+  }
+}

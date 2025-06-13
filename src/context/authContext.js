@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+// tạo Context để chia sẻ state người dùng và các hàm đăng nhập/đăng xuất 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  // Check for saved user in localStorage on initial render
+  const [user, setUser] = useState(null); // state để lưu thông tin người dùng
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // state để kiểm tra trạng thái đăng nhập
+  const [loading, setLoading] = useState(true); // state để kiểm tra trạng thái tải dữ liệu
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -13,19 +14,17 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = (userData) => {
+  const login = (userData) => { //Hàm login - được gọi từ RegisterPage.jsx
+    // nhận userData object từ backend sau khi đăng ký/đăng nhập
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    setIsAuthenticated(true);
+    localStorage.setItem("user", JSON.stringify(userData)); //tránh load trang phải gọi lại API
   };
 
   const logout = () => {
-    // Remove token from localStorage
+
     localStorage.removeItem("userToken");
-
-    // Clear user state
     setUser(null);
-
-    // Log the logout action
     console.log("User logged out, token removed from storage");
   };
 

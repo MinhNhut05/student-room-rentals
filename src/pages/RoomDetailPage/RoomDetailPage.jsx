@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import roomService from "../../services/roomService";
+import userService from "../../services/userService"; // <-- Thêm import
 import "./RoomDetailPage.scss";
 
 const RoomDetailPage = () => {
@@ -15,12 +16,79 @@ const RoomDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
+  // State cho form đánh giá
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
+  // State cho việc xử lý submit review
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState("");
+  const [reviewSuccess, setReviewSuccess] = useState(false);
+
+  // State cho form TRẢ LỜI ĐÁNH GIÁ của chủ phòng
+  const [replyText, setReplyText] = useState("");
+  const [activeReplyForm, setActiveReplyForm] = useState(null); // Lưu ID của review đang được trả lời
+
+  // --- PHẦN MỚI CHO TÍNH NĂNG YÊU THÍCH ---
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(true);
+
+  // Hàm xử lý khi nhấn nút Yêu thích / Bỏ thích
+  const handleFavoriteToggle = async () => {
+    if (!user) {
+      alert("Vui lòng đăng nhập để sử dụng tính năng này");
+      return;
+    }
+
+    try {
+      if (isFavorited) {
+        // Nếu đã thích, thì gọi API bỏ thích
+        await userService.removeFromFavorites(id, user.token);
+        setIsFavorited(false);
+      } else {
+        // Nếu chưa thích, thì gọi API thêm vào yêu thích
+        await userService.addToFavorites(id, user.token);
+        setIsFavorited(true);
+      }
+    } catch (err) {
+      alert("Đã có lỗi xảy ra, vui lòng thử lại.");
+      console.error("Favorite toggle error:", err);
+    }
+  };
+
+  // Hàm fetch dữ liệu chi tiết phòng
+  const fetchRoomDetails = async () => {
+    try {
+      setLoading(true);
+      const data = await roomService.getRoomById(id);
+      setRoom(data);
+      setLoading(false);
+    } catch (err) {
+      setError("Không thể tải thông tin phòng.");
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchRoom = async () => {
+    const fetchRoomData = async () => {
       try {
         setLoading(true);
-        const data = await roomService.getRoomById(id);
-        setRoom(data);
+        const roomData = await roomService.getRoomById(id);
+        setRoom(roomData);
+
+        // Sau khi có dữ liệu phòng, kiểm tra xem người dùng đã thích phòng này chưa
+        if (user) {
+          setFavoriteLoading(true);
+          const favoriteRooms = await userService.getMyFavorites(user.token);
+          // some() sẽ trả về true nếu tìm thấy ít nhất 1 phần tử thỏa mãn
+          const alreadyFavorited = favoriteRooms.some(
+            (favRoom) => favRoom._id === id
+          );
+          setIsFavorited(alreadyFavorited);
+          setFavoriteLoading(false);
+        } else {
+          setFavoriteLoading(false);
+        }
       } catch (err) {
         setError("Không thể tải thông tin phòng.");
       } finally {
@@ -28,8 +96,50 @@ const RoomDetailPage = () => {
       }
     };
 
-    fetchRoom();
-  }, [id]);
+    fetchRoomData();
+  }, [id, user]); // Thêm 'user' vào dependency array để kiểm tra lại khi user đăng nhập/đăng xuất
+
+  // Hàm xử lý khi người dùng gửi form đánh giá
+  const reviewSubmitHandler = async (e) => {
+    e.preventDefault();
+    setReviewLoading(true);
+    setReviewError("");
+    setReviewSuccess(false);
+
+    try {
+      const reviewData = { rating, comment };
+      await roomService.createRoomReview(id, reviewData, user.token);
+
+      setReviewLoading(false);
+      setReviewSuccess(true);
+      setRating(0); // Reset form
+      setComment(""); // Reset form
+
+      alert("Gửi đánh giá thành công!");
+      fetchRoomDetails(); // Tải lại dữ liệu để hiển thị review mới
+    } catch (error) {
+      setReviewLoading(false);
+      setReviewError(error.message || "Gửi đánh giá thất bại");
+    }
+  };
+
+  // Hàm xử lý khi chủ phòng gửi trả lời
+  const replySubmitHandler = async (e, reviewId) => {
+    e.preventDefault();
+    try {
+      await roomService.addReviewReply(
+        reviewId,
+        { comment: replyText },
+        user.token
+      );
+      alert("Gửi trả lời thành công!");
+      fetchRoomDetails(); // Tải lại dữ liệu để hiển thị reply mới
+      setActiveReplyForm(null); // Đóng form trả lời lại
+      setReplyText(""); // Reset nội dung reply
+    } catch (err) {
+      alert("Gửi trả lời thất bại: " + err.message);
+    }
+  };
 
   const openImageModal = (imgUrl, index) => {
     setSelectedImage(imgUrl);
@@ -130,10 +240,36 @@ const RoomDetailPage = () => {
     return <div className="error-message">Không tìm thấy phòng</div>;
   }
 
+  const isOwner = user && user._id === room.owner?._id;
+
   return (
     <div className="room-detail-page">
       <div className="room-detail-container">
-        <h1 className="room-detail-title">{room.title}</h1>
+        <div className="room-header">
+          <h1 className="room-detail-title">{room.title}</h1>
+
+          {/* --- NÚT YÊU THÍCH MỚI --- */}
+          {user && ( // Chỉ hiển thị nút nếu người dùng đã đăng nhập
+            <button
+              className={`favorite-btn ${isFavorited ? "favorited" : ""}`}
+              onClick={handleFavoriteToggle}
+              disabled={favoriteLoading}
+            >
+              {favoriteLoading ? (
+                <i className="fas fa-spinner fa-spin"></i>
+              ) : (
+                <>
+                  <i
+                    className={`${
+                      isFavorited ? "fas fa-heart" : "far fa-heart"
+                    }`}
+                  ></i>
+                  {isFavorited ? " Đã thích" : " Yêu thích"}
+                </>
+              )}
+            </button>
+          )}
+        </div>
 
         <div className="room-detail-main">
           <div className="room-detail-gallery fade-in">
@@ -227,6 +363,201 @@ const RoomDetailPage = () => {
         </div>
 
         {renderAmenities()}
+
+        {/* --- PHẦN ĐÁNH GIÁ VÀ TRẢ LỜI --- */}
+        <div className="reviews-section fade-in">
+          <h3 className="reviews-title">
+            <i className="fas fa-star review-icon"></i>
+            Đánh giá của khách hàng ({room?.numReviews || 0} đánh giá)
+          </h3>
+
+          {/* Hiển thị điểm rating trung bình */}
+          {room?.rating > 0 && (
+            <div className="rating-summary">
+              <div className="rating-stars">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={`star ${
+                      i < Math.floor(room.rating) ? "filled" : ""
+                    }`}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="rating-number">{room.rating.toFixed(1)}/5</span>
+            </div>
+          )}
+
+          {/* Hiển thị danh sách các đánh giá đã có */}
+          {room?.reviews && room.reviews.length === 0 && (
+            <p className="no-reviews">Chưa có đánh giá nào.</p>
+          )}
+
+          <div className="review-list">
+            {room?.reviews &&
+              room.reviews.map((review) => (
+                <div key={review._id} className="review-item">
+                  <div className="review-header">
+                    <strong className="reviewer-name">{review.name}</strong>
+                    <div className="review-rating">
+                      {[...Array(5)].map((_, i) => (
+                        <span
+                          key={i}
+                          className={`star ${
+                            i < review.rating ? "filled" : ""
+                          }`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="review-comment">{review.comment}</p>
+                  <small className="review-date">
+                    {new Date(review.createdAt).toLocaleDateString("vi-VN")}
+                  </small>
+
+                  {/* Hiển thị các câu trả lời của chủ phòng */}
+                  {review.replies && review.replies.length > 0 && (
+                    <div className="replies-list">
+                      <h4 className="replies-title">Phản hồi từ chủ phòng:</h4>
+                      {review.replies.map((reply) => (
+                        <div key={reply._id} className="reply-item">
+                          <div className="reply-header">
+                            <strong className="reply-owner">
+                              {reply.name}
+                            </strong>
+                            <span className="owner-badge">Chủ phòng</span>
+                            <small className="reply-date">
+                              {new Date(reply.createdAt).toLocaleDateString(
+                                "vi-VN"
+                              )}
+                            </small>
+                          </div>
+                          <p className="reply-comment">{reply.comment}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Nút và Form trả lời cho CHỦ PHÒNG */}
+                  {isOwner && (
+                    <div className="reply-action">
+                      {activeReplyForm !== review._id ? (
+                        <button
+                          className="reply-btn"
+                          onClick={() => setActiveReplyForm(review._id)}
+                        >
+                          <i className="fas fa-reply"></i> Trả lời
+                        </button>
+                      ) : (
+                        <form
+                          className="reply-form"
+                          onSubmit={(e) => replySubmitHandler(e, review._id)}
+                        >
+                          <textarea
+                            rows="3"
+                            placeholder="Viết câu trả lời của bạn..."
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            required
+                            className="reply-textarea"
+                          />
+                          <div className="reply-form-actions">
+                            <button type="submit" className="reply-submit-btn">
+                              Gửi trả lời
+                            </button>
+                            <button
+                              type="button"
+                              className="reply-cancel-btn"
+                              onClick={() => {
+                                setActiveReplyForm(null);
+                                setReplyText("");
+                              }}
+                            >
+                              Hủy
+                            </button>
+                          </div>
+                        </form>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+
+          {/* Form để lại đánh giá */}
+          <div className="review-form-container">
+            <h3 className="form-title">Để lại đánh giá của bạn</h3>
+
+            {user ? (
+              room.owner?._id === user._id ? (
+                <div className="owner-notice">
+                  <i className="fas fa-info-circle"></i>
+                  <p>Bạn là chủ của phòng này nên không thể để lại đánh giá.</p>
+                </div>
+              ) : (
+                <form onSubmit={reviewSubmitHandler} className="review-form">
+                  <div className="form-group">
+                    <label htmlFor="rating">Chất lượng</label>
+                    <select
+                      id="rating"
+                      value={rating}
+                      onChange={(e) => setRating(e.target.value)}
+                      required
+                    >
+                      <option value="">Chọn...</option>
+                      <option value="1">1 - Rất tệ</option>
+                      <option value="2">2 - Tệ</option>
+                      <option value="3">3 - Ổn</option>
+                      <option value="4">4 - Tốt</option>
+                      <option value="5">5 - Rất tốt</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="comment">Bình luận</label>
+                    <textarea
+                      id="comment"
+                      rows="4"
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      placeholder="Chia sẻ trải nghiệm của bạn về phòng trọ này..."
+                      required
+                    />
+                  </div>
+
+                  {reviewLoading && (
+                    <p className="loading-message">Đang gửi...</p>
+                  )}
+                  {reviewError && (
+                    <p className="error-message">{reviewError}</p>
+                  )}
+                  {reviewSuccess && (
+                    <p className="success-message">Cảm ơn bạn đã đánh giá!</p>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="submit-review-btn"
+                    disabled={reviewLoading}
+                  >
+                    {reviewLoading ? "Đang gửi..." : "Gửi đánh giá"}
+                  </button>
+                </form>
+              )
+            ) : (
+              <p className="login-prompt">
+                Vui lòng{" "}
+                <a href="/login" className="login-link">
+                  đăng nhập
+                </a>{" "}
+                để để lại đánh giá.
+              </p>
+            )}
+          </div>
+        </div>
 
         <div className="contact-section fade-in">
           <div className="contact-info">

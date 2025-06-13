@@ -7,10 +7,15 @@ const roomService = {
 
       // Add non-empty filters to the query
       Object.entries(filters).forEach(([key, value]) => {
-        if (value) queryParams.append(key, value);
+        if (value !== undefined && value !== null && value !== "") {
+          queryParams.append(key, value);
+        }
       });
 
       const query = queryParams.toString();
+      console.log("API call with filters:", filters); // Debug log
+      console.log("Query string:", query); // Debug log
+      
       // Don't include /api since it's already in the base URL
       return await api.get(`/rooms${query ? `?${query}` : ""}`);
     } catch (error) {
@@ -116,6 +121,77 @@ const roomService = {
     return await api.get("/rooms/my", {
       headers: { Authorization: `Bearer ${token}` },
     });
+  },
+
+  // Create a review for a room
+  createRoomReview: async (roomId, reviewData, token) => {
+    try {
+      // Cấu hình để gửi kèm token xác thực
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      // Gửi request POST đến đúng endpoint
+      const { data } = await api.post(
+        `/rooms/${roomId}/reviews`,
+        reviewData,
+        config
+      );
+
+      return data;
+    } catch (error) {
+      console.error("Error creating room review:", error);
+      throw error;
+    }
+  },
+
+  // Hàm mới để chủ phòng gửi trả lời cho một đánh giá
+  addReviewReply: async (reviewId, replyData, token) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      // Gửi request POST đến API trả lời review
+      const result = await api.post(
+        `/reviews/${reviewId}/replies`, // Chú ý: API này là /api/reviews/
+        replyData,
+        config
+      );
+
+      return result; // Không cần .data vì interceptor đã xử lý
+    } catch (error) {
+      console.error("Error adding review reply:", error);
+      throw error;
+    }
+  },
+
+  // Hàm lấy tất cả review (chỉ Admin)
+  getAllReviews: async (token) => {
+    try {
+      console.log(
+        "Service: Bắt đầu gọi API getAllReviews với token:",
+        token?.substring(0, 20) + "..."
+      );
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const data = await api.get("/reviews", config);
+      console.log("Service: API response data:", data);
+      return data; // Không cần .data vì interceptor đã xử lý
+    } catch (error) {
+      console.error("Service: Lỗi trong getAllReviews:", error);
+      throw error;
+    }
+  },
+
+  // Hàm xóa review (chỉ Admin)
+  deleteReview: async (reviewId, token) => {
+    const config = { headers: { Authorization: `Bearer ${token}` } };
+    const result = await api.delete(`/reviews/${reviewId}`, config);
+    return result; // Không cần .data vì interceptor đã xử lý
   },
 };
 

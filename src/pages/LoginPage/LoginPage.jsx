@@ -42,7 +42,7 @@ const LoginPage = () => {
         localStorage.setItem("userToken", user.token);
       }
 
-      navigate("/rooms");
+      navigate("/");
     } catch (err) {
       setError(err.message || "Email hoặc mật khẩu không đúng");
     } finally {

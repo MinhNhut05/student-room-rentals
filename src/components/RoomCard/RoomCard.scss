@@ -147,6 +147,32 @@
         white-space: nowrap;
       }
     }
+
+    .room-card-owner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      padding: 6px 12px;
+      background: rgba(59, 134, 99, 0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(59, 134, 99, 0.2);
+
+      .owner-icon {
+        font-size: 0.9rem;
+        color: #3b8663;
+      }
+
+      .owner-text {
+        font-size: 0.85rem;
+        color: #d6d6e7; // Changed from #555 to be more visible on dark background
+
+        strong {
+          color: #4dc9ff; // Changed to match the theme colors
+          font-weight: 600;
+        }
+      }
+    }
   }
 
   .save-button {

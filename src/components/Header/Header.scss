@@ -96,7 +96,7 @@ $button-text-dark: #17171c; // Dark text for sign-up button
       margin-right: 0;
       display: flex;
       gap: 25px; // Space between individual nav links
-       // Center nav items
+      // Center nav items
 
       .nav-item {
         position: relative; // For dropdown positioning
@@ -107,7 +107,7 @@ $button-text-dark: #17171c; // Dark text for sign-up button
           text-decoration: none;
           font-size: 16px;
           font-weight: 500;
-          padding: 5px 0;
+          padding: 10px 0;
           transition: color 0.3s ease;
 
           &:hover {
@@ -223,6 +223,62 @@ $button-text-dark: #17171c; // Dark text for sign-up button
           transition: background 0s;
         }
       }
+    }
+  }
+
+  // Style cho menu dropdown của Admin
+  .nav-list .nav-item.admin-menu {
+    position: relative; // Cần thiết để định vị dropdown
+
+    // Menu con
+    .admin-dropdown {
+      display: none; // Mặc định ẩn
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #2a2a2e; // Màu nền tối giống theme
+      border: 1px solid #444;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      list-style: none;
+      padding: 8px 0;
+      margin-top: 10px; // Khoảng cách với nút cha
+      min-width: 180px;
+      z-index: 1001;
+
+      // Các mục con trong dropdown
+      li {
+        margin: 0;
+        a {
+          color: #f0f0f0;
+          padding: 10px 20px;
+          display: block;
+          white-space: nowrap;
+          text-decoration: none;
+          // Kế thừa font từ .nav-link của bạn
+          font-family: "Inter", sans-serif;
+          font-size: 16px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: #3c3c42;
+            color: $primary-color; // Dùng biến màu chính của bạn
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    // Khi di chuột vào mục "Quản trị"
+    &:hover .admin-dropdown {
+      display: block; // Hiển thị menu con
+    }
+
+    // Style cho span "Quản trị ▼"
+    .nav-link {
+      cursor: pointer;
+      user-select: none;
     }
   }
 }

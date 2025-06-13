@@ -38,11 +38,81 @@ const updateProfile = async (data, token) => {
   return res.data;
 };
 
+// Hàm thêm phòng vào danh sách yêu thích
+const addToFavorites = async (roomId, token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const body = { roomId }; // Backend mong muốn nhận roomId trong body
+  const { data } = await axios.post(API_URL + "favorites", body, config);
+  return data;
+};
+
+// Hàm xóa phòng khỏi danh sách yêu thích
+const removeFromFavorites = async (roomId, token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  // Chú ý: roomId được truyền qua URL params
+  const { data } = await axios.delete(API_URL + `favorites/${roomId}`, config);
+  return data;
+};
+
+// Hàm lấy tất cả các phòng yêu thích của người dùng
+const getMyFavorites = async (token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const { data } = await axios.get(API_URL + "favorites", config);
+  return data;
+};
+
+// Hàm lấy tất cả người dùng (chỉ Admin)
+const getAllUsers = async (token) => {
+  // Cấu hình để gửi kèm token của Admin
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  // Gửi request GET đến API lấy danh sách người dùng
+  const { data } = await axios.get(API_URL, config);
+  return data;
+};
+
+// Hàm xóa người dùng theo ID (chỉ Admin)
+const deleteUser = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  // Gửi request DELETE đến API
+  const { data } = await axios.delete(`${API_URL}${id}`, config);
+  return data;
+};
+
+// Hàm lấy thông tin một user theo ID (chỉ Admin)
+const getUserById = async (id, token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const { data } = await axios.get(`${API_URL}${id}`, config);
+  return data;
+};
+
+// Hàm cập nhật thông tin user (chỉ Admin)
+const updateUser = async (id, userData, token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const { data } = await axios.put(`${API_URL}${id}`, userData, config);
+  return data;
+};
+
 const userService = {
   register,
   login,
   getProfile,
   updateProfile,
+  addToFavorites,
+  removeFromFavorites,
+  getMyFavorites,
+  getAllUsers,
+  deleteUser,
+  getUserById, // <-- Thêm vào
+  updateUser, // <-- Thêm vào
 };
 
 export default userService;

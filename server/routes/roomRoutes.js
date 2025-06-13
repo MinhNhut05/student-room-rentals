@@ -7,6 +7,7 @@ const {
   createRoom,
   updateRoom,
   deleteRoom,
+  createRoomReview,
 } = require("../controllers/roomController");
 const { protect } = require("../middleware/authMiddleware");
 const {
@@ -25,5 +26,9 @@ router.get("/:id", getRoomById);
 router.post("/", protect, uploadImages, createRoom);
 router.put("/:id", protect, uploadImages, updateRoom);
 router.delete("/:id", protect, deleteRoom);
+
+// Route để tạo một đánh giá mới cho phòng có ID là :id
+// POST /api/rooms/:id/reviews
+router.route("/:id/reviews").post(protect, createRoomReview);
 
 module.exports = router;

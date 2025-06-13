@@ -68,11 +68,40 @@ const Header = () => {
               </Link>
             </li>
             {user && (
-              <li className="nav-item">
-                <Link to="/my-rooms" className="nav-link">
-                  Phòng của tôi
-                </Link>
-              </li>
+              <>
+                {user.isAdmin && (
+                  <li className="nav-item admin-menu">
+                    <Link to="/admin/dashboard" className="nav-link">
+                      Quản trị ▼
+                    </Link>
+                    <ul className="admin-dropdown">
+                      <li>
+                        <Link to="/admin/dashboard">Bảng điều khiển</Link>
+                      </li>
+                      <li>
+                        <Link to="/admin/users">Quản lý User</Link>
+                      </li>
+                      <li>
+                        <Link to="/admin/rooms">Quản lý Phòng</Link>
+                      </li>
+                      <li>
+                        <Link to="/admin/reviews">Quản lý Đánh giá</Link>
+                      </li>
+                    </ul>
+                  </li>
+                )}
+
+                <li className="nav-item">
+                  <Link to="/my-rooms" className="nav-link">
+                    Phòng của tôi
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/my-favorites" className="nav-link">
+                    <i className="fas fa-heart"></i> Yêu thích
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
 

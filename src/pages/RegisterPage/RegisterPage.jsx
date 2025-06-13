@@ -34,20 +34,20 @@ const RegisterPage = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoading(true); //gọi setIsLoading -> true để hiển thị loading
 
-    try {
-      const newUser = await userService.register({
-        name,
+    try { // sử  lý các lệnh có thể gây ra lỗi
+      const newUser = await userService.register({ // gọi hàm register từ userService
+        name, // truyền các thông tin người dùng
         email,
         phone,
         password,
       });
-      login(newUser);
-      navigate("/rooms");
-    } catch (err) {
-      setError(err.message || "Đăng ký thất bại");
-    } finally {
+      login(newUser); // gọi hàm login từ context để lưu thông tin người dùng mới vào context
+      navigate("/"); // chuyển hướng về trang chính sau khi đăng ký thành công
+    } catch (err) { // nếu có lỗi xảy ra trong quá trình đăng ký
+      setError(err.message || "Đăng ký thất bại"); 
+    } finally { // cuối cùng, dù thành công hay thất bại, sẽ gọi setIsLoading -> false để ẩn loading
       setIsLoading(false);
     }
   };

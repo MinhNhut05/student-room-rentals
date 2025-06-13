@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import roomService from "../../services/roomService";
+import userService from "../../services/userService"; // <-- Thêm import
+import { useAuth } from "../../context/authContext"; // <-- Thêm import
 import RoomCard from "../../components/RoomCard/RoomCard";
 import "./RoomListPage.scss";
 
@@ -10,6 +12,7 @@ const SORT_OPTIONS = [
   { value: "price_desc", label: "Giá cao đến thấp" },
   { value: "area_asc", label: "Diện tích nhỏ đến lớn" },
   { value: "area_desc", label: "Diện tích lớn đến nhỏ" },
+  { value: "rating_desc", label: "Đánh giá cao nhất" }, // <-- Thêm option mới
 ];
 
 // Define amenities
@@ -29,7 +32,9 @@ const ALL_AMENITIES = [
 ];
 
 const RoomListPage = () => {
+  const { user } = useAuth(); // <-- Thêm dòng này
   const [rooms, setRooms] = useState([]);
+  const [favorites, setFavorites] = useState(new Set()); // <-- State mới lưu ds yêu thích
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -51,8 +56,11 @@ const RoomListPage = () => {
   const [amenities, setAmenities] = useState([]);
 
   useEffect(() => {
-    const fetchRooms = async () => {
+    const fetchInitialData = async () => {
       try {
+        setLoading(true);
+
+        // Lấy danh sách phòng với thêm sortBy
         const filters = {
           keyword: keyword.trim(),
           city: city.trim(),
@@ -61,17 +69,33 @@ const RoomListPage = () => {
           maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
           minArea: minArea ? parseFloat(minArea) : undefined,
           maxArea: maxArea ? parseFloat(maxArea) : undefined,
+          sortBy: sortBy, // <-- Thêm sortBy vào filters
         };
-        const data = await roomService.getRooms(filters);
-        setRooms(data);
+        const roomsData = await roomService.getRooms(filters);
+        setRooms(roomsData);
+
+        // Nếu người dùng đã đăng nhập, lấy danh sách yêu thích của họ
+        if (user) {
+          try {
+            const favoriteData = await userService.getMyFavorites(user.token);
+            // Lưu lại dưới dạng một Set để kiểm tra nhanh hơn
+            setFavorites(new Set(favoriteData.map((fav) => fav._id)));
+          } catch (favError) {
+            console.error("Error fetching favorites:", favError);
+            // Không hiển thị lỗi cho user vì đây không phải lỗi critical
+          }
+        } else {
+          setFavorites(new Set()); // Clear favorites khi logout
+        }
       } catch (err) {
         setError("Không thể tải danh sách phòng trọ");
       } finally {
         setLoading(false);
       }
     };
-    fetchRooms();
-  }, [keyword, city, district, minPrice, maxPrice, minArea, maxArea]);
+
+    fetchInitialData();
+  }, [user, keyword, city, district, minPrice, maxPrice, minArea, maxArea, sortBy]); // <-- Thêm sortBy vào dependency array
 
   // Xử lý thay đổi tiện nghi
   const handleAmenityChange = (amenityId) => {
@@ -180,6 +204,12 @@ const RoomListPage = () => {
           <span className="filter-tag">
             Tiện nghi: {amenities.length}{" "}
             <button onClick={() => setAmenities([])}>×</button>
+          </span>
+        )}
+        {sortBy && sortBy !== "newest" && (
+          <span className="filter-tag">
+            Sắp xếp: {SORT_OPTIONS.find(opt => opt.value === sortBy)?.label}
+            <button onClick={() => setSortBy("newest")}>×</button>
           </span>
         )}
       </div>
@@ -487,9 +517,17 @@ const RoomListPage = () => {
         </div>
       ) : (
         <div className="room-list-grid">
-          {rooms.map((room) => (
-            <RoomCard key={room._id} room={room} />
-          ))}
+          {rooms.map((room) => {
+            // Kiểm tra xem phòng này có trong danh sách yêu thích không
+            const isInitiallySaved = favorites.has(room._id);
+            return (
+              <RoomCard
+                key={room._id}
+                room={room}
+                isInitiallySaved={isInitiallySaved} // <-- Truyền prop mới
+              />
+            );
+          })}
         </div>
       )}
     </div>

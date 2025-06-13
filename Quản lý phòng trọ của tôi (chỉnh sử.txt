@@ -1,16 +1,6 @@
 
 
 
-
-
-
-Validation:
-Frontend: Validate dữ liệu nhập ngay trên form để phản hồi nhanh cho user.
-Backend: Quan trọng nhất, validate dữ liệu trước khi lưu vào DB để đảm bảo tính toàn vẹn và an toàn dữ liệu.
-Bước 7: Testing
-
-Test Backend: Sử dụng Postman/Insomnia để gọi và kiểm tra từng API endpoint.
-Test Frontend: Test giao diện, luồng người dùng, tương tác với API trên trình duyệt. Sử dụng React Testing Library hoặc Jest (kết hợp với Enzyme) cho unit/integration test (có thể làm sau khi các tính năng cơ bản hoạt động).
 Bước 8: Deployment (Đưa website lên mạng)
 
 Khi dự án đủ ổn định, bạn sẽ muốn deploy để mọi người có thể truy cập.
@@ -42,5 +32,43 @@ Chúc bạn thành công với dự án xây dựng web mua bán phòng trọ ch
 Nguồn
 
 
-
+thứ tự giải thích 1. Backend - Room Data Model ⬅️ BẮT ĐẦU TỪ ĐÂY
+roomController.js
+Xem các API endpoints của rooms
+Hiểu structure của Room object
+Các operations: GET, POST, PUT, DELETE
+2. Frontend Service Layer
+roomService.js
+Cách frontend call API
+Axios configuration
+Error handling
+3. Room Creation Flow 📝
+PostRoomPage.jsx
+Form validation
+File upload handling
+State management
+Submit process
+4. Room Display Flow 📋
+RoomListPage.jsx
+Fetch rooms data
+Filtering & searching logic
+Render RoomCard components
+RoomCard.jsx
+Cách hiển thị room summary
+Props handling
+Navigation logic
+5. Room Detail Flow 🔍
+RoomDetailPage.jsx
+Load single room data
+Image gallery
+Google Maps integration
+Contact functionality
+6. Room Management Flow ⚙️
+MyRoomsPage.jsx
+User's rooms only
+Room statistics
+EditRoomPage.jsx
+Pre-populate form data
+Update logic
+Image management
 

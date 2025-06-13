@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Sửa lại dòng này để có cả useEffect
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/authContext"; // <-- Thêm dòng này
+import userService from "../../services/userService"; // <-- Thêm dòng này
 import "./RoomCard.scss";
 
-const RoomCard = ({ room }) => {
-  const { _id, title, price, address, city, district, area, images } = room;
-  const [isSaved, setIsSaved] = useState(false);
+const RoomCard = ({ room, isInitiallySaved = false }) => {
+  const { user } = useAuth(); // <-- Thêm dòng này
+  const { _id, title, price, address, city, district, area, images, owner } =
+    room;
+
+  // Dòng này sẽ khởi tạo state isSaved bằng giá trị được truyền từ cha
+  const [isSaved, setIsSaved] = useState(isInitiallySaved);
 
   // Find the first available image or use placeholder
   const displayImage =
@@ -26,12 +32,37 @@ const RoomCard = ({ room }) => {
     room.createdAt &&
     (new Date() - new Date(room.createdAt)) / (1000 * 60 * 60 * 24) < 3;
 
+  // Thêm đoạn useEffect này vào trong component RoomCard
+  useEffect(() => {
+    setIsSaved(isInitiallySaved);
+  }, [isInitiallySaved]);
+
   // Toggle save room
-  const handleSaveClick = (e) => {
-    e.preventDefault();
-    setIsSaved(!isSaved);
-    // Here you would implement actual save functionality
-    // saveRoomToFavorites(_id);
+  const handleSaveClick = async (e) => {
+    e.preventDefault(); // Ngăn hành vi mặc định của Link, không cho chuyển trang
+
+    // 1. Kiểm tra xem người dùng đã đăng nhập chưa
+    if (!user) {
+      alert("Vui lòng đăng nhập để sử dụng tính năng này!");
+      return;
+    }
+
+    // 2. Gọi API tương ứng
+    try {
+      if (isSaved) {
+        // Nếu đã thích -> gọi API bỏ thích
+        await userService.removeFromFavorites(_id, user.token);
+      } else {
+        // Nếu chưa thích -> gọi API thêm vào yêu thích
+        await userService.addToFavorites(_id, user.token);
+      }
+
+      // 3. Cập nhật lại giao diện nút bấm sau khi API thành công
+      setIsSaved(!isSaved);
+    } catch (error) {
+      console.error("Lỗi khi thay đổi trạng thái yêu thích:", error);
+      alert("Đã có lỗi xảy ra, vui lòng thử lại.");
+    }
   };
 
   return (
@@ -94,6 +125,18 @@ const RoomCard = ({ room }) => {
               {displayAddress || "Chưa rõ địa chỉ"}
             </span>
           </div>
+
+          {/* --- DÒNG MỚI THÊM VÀO --- */}
+          {/* Chỉ hiển thị nếu có thông tin người đăng */}
+          {owner && (
+            <div className="room-card-owner">
+              <span className="owner-icon">👤</span>
+              <span className="owner-text">
+                Đăng bởi: <strong>{owner.name}</strong>
+              </span>
+            </div>
+          )}
+          {/* --- KẾT THÚC DÒNG MỚI --- */}
         </div>
       </Link>
     </div>

@@ -47,7 +47,13 @@ const EditRoomPage = () => {
         setFetchLoading(true);
         const roomData = await roomService.getRoomById(roomId);
 
-        if (roomData.owner._id.toString() !== user._id.toString()) {
+        // --- SỬA LẠI ĐIỀU KIỆN KIỂM TRA QUYỀN ---
+        // Chỉ chuyển hướng nếu người dùng KHÔNG PHẢI chủ phòng VÀ cũng KHÔNG PHẢI là Admin
+        if (
+          roomData.owner._id.toString() !== user._id.toString() &&
+          !user.isAdmin
+        ) {
+          alert("Bạn không có quyền sửa phòng trọ này.");
           navigate("/my-rooms");
           return;
         }

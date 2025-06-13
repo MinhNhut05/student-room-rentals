@@ -1,8 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const Room = require("../models/roomModel");
+const Review = require("../models/reviewModel"); // <-- Thêm dòng này
 
 // Lấy danh sách phòng (có lọc)
 const getRooms = asyncHandler(async (req, res) => {
+  // Lấy thêm sortBy từ query
   const {
     keyword,
     city,
@@ -12,6 +14,7 @@ const getRooms = asyncHandler(async (req, res) => {
     minArea,
     maxArea,
     owner,
+    sortBy, // <-- Thêm sortBy vào đây
   } = req.query;
 
   let findQuery = {};
@@ -43,19 +46,44 @@ const getRooms = asyncHandler(async (req, res) => {
   // Lọc theo chủ phòng
   if (owner) findQuery.owner = owner;
 
-  const rooms = await Room.find(findQuery).populate(
-    "owner",
-    "name email phone"
-  );
+  // --- PHẦN MỚI: XỬ LÝ SẮP XẾP ---
+  let sortQuery = {};
+  switch (sortBy) {
+    case 'price_asc':
+      sortQuery = { price: 1 }; // 1 là tăng dần (Ascending)
+      break;
+    case 'price_desc':
+      sortQuery = { price: -1 }; // -1 là giảm dần (Descending)
+      break;
+    case 'area_desc':
+      sortQuery = { area: -1 };
+      break;
+    case 'area_asc':
+      sortQuery = { area: 1 };
+      break;
+    case 'rating_desc':
+      sortQuery = { rating: -1 }; // Sắp xếp theo điểm đánh giá cao nhất
+      break;
+    case 'newest':
+    default:
+      sortQuery = { createdAt: -1 }; // Mặc định sắp xếp theo ngày tạo mới nhất
+      break;
+  }
+  // --- KẾT THÚC PHẦN MỚI ---
+
+  // Áp dụng cả .find() và .sort() vào câu lệnh
+  const rooms = await Room.find(findQuery)
+    .sort(sortQuery) // <-- THÊM PHƯƠNG THỨC SORT TẠI ĐÂY
+    .populate("owner", "name email phone");
+
   res.json(rooms);
 });
 
 // Lấy chi tiết phòng
 const getRoomById = asyncHandler(async (req, res) => {
-  const room = await Room.findById(req.params.id).populate(
-    "owner",
-    "name email _id"
-  );
+  const room = await Room.findById(req.params.id)
+    .populate("owner", "name email _id")
+    .populate("reviews"); // <-- THÊM DÒNG NÀY để lấy thêm thông tin của các đánh giá
 
   if (!room) {
     res.status(404);
@@ -129,7 +157,9 @@ const updateRoom = asyncHandler(async (req, res) => {
     throw new Error("Không tìm thấy phòng");
   }
 
-  if (room.owner.toString() !== req.user._id.toString()) {
+  // --- SỬA LẠI ĐIỀU KIỆN KIỂM TRA QUYỀN ---
+  // Chỉ từ chối nếu người dùng KHÔNG PHẢI chủ phòng VÀ cũng KHÔNG PHẢI là Admin
+  if (room.owner.toString() !== req.user._id.toString() && !req.user.isAdmin) {
     res.status(401);
     throw new Error("Không có quyền sửa phòng này");
   }
@@ -185,7 +215,9 @@ const deleteRoom = asyncHandler(async (req, res) => {
     throw new Error("Không tìm thấy phòng");
   }
 
-  if (room.owner.toString() !== req.user._id.toString()) {
+  // --- SỬA LẠI ĐIỀU KIỆN KIỂM TRA QUYỀN ---
+  // Chỉ từ chối nếu người dùng KHÔNG PHẢI chủ phòng VÀ cũng KHÔNG PHẢI là Admin
+  if (room.owner.toString() !== req.user._id.toString() && !req.user.isAdmin) {
     res.status(401);
     throw new Error("Không có quyền xóa phòng này");
   }
@@ -208,6 +240,69 @@ const getMyRooms = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * @desc    Tạo một đánh giá mới cho phòng trọ
+ * @route   POST /api/rooms/:id/reviews
+ * @access  Private (Yêu cầu đăng nhập)
+ */
+const createRoomReview = asyncHandler(async (req, res) => {
+  // Lấy rating và comment từ body của request
+  const { rating, comment } = req.body;
+  const roomId = req.params.id;
+
+  // Tìm phòng trọ mà người dùng muốn đánh giá
+  const room = await Room.findById(roomId);
+
+  // Nếu tìm thấy phòng trọ
+  if (room) {
+    // --- THÊM LOGIC KIỂM TRA MỚI TẠI ĐÂY ---
+    // So sánh ID của người đăng nhập và ID của chủ phòng
+    if (room.owner.toString() === req.user._id.toString()) {
+      res.status(400); // Bad Request
+      throw new Error("Bạn không thể tự đánh giá phòng của mình");
+    }
+    // --- Kết thúc logic mới ---
+
+    // Kiểm tra xem người dùng này đã từng đánh giá phòng này chưa
+    const alreadyReviewed = await Review.findOne({
+      room: roomId,
+      user: req.user._id, // req.user được lấy từ middleware 'protect'
+    });
+
+    if (alreadyReviewed) {
+      res.status(400); // Bad Request
+      throw new Error("Bạn đã đánh giá phòng này rồi");
+    }
+
+    // Nếu chưa, tạo một đối tượng đánh giá mới
+    const review = new Review({
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+      room: roomId,
+    });
+
+    // Lưu đánh giá vào database
+    await review.save();
+
+    // Lấy tất cả review của phòng để tính lại điểm trung bình và số lượng
+    const reviewsOfRoom = await Review.find({ room: roomId });
+    room.numReviews = reviewsOfRoom.length;
+    room.rating =
+      reviewsOfRoom.reduce((acc, item) => item.rating + acc, 0) /
+      reviewsOfRoom.length;
+
+    // Lưu lại thông tin phòng trọ đã cập nhật
+    await room.save();
+
+    res.status(201).json({ message: "Đã thêm đánh giá thành công" });
+  } else {
+    res.status(404); // Not Found
+    throw new Error("Không tìm thấy phòng trọ");
+  }
+});
+
 module.exports = {
   getRooms,
   getRoomById,
@@ -215,4 +310,5 @@ module.exports = {
   updateRoom,
   deleteRoom,
   getMyRooms,
+  createRoomReview, // <-- Thêm hàm mới vào đây
 };

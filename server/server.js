@@ -7,6 +7,8 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const userRoutes = require("./routes/userRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const adminRoutes = require("./routes/adminRoutes"); // <-- 1. THÊM DÒNG NÀY
 
 dotenv.config();
 const app = express();
@@ -17,10 +19,7 @@ app.use(express.json());
 
 // Kết nối MongoDB
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI) // Bỏ các option không còn dùng nữa để tránh warning
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB error:", err.message));
 
@@ -28,6 +27,8 @@ mongoose
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/admin", adminRoutes); // <-- 2. THÊM DÒNG NÀY
 
 // Start server
 const PORT = process.env.PORT || 5000;
