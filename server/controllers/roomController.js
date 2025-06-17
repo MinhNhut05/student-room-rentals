@@ -4,7 +4,7 @@ const Review = require("../models/reviewModel"); // <-- Thêm dòng này
 
 // Lấy danh sách phòng (có lọc)
 const getRooms = asyncHandler(async (req, res) => {
-  // Lấy thêm sortBy từ query
+  // Lấy thêm 'amenities' từ query
   const {
     keyword,
     city,
@@ -14,7 +14,8 @@ const getRooms = asyncHandler(async (req, res) => {
     minArea,
     maxArea,
     owner,
-    sortBy, // <-- Thêm sortBy vào đây
+    sortBy,
+    amenities, // <-- THÊM amenities vào đây
   } = req.query;
 
   let findQuery = {};
@@ -49,25 +50,42 @@ const getRooms = asyncHandler(async (req, res) => {
   // --- PHẦN MỚI: XỬ LÝ SẮP XẾP ---
   let sortQuery = {};
   switch (sortBy) {
-    case 'price_asc':
+    case "price_asc":
       sortQuery = { price: 1 }; // 1 là tăng dần (Ascending)
       break;
-    case 'price_desc':
+    case "price_desc":
       sortQuery = { price: -1 }; // -1 là giảm dần (Descending)
       break;
-    case 'area_desc':
+    case "area_desc":
       sortQuery = { area: -1 };
       break;
-    case 'area_asc':
+    case "area_asc":
       sortQuery = { area: 1 };
       break;
-    case 'rating_desc':
+    case "rating_desc":
       sortQuery = { rating: -1 }; // Sắp xếp theo điểm đánh giá cao nhất
       break;
-    case 'newest':
+    case "newest":
     default:
       sortQuery = { createdAt: -1 }; // Mặc định sắp xếp theo ngày tạo mới nhất
       break;
+  }
+  // --- KẾT THÚC PHẦN MỚI ---
+
+  // --- PHẦN MỚI: LỌC THEO TIỆN NGHI ---
+  if (amenities) {
+    // Frontend sẽ gửi lên một chuỗi các tiện nghi, cách nhau bởi dấu phẩy
+    // Ví dụ: "wifi,parking"
+    const amenitiesToFilter = amenities.split(",");
+
+    // Thêm điều kiện vào query để tìm các phòng có tiện nghi=true
+    // Ví dụ: { "amenities.wifi": true, "amenities.parking": true }
+    amenitiesToFilter.forEach((amenity) => {
+      if (amenity.trim()) {
+        // Bỏ qua các giá trị rỗng
+        findQuery[`amenities.${amenity.trim()}`] = true;
+      }
+    });
   }
   // --- KẾT THÚC PHẦN MỚI ---
 

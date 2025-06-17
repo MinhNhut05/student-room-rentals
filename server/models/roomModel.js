@@ -23,6 +23,22 @@ const roomSchema = new Schema(
       default: [], // Default to empty array if no images
     },
 
+    // --- PHẦN TIỆN NGHI ---
+    amenities: {
+      wifi: { type: Boolean, default: false },
+      air_conditioner: { type: Boolean, default: false },
+      washing_machine: { type: Boolean, default: false },
+      fridge: { type: Boolean, default: false },
+      parking: { type: Boolean, default: false },
+      security: { type: Boolean, default: false },
+      private_bathroom: { type: Boolean, default: false },
+      kitchen: { type: Boolean, default: false },
+      window: { type: Boolean, default: false },
+      balcony: { type: Boolean, default: false },
+      water_heater: { type: Boolean, default: false },
+      tv: { type: Boolean, default: false },
+    },
+
     // --- CÁC TRƯỜNG LIÊN QUAN ĐẾN ĐÁNH GIÁ ---
 
     // Điểm đánh giá trung bình của phòng, tính từ tất cả các review
