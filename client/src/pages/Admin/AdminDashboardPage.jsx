@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/authContext";
 import adminService from "../../services/adminService";
 import "./AdminDashboardPage.scss"; // Tạo file style này
-
+// Dòng comment để ép deploy lại, ngày 19/06/2025
 // Một component nhỏ để hiển thị từng ô thống kê cho đẹp
 const StatCard = ({ title, value, icon }) => (
   <div className="stat-card">
