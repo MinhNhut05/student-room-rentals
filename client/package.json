@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://minhnhut05.github.io/student-room-rentals",
-  "proxy": "http://localhost:5000",
   "main": "src/index.js",
   "scripts": {
     "start": "react-scripts start",
