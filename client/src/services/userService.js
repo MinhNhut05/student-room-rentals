@@ -1,104 +1,59 @@
-import axios from "axios";
-
-const API_URL =
-  process.env.NODE_ENV === "development" && process.env.REACT_APP_API_URL
-    ? process.env.REACT_APP_API_URL + "/api/users/"
-    : "/api/users/";
+import api from "./api"; // Quan trọng: Import axios instance đã được cấu hình
+import authHeader from "../utils/authHeader"; // Import tiện ích lấy header
 
 // Đăng ký user
-const register = async (userData) => {
-  try {
-    const res = await axios.post(API_URL, userData);
-    return res.data;
-  } catch (error) {
-    console.error("Registration error:", error.response?.data);
-    throw new Error(error.response?.data?.message || "Đăng ký thất bại");
-  }
+const register = (userData) => {
+  return api.post("/auth/register", userData);
 };
 
 // Đăng nhập user
-const login = async (userData) => {
-  const response = await axios.post(API_URL + "login", userData);
-  return response.data;
+const login = (userData) => {
+  return api.post("/auth/login", userData);
 };
 
 // Lấy thông tin profile
-const getProfile = async (token) => {
-  const res = await axios.get(API_URL + "profile", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
+const getProfile = () => {
+  return api.get("/users/profile", { headers: authHeader() });
 };
 
 // Cập nhật profile
-const updateProfile = async (data, token) => {
-  const res = await axios.put(API_URL + "profile", data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
+const updateProfile = (data) => {
+  return api.put("/users/profile", data, { headers: authHeader() });
 };
 
 // Hàm thêm phòng vào danh sách yêu thích
-const addToFavorites = async (roomId, token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
-  const body = { roomId }; // Backend mong muốn nhận roomId trong body
-  const { data } = await axios.post(API_URL + "favorites", body, config);
-  return data;
+const addToFavorites = (roomId) => {
+  return api.post("/users/favorites", { roomId }, { headers: authHeader() });
 };
 
 // Hàm xóa phòng khỏi danh sách yêu thích
-const removeFromFavorites = async (roomId, token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
-  // Chú ý: roomId được truyền qua URL params
-  const { data } = await axios.delete(API_URL + `favorites/${roomId}`, config);
-  return data;
+const removeFromFavorites = (roomId) => {
+  return api.delete(`/users/favorites/${roomId}`, { headers: authHeader() });
 };
 
 // Hàm lấy tất cả các phòng yêu thích của người dùng
-const getMyFavorites = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
-  const { data } = await axios.get(API_URL + "favorites", config);
-  return data;
+const getMyFavorites = () => {
+  return api.get("/users/favorites", { headers: authHeader() });
 };
 
 // Hàm lấy tất cả người dùng (chỉ Admin)
-const getAllUsers = async (token) => {
-  // Cấu hình để gửi kèm token của Admin
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  // Gửi request GET đến API lấy danh sách người dùng
-  const { data } = await axios.get(API_URL, config);
-  return data;
+const getAllUsers = () => {
+  return api.get("/users", { headers: authHeader() });
 };
 
 // Hàm xóa người dùng theo ID (chỉ Admin)
-const deleteUser = async (id, token) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  // Gửi request DELETE đến API
-  const { data } = await axios.delete(`${API_URL}${id}`, config);
-  return data;
+const deleteUser = (id) => {
+  return api.delete(`/users/${id}`, { headers: authHeader() });
 };
 
 // Hàm lấy thông tin một user theo ID (chỉ Admin)
-const getUserById = async (id, token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
-  const { data } = await axios.get(`${API_URL}${id}`, config);
-  return data;
+const getUserById = (id) => {
+  return api.get(`/users/${id}`, { headers: authHeader() });
 };
 
 // Hàm cập nhật thông tin user (chỉ Admin)
-const updateUser = async (id, userData, token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
-  const { data } = await axios.put(`${API_URL}${id}`, userData, config);
-  return data;
+const updateUser = (id, userData) => {
+  return api.put(`/users/${id}`, userData, { headers: authHeader() });
 };
 
 const userService = {
@@ -111,8 +66,8 @@ const userService = {
   getMyFavorites,
   getAllUsers,
   deleteUser,
-  getUserById, // <-- Thêm vào
-  updateUser, // <-- Thêm vào
+  getUserById,
+  updateUser,
 };
 
 export default userService;
