@@ -11,7 +11,7 @@
     "sass": "sass src/scss:src/css --watch --no-source-map",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "cross-env REACT_APP_API_URL=https://student-rentals-api.onrender.com/api npm run build",
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "gh-pages": "^6.3.0"
   }
 }
