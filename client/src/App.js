@@ -1,4 +1,5 @@
 // src/App.js
+// Deployed after removing proxy, ngày 19/06/2025
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
