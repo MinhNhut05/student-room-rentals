@@ -14,7 +14,13 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: "https://minhnhut05.github.io", // QUAN TRỌNG: Chỉ cho phép domain này gửi yêu cầu
+  methods: "GET,POST,PUT,DELETE,PATCH,HEAD", // QUAN TRỌNG: Cho phép cả phương thức POST
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Kết nối MongoDB
