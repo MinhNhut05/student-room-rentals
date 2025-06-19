@@ -30,8 +30,8 @@ mongoose
   .catch((err) => console.error("❌ MongoDB error:", err.message));
 
 // Routes
-app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin", adminRoutes); // <-- 2. THÊM DÒNG NÀY
