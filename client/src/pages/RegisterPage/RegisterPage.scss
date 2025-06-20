@@ -370,14 +370,14 @@ $shadow-medium: rgba(0, 0, 0, 0.15);
   @media (max-width: 800px) {
     .register-container {
       flex-direction: column;
-      max-width: 99vw;
+      max-width: 90vw;
       margin: 20px auto;
 
       .register-illustration {
         width: 100%;
         min-width: unset;
         min-height: 160px;
-        padding: 30px 12px;
+        padding: 30px 24px;
 
         h2 {
           font-size: 1.6rem;
@@ -402,10 +402,10 @@ $shadow-medium: rgba(0, 0, 0, 0.15);
 
       .register-form-section {
         min-width: unset;
-        padding: 38px 14px;
+        padding: 38px 24px;
 
         .form-header {
-          text-align: center;
+          margin-left: 30px;
 
           h2 {
             font-size: 1.7rem;
@@ -414,6 +414,11 @@ $shadow-medium: rgba(0, 0, 0, 0.15);
 
         .register-form {
           gap: 14px;
+          margin-left: 30px;
+
+          .register-btn {
+            margin-left: 20px;
+          }
         }
 
         .login-switch {

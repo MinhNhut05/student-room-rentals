@@ -121,7 +121,7 @@ $button-text-dark: #17171c; // Dark text for sign-up button
       display: flex;
       gap: 15px;
       align-items: center;
-      margin-left: 40px; // Space between login and signup buttons
+      margin-left: -20px; // Space between login and signup buttons
 
       .login-button,
       .signup-button,

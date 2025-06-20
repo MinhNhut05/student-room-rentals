@@ -502,7 +502,7 @@
       height: auto;
 
       .login-form-section {
-        width: 100%;
+        width: 85%;
         order: 2;
         padding: 40px; // Increased padding
 
@@ -584,7 +584,7 @@
       }
 
       .illustration-section {
-        width: 100%;
+        width: 90%;
         order: 1;
         padding: 45px; // Increased padding
 
@@ -651,7 +651,7 @@
           }
 
           .form-group input {
-            width: 100%; // Full width on small screens
+            width: 90%; // Full width on small screens
             font-size: 18px; // Maintain readability
           }
         }
