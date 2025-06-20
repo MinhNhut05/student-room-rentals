@@ -13,8 +13,14 @@ dotenv.config();
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  "https://minhnhut05.github.io", // Production Frontend (old)
+  "http://localhost:3000", // Local Development Frontend
+  "https://xemtrovuive.online", // Production Frontend (New Custom Domain)
+];
+
 const corsOptions = {
-  origin: "https://minhnhut05.github.io", // QUAN TRỌNG: Chỉ cho phép domain này gửi yêu cầu
+  origin: allowedOrigins,
   methods: "GET,POST,PUT,DELETE,PATCH,HEAD", // QUAN TRỌNG: Cho phép cả phương thức POST
   credentials: true,
 };
