@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/student-room-rentals/static/css/main.b549c6dd.css",
-    "main.js": "/student-room-rentals/static/js/main.e0d93348.js",
+    "main.js": "/student-room-rentals/static/js/main.f73e79e0.js",
     "static/media/28.jpg": "/student-room-rentals/static/media/28.dfd606171653942ca6b3.jpg",
     "static/media/26.jpg": "/student-room-rentals/static/media/26.fd8e24f21e456aff9135.jpg",
     "static/media/27.jpg": "/student-room-rentals/static/media/27.f3e35b26f915404b1370.jpg",
@@ -10,10 +10,10 @@
     "static/media/29.jpg": "/student-room-rentals/static/media/29.980bbe4f66df58bc3b79.jpg",
     "index.html": "/student-room-rentals/index.html",
     "main.b549c6dd.css.map": "/student-room-rentals/static/css/main.b549c6dd.css.map",
-    "main.e0d93348.js.map": "/student-room-rentals/static/js/main.e0d93348.js.map"
+    "main.f73e79e0.js.map": "/student-room-rentals/static/js/main.f73e79e0.js.map"
   },
   "entrypoints": [
     "static/css/main.b549c6dd.css",
-    "static/js/main.e0d93348.js"
+    "static/js/main.f73e79e0.js"
   ]
 }
