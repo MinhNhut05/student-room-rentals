@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
-const Favorite = require("../models/favoriteModel"); // <-- Thêm dòng này
-const Room = require("../models/roomModel"); // <-- Thêm dòng này
+const Favorite = require("../models/favoriteModel");
+const Room = require("../models/roomModel");
 const generateToken = require("../utils/generateToken");
 
 // Đăng ký user mới
@@ -45,6 +45,7 @@ const authUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      phone: user.phone,
       token: generateToken(user._id),
     });
   } else {
@@ -82,15 +83,15 @@ const updateProfile = asyncHandler(async (req, res) => {
     user.password = req.body.password;
   }
 
-  await user.save();
+  const updatedUser = await user.save();
 
   res.json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    email: updatedUser.email,
+    phone: updatedUser.phone,
+    isAdmin: updatedUser.isAdmin,
+    token: generateToken(updatedUser._id),
   });
 });
 
@@ -253,25 +254,27 @@ const getUserById = asyncHandler(async (req, res) => {
  * @access  Private/Admin
  */
 const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const userToUpdate = await User.findById(req.params.id);
 
-  if (user) {
-    // Cập nhật các trường được gửi lên từ request body
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    // Kiểm tra isAdmin có được gửi lên không để cho phép cập nhật cả giá trị false
-    if (req.body.isAdmin !== undefined) {
-      user.isAdmin = req.body.isAdmin;
+  if (userToUpdate) {
+    userToUpdate.name = req.body.name || userToUpdate.name;
+    userToUpdate.email = req.body.email || userToUpdate.email;
+    userToUpdate.phone = req.body.phone || userToUpdate.phone;
+    // Chỉ admin mới có thể thay đổi quyền của người khác
+    if (req.user.isAdmin) {
+      // Chú ý: Cần kiểm tra cẩn thận trước khi cho phép thay đổi isAdmin
+      if (typeof req.body.isAdmin === "boolean") {
+        userToUpdate.isAdmin = req.body.isAdmin;
+      }
     }
 
-    const updatedUser = await user.save();
-
-    // Trả về thông tin user đã cập nhật (không có password)
+    const updatedUser = await userToUpdate.save();
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
+      phone: updatedUser.phone,
     });
   } else {
     res.status(404);
@@ -288,7 +291,7 @@ module.exports = {
   removeFromFavorites,
   getMyFavorites,
   getUsers,
-  getUserById, // <-- Thêm vào
-  updateUser, // <-- Thêm vào
   deleteUser,
+  getUserById,
+  updateUser,
 };

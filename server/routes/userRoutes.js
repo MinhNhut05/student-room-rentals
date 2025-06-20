@@ -3,7 +3,6 @@ const router = express.Router();
 
 const {
   registerUser,
-  authUser,
   getProfile,
   updateProfile,
   addToFavorites,
@@ -13,6 +12,7 @@ const {
   getUserById, // <-- Import hàm mới
   updateUser, // <-- Import hàm mới
   deleteUser, // <-- Import hàm mới
+  authUser,
 } = require("../controllers/userController");
 
 // Import cả 'protect' và 'admin'
@@ -26,8 +26,10 @@ router
   // POST: Đăng ký user mới - Công khai
   .post(registerUser);
 
-// Các route khác giữ nguyên
+// Thêm lại route login để userController xử lý
 router.post("/login", authUser);
+
+// Các route khác giữ nguyên
 router.route("/profile").get(protect, getProfile).put(protect, updateProfile);
 
 // --- CÁC ROUTE CHO YÊU THÍCH ---

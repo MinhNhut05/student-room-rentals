@@ -10,6 +10,15 @@
     <!-- Remove the apple-touch-icon reference if the file doesn't exist -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Student Room Rentals</title>
+    <script type="text/javascript">
+        (function () {
+            var redirect = sessionStorage.redirect;
+            delete sessionStorage.redirect;
+            if (redirect && redirect != window.location.href) {
+                history.replaceState(null, null, redirect);
+            }
+        })();
+    </script>
 </head>
 
 <body>

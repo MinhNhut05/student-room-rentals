@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const generateToken = require("../utils/generateToken");
 
 // Tạo JWT token
 const generateToken = (id) => {
@@ -9,7 +10,7 @@ const generateToken = (id) => {
 // Đăng ký user mới
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
 
     // Kiểm tra user đã tồn tại
     const userExists = await User.findOne({ email });
@@ -18,16 +19,19 @@ exports.register = async (req, res) => {
     }
 
     // Tạo user mới
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, phone });
 
+    // Trả về đầy đủ thông tin khi đăng ký
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      isAdmin: user.isAdmin,
+      phone: user.phone,
       token: generateToken(user._id),
     });
   } catch (error) {
-    res.status(500).json({ message: "Lỗi đăng ký user" });
+    res.status(500).json({ message: "Lỗi đăng ký user", error: error.message });
   }
 };
 
@@ -40,19 +44,20 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
 
     // Kiểm tra user và password
-    if (!user || !(await user.matchPassword(password))) {
-      return res
-        .status(401)
-        .json({ message: "Email hoặc mật khẩu không đúng" });
+    if (user && (await user.matchPassword(password))) {
+      // Trả về đầy đủ thông tin user, bao gồm cả `isAdmin`
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        phone: user.phone,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(401).json({ message: "Email hoặc mật khẩu không đúng" });
     }
-
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
-    });
   } catch (error) {
-    res.status(500).json({ message: "Lỗi đăng nhập" });
+    res.status(500).json({ message: "Lỗi đăng nhập", error: error.message });
   }
 };

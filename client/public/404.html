@@ -5,17 +5,18 @@
     <meta charset="utf-8">
     <title>Single Page Apps for GitHub Pages</title>
     <script type="text/javascript">
-        // Single Page Apps for GitHub Pages
-        // MIT License
-        // https://github.com/rafgraph/spa-github-pages
-        var l = window.location;
-        l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            l.pathname.split('/').slice(0, 1 + 1).join('/') + '/?p=/' +
-            l.pathname.slice(1).split('/').slice(1).join('/').replace(/&/g, '~and~') +
-            (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-            l.hash
-        );
+        // Lấy đường dẫn mà người dùng đang cố truy cập (ví dụ: /student-room-rentals/rooms/123)
+        var path = window.location.pathname;
+
+        // Lấy tên repository từ URL (phần tử thứ 2 sau khi tách chuỗi bằng dấu '/')
+        var repo = path.split('/')[1];
+
+        // Lưu lại đường dẫn mà người dùng muốn vào
+        sessionStorage.redirect = path;
+
+        // Chuyển hướng về trang chủ của ứng dụng trên GitHub Pages
+        // Trình duyệt sẽ tải file index.html và React sẽ khởi động
+        window.location.replace('/' + repo + '/');
     </script>
 </head>
 

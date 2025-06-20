@@ -1,44 +1,64 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-// tạo Context để chia sẻ state người dùng và các hàm đăng nhập/đăng xuất 
+// tạo Context để chia sẻ state người dùng và các hàm đăng nhập/đăng xuất
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // state để lưu thông tin người dùng
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // state để kiểm tra trạng thái đăng nhập
-  const [loading, setLoading] = useState(true); // state để kiểm tra trạng thái tải dữ liệu
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  // useEffect này sẽ chạy một lần khi ứng dụng khởi động
+  // để kiểm tra xem có thông tin người dùng trong localStorage không
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    try {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+    } catch (error) {
+      console.error("Failed to parse user from localStorage", error);
+      localStorage.removeItem("user");
     }
   }, []);
 
-  const login = (userData) => { //Hàm login - được gọi từ RegisterPage.jsx
-    // nhận userData object từ backend sau khi đăng ký/đăng nhập
+  const login = (userData) => {
+    // Lưu thông tin người dùng vào state và localStorage
     setUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify(userData)); //tránh load trang phải gọi lại API
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    // Chuyển hướng dựa trên vai trò của người dùng
+    if (userData.isAdmin) {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/");
+    }
   };
 
   const logout = () => {
-
-    localStorage.removeItem("userToken");
+    // Xóa thông tin người dùng khỏi state và localStorage
     setUser(null);
-    console.log("User logged out, token removed from storage");
+    localStorage.removeItem("user");
+    // Chuyển hướng về trang đăng nhập
+    navigate("/login");
   };
 
-  // Add the update user function
   const updateUserInContext = (updatedUserData) => {
     setUser(updatedUserData);
     localStorage.setItem("user", JSON.stringify(updatedUserData));
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout, updateUserInContext }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  // Giá trị được cung cấp cho toàn bộ ứng dụng
+  const value = {
+    // isAuthenticated có thể được suy ra một cách an toàn: !!user
+    isAuthenticated: !!user,
+    user,
+    login,
+    logout,
+    updateUserInContext,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);
