@@ -16,11 +16,18 @@ const app = express();
 const allowedOrigins = [
   "https://minhnhut05.github.io", // Production Frontend (old)
   "http://localhost:3000", // Local Development Frontend
-  "https://xemtrovuive.online", // Production Frontend (New Custom Domain)
+  "https://xemtrovuive.online", // Custom Domain
+  "https://www.xemtrovuive.online", // Custom Domain with www
 ];
 
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: "GET,POST,PUT,DELETE,PATCH,HEAD", // QUAN TRỌNG: Cho phép cả phương thức POST
   credentials: true,
 };
