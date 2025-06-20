@@ -20,3 +20,4 @@ Thumbs.db
 
 # Bỏ qua file môi trường
 .env
+.env.production

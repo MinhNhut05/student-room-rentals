@@ -3,13 +3,24 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Student Room Rentals - Find and post student accommodations" />
-    <!-- Remove the apple-touch-icon reference if the file doesn't exist -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- === FAVICON CONFIGURATION (Corrected) === -->
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="%PUBLIC_URL%/favicon/favicon-96x96.png">
+    <link rel="icon" href="%PUBLIC_URL%/favicon/favicon.ico" />
+    <link rel="manifest" href="%PUBLIC_URL%/favicon/site.webmanifest">
+    <!-- ========================================= -->
+
+    <!-- Font Awesome CDN Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <title>Student Room Rentals</title>
+
     <script type="text/javascript">
         (function () {
             var redirect = sessionStorage.redirect;
