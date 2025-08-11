@@ -4,7 +4,7 @@ import authHeader from "../utils/authHeader"; // Import tiện ích lấy header
 // --- AUTH SERVICES ---
 // Sử dụng endpoint /users/ cho đăng ký và đăng nhập theo cấu trúc mới
 const register = (userData) => {
-  return api.post("/users/register", userData);
+  return api.post("/users", userData);
 };
 
 const login = (userData) => {
