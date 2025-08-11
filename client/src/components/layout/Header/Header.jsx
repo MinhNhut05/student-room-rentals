@@ -3,12 +3,14 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
 import "./Header.scss";
 import { FaUserCircle } from "react-icons/fa";
+import { useTheme } from "../../../context/themeContext";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -127,6 +129,14 @@ const Header = () => {
               </>
             )}
           </div>
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            title={theme === "dark" ? "Chuyển sang sáng" : "Chuyển sang tối"}
+          >
+            {theme === "dark" ? "🌞" : "🌙"}
+          </button>
         </nav>
       </div>
     </header>

@@ -38,7 +38,17 @@ const AdminRoomListPage = () => {
     }
   };
 
-  if (loading) return <p>Đang tải danh sách phòng...</p>;
+  if (loading) return (
+    <div className="loader-container">
+      <div className="sk-folding-cube" aria-label="loading">
+        <div className="sk-cube1 sk-cube"></div>
+        <div className="sk-cube2 sk-cube"></div>
+        <div className="sk-cube4 sk-cube"></div>
+        <div className="sk-cube3 sk-cube"></div>
+      </div>
+      <p>Đang tải danh sách phòng...</p>
+    </div>
+  );
   if (error) return <p className="error-message">{error}</p>;
 
   return (

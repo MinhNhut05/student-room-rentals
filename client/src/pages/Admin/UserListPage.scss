@@ -2,7 +2,7 @@
   padding: 2rem;
 
   h1 {
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 1rem;
   }
 
@@ -10,14 +10,14 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background: white;
+    background: var(--surface-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
 
     th,
     td {
-      border: 1px solid #ddd;
+      border: 1px solid var(--border-color);
       padding: 12px;
       text-align: left;
     }

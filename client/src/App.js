@@ -26,85 +26,94 @@ import AdminDashboardPage from "./pages/Admin/AdminDashboardPage";
 
 import "./scss/global.scss";
 import { AuthProvider } from "./context/authContext";
+import { ThemeProvider } from "./context/themeContext";
 
 const App = () => {
   console.log("App rendering"); // Debug log
 
   return (
-    <AuthProvider>
-      <div className="app">
-        <Header />
-        <main className="container">
-          <Routes>
-            {/* === CÁC ROUTE CÔNG KHAI === */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/rooms" element={<RoomListPage />} />
-            <Route path="/rooms/:id" element={<RoomDetailPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <div className="app">
+          <Header />
+          <main className="container">
+            <Routes>
+              {/* === CÁC ROUTE CÔNG KHAI === */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/rooms" element={<RoomListPage />} />
+              <Route path="/rooms/:id" element={<RoomDetailPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            {/* === CÁC ROUTE CẦN ĐĂNG NHẬP === */}
-            <Route
-              path="/post-room"
-              element={
-                <PrivateRoute>
-                  <PostRoomPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <PrivateRoute>
-                  <ProfilePage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/my-rooms"
-              element={
-                <PrivateRoute>
-                  <MyRoomsPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/edit-room/:id"
-              element={
-                <PrivateRoute>
-                  <EditRoomPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/my-favorites"
-              element={
-                <PrivateRoute>
-                  <MyFavoritesPage />
-                </PrivateRoute>
-              }
-            />
-
-            {/* === CÁC ROUTE CHỈ DÀNH CHO ADMIN === */}
-            <Route element={<AdminRoute />}>
-              {/* Đặt route này làm trang chính cho admin */}
-              <Route path="/admin" element={<AdminDashboardPage />} />
+              {/* === CÁC ROUTE CẦN ĐĂNG NHẬP === */}
               <Route
-                path="/admin/dashboard"
-                element={<AdminDashboardPage />}
-              />{" "}
-              {/* Thêm cả hai cho chắc chắn */}
-              <Route path="/admin/users" element={<UserListPage />} />
-              <Route path="/admin/users/:id/edit" element={<UserEditPage />} />
-              <Route path="/admin/rooms" element={<AdminRoomListPage />} />
-              <Route path="/admin/reviews" element={<AdminReviewListPage />} />
-              {/* Sau này chúng ta sẽ thêm các route admin khác ở đây */}
-            </Route>
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </AuthProvider>
+                path="/post-room"
+                element={
+                  <PrivateRoute>
+                    <PostRoomPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <ProfilePage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/my-rooms"
+                element={
+                  <PrivateRoute>
+                    <MyRoomsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/edit-room/:id"
+                element={
+                  <PrivateRoute>
+                    <EditRoomPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/my-favorites"
+                element={
+                  <PrivateRoute>
+                    <MyFavoritesPage />
+                  </PrivateRoute>
+                }
+              />
+
+              {/* === CÁC ROUTE CHỈ DÀNH CHO ADMIN === */}
+              <Route element={<AdminRoute />}>
+                {/* Đặt route này làm trang chính cho admin */}
+                <Route path="/admin" element={<AdminDashboardPage />} />
+                <Route
+                  path="/admin/dashboard"
+                  element={<AdminDashboardPage />}
+                />{" "}
+                {/* Thêm cả hai cho chắc chắn */}
+                <Route path="/admin/users" element={<UserListPage />} />
+                <Route
+                  path="/admin/users/:id/edit"
+                  element={<UserEditPage />}
+                />
+                <Route path="/admin/rooms" element={<AdminRoomListPage />} />
+                <Route
+                  path="/admin/reviews"
+                  element={<AdminReviewListPage />}
+                />
+                {/* Sau này chúng ta sẽ thêm các route admin khác ở đây */}
+              </Route>
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

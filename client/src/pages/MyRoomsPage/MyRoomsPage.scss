@@ -1,12 +1,14 @@
 @import "../../scss/abstracts/variables";
 
 .my-rooms-page {
-  background: #18181d;
+  background: var(--bg-color);
   min-height: 100vh;
-  color: #fff;
+  color: var(--text-color);
   padding: 40px 0 60px;
-    width: 100vw; // Make hero section full width
-  margin-left: calc(-50vw + 50%); // Center the section if parent has width constraints
+  width: 100vw; // Make hero section full width
+  margin-left: calc(
+    -50vw + 50%
+  ); // Center the section if parent has width constraints
 
   h1 {
     font-size: 2.2rem;
@@ -23,31 +25,31 @@
     margin-bottom: 2rem;
   }
   .post-new-room-link {
-      display: inline-block;
-      background: #ffd43b;
-      color: #23232b;
-      padding: 12px 26px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 1.08rem;
-      text-decoration: none;
-      margin-bottom: 32px;
-      transition: all 0.2s;
-      box-shadow: 0 3px 15px rgba(255, 212, 59, 0.25);
+    display: inline-block;
+    background: #ffd43b;
+    color: #23232b;
+    padding: 12px 26px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1.08rem;
+    text-decoration: none;
+    margin-bottom: 32px;
+    transition: all 0.2s;
+    box-shadow: 0 3px 15px rgba(255, 212, 59, 0.25);
 
-      &::before {
-        content: "+";
-        margin-right: 8px;
-        font-size: 1.2em;
-      }
-
-      &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(255, 212, 59, 0.35);
-        background: #e96fff;
-        color: #fff;
-      }
+    &::before {
+      content: "+";
+      margin-right: 8px;
+      font-size: 1.2em;
     }
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 212, 59, 0.35);
+      background: #e96fff;
+      color: #fff;
+    }
+  }
 
   .loader-container {
     display: flex;
@@ -239,8 +241,8 @@
 
 // MyRoomCard styles
 
-.page-header{
-    margin-left: 50px;
+.page-header {
+  margin-left: 50px;
 }
 
 .my-room-card {

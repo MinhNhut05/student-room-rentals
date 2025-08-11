@@ -3,7 +3,7 @@
 .my-favorites-page {
   min-height: 100vh;
   padding: 2rem 1rem;
-  background: #18181d;
+  background: var(--bg-color);
   width: 100vw;
   margin-left: calc(-51vw + 50%);
 
@@ -14,7 +14,7 @@
     .page-title {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text-color);
       margin-bottom: 1rem;
       display: flex;
       align-items: center;

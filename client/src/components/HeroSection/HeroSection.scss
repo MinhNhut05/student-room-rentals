@@ -1,8 +1,9 @@
 @import "../../scss/abstracts/variables";
 
 .hero-section {
-  background: #17171c;
-  color: #fff;
+  // Use theme variables
+  background: var(--bg-color);
+  color: var(--text-color);
   padding: 0 0 40px 0;
   position: relative;
   overflow: hidden;
@@ -73,7 +74,7 @@
       .hero-subtitle {
         display: block;
         font-size: 1rem;
-        color: $primary-color;
+        color: var(--primary-color);
         margin-bottom: 18px;
         letter-spacing: 2px;
         text-transform: uppercase;
@@ -91,7 +92,7 @@
         }
 
         .highlight {
-          color: $primary-color;
+          color: var(--primary-color);
           position: relative;
 
           &::after {
@@ -101,7 +102,7 @@
             left: 0;
             width: 100%;
             height: 6px;
-            background-color: rgba($primary-color, 0.3);
+            background-color: rgba(124, 58, 237, 0.25);
             border-radius: 3px;
           }
         }
@@ -136,23 +137,23 @@
           transition: all 0.3s ease;
 
           &.primary {
-            background: $primary-color;
-            box-shadow: 0 4px 18px rgba($primary-color, 0.3);
+            background: var(--primary-color);
+            box-shadow: 0 4px 18px rgba(124, 58, 237, 0.3);
 
             &:hover {
-              background: darken($primary-color, 10%);
+              filter: brightness(0.9);
               transform: translateY(-3px);
-              box-shadow: 0 8px 25px rgba($primary-color, 0.4);
+              box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
             }
           }
 
           &.secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.06);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
 
             &:hover {
-              background: rgba(255, 255, 255, 0.2);
+              background: rgba(0, 0, 0, 0.1);
               transform: translateY(-3px);
             }
           }
@@ -185,7 +186,7 @@
         position: relative;
         width: 320px;
         height: 320px;
-        background: #24242b;
+        background: var(--surface-color);
         border-radius: 50%;
         box-shadow: 0 6px 40px rgba(0, 0, 0, 0.4);
         display: flex;
@@ -199,7 +200,7 @@
           width: 100%;
           height: 100%;
           border-radius: 50%;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 1px solid var(--border-color);
           animation: pulse 4s infinite;
         }
 
@@ -209,7 +210,7 @@
           width: calc(100% + 30px);
           height: calc(100% + 30px);
           border-radius: 50%;
-          border: 4px dashed rgba(255, 255, 255, 0.2);
+          border: 4px dashed rgba(0, 0, 0, 0.1);
           animation: spin 20s linear infinite;
         }
 
@@ -230,7 +231,7 @@
           position: absolute;
           bottom: 18px;
           left: 18px;
-          background: $primary-color;
+          background: var(--primary-color);
           color: #fff;
           padding: 12px 20px;
           border-radius: 12px;
@@ -259,8 +260,8 @@
           height: 64px;
           border-radius: 50%;
           object-fit: cover;
-          border: 2px solid $primary-color;
-          background: #292930;
+          border: 2px solid var(--primary-color);
+          background: var(--surface-color);
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
           transition: transform 0.3s ease;
 
@@ -274,18 +275,18 @@
           width: 64px;
           height: 64px;
           border-radius: 50%;
-          background-color: rgba(255, 255, 255, 0.1);
+          background-color: rgba(0, 0, 0, 0.06);
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 1.2rem;
           font-weight: 700;
-          color: $primary-color;
+          color: var(--primary-color);
           cursor: pointer;
           transition: background-color 0.3s ease;
 
           &:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.12);
           }
         }
       }
@@ -298,7 +299,7 @@
     align-items: center;
     gap: 80px;
     margin-top: 16px;
-    background: #23232c;
+    background: var(--surface-color);
     padding: 32px 0 32px 0;
     border-radius: 30px 30px 0 0;
     position: relative;
@@ -329,7 +330,7 @@
       .stat-number {
         font-size: 2.4rem;
         font-weight: 900;
-        color: $primary-color;
+        color: var(--primary-color);
         margin-bottom: 2px;
         line-height: 1;
         position: relative;
@@ -342,14 +343,14 @@
           transform: translateX(-50%);
           width: 30px;
           height: 3px;
-          background: rgba($primary-color, 0.5);
+          background: rgba(124, 58, 237, 0.4);
           border-radius: 2px;
         }
       }
 
       .stat-label {
         font-size: 1.1rem;
-        color: #ececec;
+        color: var(--muted-text);
         letter-spacing: 1px;
         text-align: center;
         line-height: 1.25;
@@ -360,7 +361,7 @@
   }
 
   .hero-search {
-    background: #23232c;
+    background: var(--surface-color);
     padding: 0 20px 40px;
     position: relative;
     z-index: 2;
@@ -371,8 +372,8 @@
       display: flex;
       align-items: flex-end;
       gap: 15px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 20px;
       backdrop-filter: blur(10px);
@@ -396,7 +397,7 @@
 
         label {
           display: block;
-          color: #b0b0b0;
+          color: var(--muted-text);
           margin-bottom: 8px;
           font-size: 0.9rem;
         }
@@ -405,9 +406,9 @@
           width: 100%;
           padding: 12px 15px;
           border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          background-color: rgba(255, 255, 255, 0.05);
-          color: #fff;
+          border: 1px solid var(--border-color);
+          background-color: var(--surface-color);
+          color: var(--text-color);
           font-size: 1rem;
           appearance: none;
           background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
@@ -418,19 +419,19 @@
           transition: all 0.3s ease;
 
           &:focus {
-            border-color: $primary-color;
+            border-color: var(--primary-color);
             outline: none;
-            box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
           }
 
           option {
-            background-color: #23232c;
+            background-color: var(--surface-color);
           }
         }
       }
 
       .search-button {
-        background-color: $primary-color;
+        background-color: var(--primary-color);
         color: white;
         border: none;
         border-radius: 8px;
@@ -452,9 +453,9 @@
         }
 
         &:hover {
-          background-color: darken($primary-color, 10%);
+          filter: brightness(0.9);
           transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba($primary-color, 0.3);
+          box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
         }
 
         svg {

@@ -13,9 +13,9 @@ $footer-link-hover: $footer-accent;
 $footer-border: #23232b;
 
 .footer {
-  background-color: $bg-secondary;
-  background: $footer-bg;
-  color: $footer-text;
+  background-color: var(--bg-color);
+  background: var(--bg-color);
+  color: var(--text-color);
   font-family: "Inter", sans-serif;
   padding: 56px 0 0 0;
   position: relative;
@@ -82,14 +82,14 @@ $footer-border: #23232b;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $footer-link;
+        color: var(--text-color);
         font-size: 1.12rem;
         border: 1.5px solid transparent;
         transition: all 0.19s;
 
         &:hover {
-          color: $footer-accent;
-          background: #25252b;
+          color: var(--link-color);
+          background: var(--surface-color);
           border-color: $footer-accent;
           transform: translateY(-2px) scale(1.12);
         }
@@ -104,7 +104,7 @@ $footer-border: #23232b;
 
   .column-title {
     font-weight: 700;
-    color: $footer-accent;
+    color: var(--link-color);
     font-size: 1.11rem;
     margin-bottom: 9px;
     letter-spacing: 0.8px;
@@ -125,7 +125,7 @@ $footer-border: #23232b;
       transition: color 0.17s, background 0.15s;
 
       &:hover {
-        color: $footer-link-hover;
+        color: var(--link-color);
         background: #23232b;
         padding-left: 10px;
       }
@@ -141,9 +141,9 @@ $footer-border: #23232b;
       margin-top: 15px;
 
       input {
-        background: #23232b;
-        border: 1px solid #2a2a33;
-        color: #fff;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
         padding: 12px 15px;
         border-radius: 6px;
         width: 100%;
@@ -165,8 +165,8 @@ $footer-border: #23232b;
         position: absolute;
         right: 5px;
         top: 5px;
-        background: $footer-accent;
-        color: #18181d;
+        background: var(--link-color);
+        color: var(--bg-color);
         border: none;
         border-radius: 4px;
         padding: 7px 15px;
@@ -187,10 +187,10 @@ $footer-border: #23232b;
   .copyright {
     text-align: center;
     padding: 22px 0 20px 0;
-    color: $footer-subtext;
-    background: #131316;
+    color: var(--muted-text);
+    background: var(--surface-color);
     font-size: 1.01rem;
-    border-top: 1px solid $footer-border;
+    border-top: 1px solid var(--border-color);
     letter-spacing: 0.2px;
 
     p {
